@@ -1,0 +1,927 @@
+@import "tailwindcss";
+
+/* =========================================================================
+   DatabaseBuilder design tokens
+   Every colour, font and radius the site uses lives here. Components never
+   hard-code a brand colour — they reference these.
+   ========================================================================= */
+@theme {
+  --color-db-black: #010409;
+  --color-db-red: #e23324;
+  --color-db-red-hot: #ff5947;
+  --color-db-cyan: #34e0d4;
+  --color-db-card-1: #192242;
+  --color-db-card-2: #0b1230;
+  --color-db-card-3: #010517;
+
+  --color-page: #f1f4f8;
+  --color-ink: #0d1526;
+  --color-ink-2: #3c4a61;
+  --color-ink-3: #6b7a90;
+  --color-line: #e2e8f0;
+  --color-brand: #1d6fe8;
+  --color-navy: #0b1730;
+  --color-green: #16a34a;
+
+  --font-display: var(--font-anton), "Oswald", Impact, sans-serif;
+  --font-ui: var(--font-oswald), "Arial Narrow", sans-serif;
+  --font-body: var(--font-roboto), system-ui, -apple-system, sans-serif;
+
+  --ease-db: cubic-bezier(0.22, 0.68, 0.16, 1);
+}
+
+/* =========================================================================
+   Base
+   ========================================================================= */
+html {
+  scroll-padding-top: 96px;
+  -webkit-text-size-adjust: 100%;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: var(--color-db-black);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+/* Lenis owns the scroll; these are its required base styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* The brand gradient lives in the scrollbar itself — the site has no
+   separate progress bar anywhere. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #8fa8ff #070a10;
+}
+html::-webkit-scrollbar {
+  width: 13px;
+}
+html::-webkit-scrollbar-track {
+  border-left: 1px solid rgb(255 255 255 / 0.06);
+  background: #070a10;
+  box-shadow: inset 2px 0 8px rgb(0 0 0 / 0.55);
+}
+html::-webkit-scrollbar-thumb {
+  min-height: 72px;
+  border: 2px solid #070a10;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #2e52ff 0%, #ffffff 50%, #e23324 100%) border-box;
+  box-shadow:
+    0 0 12px rgb(46 82 255 / 0.35),
+    0 0 10px rgb(226 51 36 / 0.25),
+    inset 0 0 0 1px rgb(255 255 255 / 0.28);
+}
+html::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #4166ff 0%, #ffffff 50%, #ff4f40 100%) border-box;
+  box-shadow:
+    0 0 16px rgb(46 82 255 / 0.5),
+    0 0 14px rgb(226 51 36 / 0.38),
+    inset 0 0 0 1px rgb(255 255 255 / 0.4);
+}
+html::-webkit-scrollbar-corner {
+  background: #070a10;
+}
+
+.db-skiplink {
+  position: fixed;
+  left: 16px;
+  top: -70px;
+  z-index: 10000;
+  background: #fff;
+  color: var(--color-ink);
+  border-radius: 999px;
+  padding: 12px 22px;
+  font: 600 15px/1 var(--font-body), system-ui, sans-serif;
+  transition: top 0.25s var(--ease-db);
+}
+.db-skiplink:focus {
+  top: 14px;
+}
+
+/* =========================================================================
+   Layout rhythm
+   ========================================================================= */
+.db-section {
+  padding-block: clamp(64px, 5.5vw, 116px);
+}
+.db-shell {
+  width: 100%;
+  max-width: 1560px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 3vw, 40px);
+}
+@media (max-height: 620px) {
+  .db-section {
+    padding-block: clamp(44px, 5vw, 76px);
+  }
+}
+
+/* =========================================================================
+   Hero
+   ========================================================================= */
+.db-hero-bg {
+  display: flex;
+  flex-direction: column;
+  min-height: 92svh;
+  background-color: var(--color-db-black);
+  background-image:
+    radial-gradient(52% 90% at 100% 58%, #e2332442, #0000 70%),
+    radial-gradient(46% 82% at 74% 46%, #1226f04d, #0000 72%),
+    radial-gradient(62% 44% at 60% 100%, #182cdc4d, #0000 70%),
+    linear-gradient(#02030c 0%, #010409 58%, #000 100%);
+}
+.db-hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(90deg, #0000 0 39%, #2e52ff33 39.4% 40.2%, #0000 40.6%),
+    linear-gradient(90deg, #0000 0 41%, #2e52ff1f 41.3% 41.9%, #0000 42.3%),
+    linear-gradient(90deg, #0000 0 88%, #e2332433 88.4% 89.4%, #0000 89.8%),
+    linear-gradient(90deg, #0000 0 93%, #e2332421 93.3% 94.1%, #0000 94.5%),
+    linear-gradient(90deg, #0000 0 97%, #e233241a 97.2% 98%, #0000 98.4%);
+  -webkit-mask-image: linear-gradient(#000 0 72%, #0000 96%);
+  mask-image: linear-gradient(#000 0 72%, #0000 96%);
+}
+@media (max-height: 620px) {
+  .db-hero-bg {
+    min-height: 0;
+  }
+}
+
+/* --- the globe + ring composition ---------------------------------------
+   One variable drives the whole thing. The orbit is a square box centred on
+   the globe's centre, so the rings stay perfectly circular and the globe can
+   never drift outside them at any width. */
+.db-stage {
+  position: relative;
+  --globe: clamp(86px, 11vw, 168px);
+  --orbit: min(96%, calc(var(--globe) * 4.15));
+}
+@media (min-width: 1024px) {
+  .db-stage {
+    --globe: clamp(104px, 9.4vw, 168px);
+  }
+}
+.db-orbit {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--globe) / 2);
+  width: var(--orbit);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+.db-orbit svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.db-lockup {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  margin-bottom: clamp(18px, 2.2vw, 30px);
+}
+.db-globe-el {
+  width: var(--globe);
+  height: var(--globe);
+  margin-inline: auto;
+  display: block;
+  filter: drop-shadow(0 0 20px rgb(120 160 255 / 0.38));
+}
+
+/* floor ribbons */
+.db-floor {
+  position: absolute;
+  left: 46%;
+  bottom: 4%;
+  z-index: 1;
+  width: 150%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+@media (max-width: 1023px) {
+  .db-floor {
+    width: 126%;
+    bottom: 2%;
+  }
+}
+@media (max-width: 639px) {
+  .db-floor {
+    width: 140%;
+    bottom: 3%;
+    opacity: 0.75;
+  }
+}
+
+/* the running light dashes */
+@keyframes db-run {
+  to {
+    stroke-dashoffset: -100px;
+  }
+}
+.db-run {
+  stroke-dashoffset: 0;
+  animation: db-run linear infinite;
+}
+.db-run--1 {
+  animation-duration: 8s;
+}
+.db-run--2 {
+  animation-duration: 8s;
+  animation-delay: -0.22s;
+}
+.db-run--3 {
+  animation-duration: 12s;
+  animation-direction: reverse;
+  animation-delay: -3.2s;
+}
+.db-run--f1 {
+  animation-duration: 9.5s;
+}
+.db-run--f2 {
+  animation-duration: 9.5s;
+  animation-delay: -0.22s;
+}
+.db-run--f3 {
+  animation-duration: 13s;
+  animation-direction: reverse;
+  animation-delay: -4.5s;
+}
+/* spinning the globe flares the ribbons */
+.db-runners {
+  opacity: calc(0.6 + 0.13 * var(--db-spd, 1));
+  transition: opacity 0.18s linear;
+  will-change: opacity;
+}
+
+.db-curve {
+  display: block;
+  width: 100%;
+  height: clamp(58px, 7vw, 132px);
+}
+.db-wave::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 100%;
+  height: clamp(40px, 5vw, 90px);
+  pointer-events: none;
+  background: linear-gradient(#01040900 0%, #0104098c 100%);
+}
+
+/* =========================================================================
+   Neon cards
+   ========================================================================= */
+.db-neon-card {
+  background: linear-gradient(
+    170deg,
+    var(--color-db-card-1) 0%,
+    var(--color-db-card-2) 45%,
+    var(--color-db-card-3) 100%
+  );
+  border: 2px solid #3355f7;
+  box-shadow:
+    0 0 0 1px #dcebff57,
+    0 0 20px #1226f0bf,
+    0 0 56px #1226f06b,
+    inset 0 0 34px #0e1e966b;
+  transition:
+    transform 0.35s var(--ease-db),
+    box-shadow 0.35s ease;
+}
+.db-neon-card--alert {
+  background: linear-gradient(170deg, #3a1116 0%, #1e0509 45%, #080104 100%);
+  border-color: #f0453a;
+  box-shadow:
+    0 0 0 1px #ffe2dc52,
+    0 0 20px #e23324b8,
+    0 0 56px #e2332466,
+    inset 0 0 34px #9619126b;
+}
+@media (hover: hover) {
+  .db-neon-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 0 0 1px #eaf2ff80,
+      0 0 30px #2e52ffd9,
+      0 0 78px #1226f08f,
+      inset 0 0 42px #12309e85;
+  }
+  .db-neon-card--alert:hover {
+    box-shadow:
+      0 0 0 1px #ffe9e480,
+      0 0 30px #ff5947d9,
+      0 0 78px #e2332485,
+      inset 0 0 42px #a01f1a85;
+  }
+}
+
+/* =========================================================================
+   Buttons
+   ========================================================================= */
+.db-cta-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(#f5382a 0%, #d8281b 55%, #b01d13 100%);
+  box-shadow:
+    0 0 34px #e2332473,
+    inset 0 1px #ffffff38;
+  transition:
+    transform 0.18s,
+    box-shadow 0.18s,
+    filter 0.18s;
+}
+.db-cta-btn:hover {
+  filter: brightness(1.07);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 48px #e233249e,
+    inset 0 1px #ffffff47;
+}
+.db-cta-btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
+}
+.db-cta-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(105deg, #fff0 38%, #ffffff5c 50%, #fff0 62%);
+  transform: translateX(-120%);
+  transition: transform 0.65s var(--ease-db);
+}
+.db-cta-btn:hover::after {
+  transform: translateX(120%);
+}
+
+/* =========================================================================
+   Header
+   ========================================================================= */
+.db-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  will-change: transform;
+  background: var(--color-db-black);
+  transition:
+    transform 0.42s var(--ease-db),
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.db-header.is-stuck {
+  background: #010409d9;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 14px 34px #00000073;
+}
+.db-header.is-hidden {
+  transform: translateY(-102%);
+}
+.db-header[data-nav-open="true"] {
+  transform: none;
+}
+.db-header nav a {
+  position: relative;
+}
+.db-header nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: var(--color-db-red);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.32s var(--ease-db);
+}
+.db-header nav a:hover::after,
+.db-header nav a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.db-mobile-nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+  background: var(--color-db-black);
+  border-bottom: 1px solid #ffffff17;
+  box-shadow: 0 26px 50px #0000008c;
+  transition:
+    grid-template-rows 0.28s var(--ease-db),
+    opacity 0.2s ease,
+    visibility 0s linear 0.28s;
+}
+.db-mobile-nav > div {
+  min-height: 0;
+  overflow: hidden;
+}
+[data-nav-open="true"] .db-mobile-nav {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.28s var(--ease-db),
+    opacity 0.2s ease;
+}
+@media (min-width: 1280px) {
+  .db-mobile-nav {
+    display: none;
+  }
+}
+.db-burger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: #fff;
+  transition:
+    transform 0.26s var(--ease-db),
+    opacity 0.18s;
+}
+.db-burger span + span {
+  margin-top: 5px;
+}
+[data-nav-open="true"] .db-burger span:first-child {
+  transform: translateY(7px) rotate(45deg);
+}
+[data-nav-open="true"] .db-burger span:nth-child(2) {
+  opacity: 0;
+}
+[data-nav-open="true"] .db-burger span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* =========================================================================
+   Light-section furniture
+   ========================================================================= */
+.db-card-flat {
+  border: 1px solid var(--color-line);
+  background: #fff;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 2px #0d15260f,
+    0 4px 12px #0d15260d;
+}
+@media (hover: hover) {
+  .db-card-flat ol li {
+    transition: background-color 0.2s ease;
+  }
+  .db-card-flat ol li:hover {
+    background: #f4f7fc;
+  }
+}
+
+/* product screens: always flat, always front-facing */
+.db-app-wrap {
+  width: 100%;
+  align-self: center;
+  container-type: inline-size;
+}
+.db-app {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: #fff;
+  font-size: clamp(10px, 1.6cqi, 16px);
+  box-shadow:
+    0 2px 4px #0d15260f,
+    0 16px 40px #0d152617;
+  transition:
+    box-shadow 0.35s ease,
+    transform 0.35s var(--ease-db);
+}
+@supports not (container-type: inline-size) {
+  .db-app {
+    font-size: 11px;
+  }
+}
+.db-app.is-cued {
+  transform: translateY(-3px);
+  box-shadow:
+    0 2px 4px #0d15260f,
+    0 22px 54px #1d6fe838;
+}
+
+.db-cta-band {
+  background:
+    radial-gradient(700px 340px at 14% 55%, #1d6fe857, #0000 66%),
+    linear-gradient(135deg, #0b1730 0%, #081026 55%, #0a0f22 100%);
+  box-shadow: 0 24px 60px #0b173047;
+}
+
+/* the clickable colour bars that expand a dashboard */
+.db-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 6px 10px 6px 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.db-eyebrow__bars {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.db-eyebrow__bars i {
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  transition:
+    width 0.42s var(--ease-db),
+    opacity 0.3s;
+}
+.db-eyebrow__bars i:nth-child(1) {
+  width: 26px;
+  background: var(--color-brand);
+}
+.db-eyebrow__bars i:nth-child(2) {
+  width: 26px;
+  background: var(--color-db-red);
+}
+.db-eyebrow__bars i:nth-child(3) {
+  width: 14px;
+  background: var(--color-ink-3);
+}
+.db-eyebrow__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: clamp(13px, 0.9vw, 16px);
+  font-weight: 500;
+  color: var(--color-brand);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity 0.32s,
+    transform 0.42s var(--ease-db);
+}
+.db-eyebrow__label svg {
+  width: 1em;
+  height: 1em;
+  transition: transform 0.32s;
+}
+.db-eyebrow.is-armed .db-eyebrow__bars i:nth-child(1) {
+  width: 40px;
+}
+.db-eyebrow.is-armed .db-eyebrow__bars i:nth-child(3) {
+  width: 8px;
+  opacity: 0.5;
+}
+.db-eyebrow.is-armed .db-eyebrow__label {
+  opacity: 1;
+  transform: none;
+}
+.db-eyebrow.is-armed .db-eyebrow__label svg {
+  transform: translateX(3px);
+}
+.db-eyebrow:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 4px;
+}
+
+/* the showcase grid that collapses its copy when a dashboard expands */
+.db-showcase {
+  display: grid;
+  gap: 40px;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .db-showcase {
+    grid-template-columns: 0.78fr 1.22fr;
+    gap: 56px;
+    transition: grid-template-columns 0.62s var(--ease-db);
+  }
+  .db-showcase[data-expanded="true"] {
+    grid-template-columns: 0fr 1fr;
+    gap: 0;
+  }
+}
+.db-showcase__copy {
+  min-width: 0;
+  overflow: hidden;
+  transition:
+    opacity 0.32s ease,
+    transform 0.42s var(--ease-db);
+}
+.db-showcase[data-expanded="true"] .db-showcase__copy {
+  opacity: 0;
+  transform: translateX(-18px);
+  pointer-events: none;
+}
+@media (max-width: 1023px) {
+  .db-showcase[data-expanded="true"] .db-showcase__copy {
+    display: none;
+  }
+}
+
+/* =========================================================================
+   Globe interaction
+   ========================================================================= */
+.db-globe {
+  cursor: grab;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    filter 0.35s ease,
+    transform 0.35s var(--ease-db);
+}
+.db-globe:hover {
+  filter: drop-shadow(0 0 30px #8fb0ffb0);
+}
+.db-globe.is-grabbing {
+  cursor: grabbing;
+  transform: scale(1.03);
+  filter: drop-shadow(0 0 38px #a8c4ffd9);
+}
+.db-globe:focus-visible {
+  outline: 3px solid #2e52ff;
+  outline-offset: 10px;
+  border-radius: 50%;
+}
+.db-globe.is-pulse {
+  animation: db-globe-pulse 0.72s var(--ease-db);
+}
+@keyframes db-globe-pulse {
+  0% {
+    filter: drop-shadow(0 0 12px #8fb0ff5c);
+  }
+  26% {
+    filter: drop-shadow(0 0 48px #cbdcffeb);
+  }
+  100% {
+    filter: drop-shadow(0 0 20px #78a0ff61);
+  }
+}
+.db-globe-ring {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  z-index: 60;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px #9dbcffd1,
+    0 0 26px #4d7bffa8;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+.db-globe-ring.is-live {
+  animation: db-ring 0.78s cubic-bezier(0.16, 0.72, 0.24, 1) forwards;
+}
+@keyframes db-ring {
+  0% {
+    opacity: 0.95;
+    width: 24px;
+    height: 24px;
+  }
+  100% {
+    opacity: 0;
+    width: 340px;
+    height: 340px;
+  }
+}
+.db-globe-hint {
+  position: absolute;
+  left: 50%;
+  bottom: -20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: 500 12.5px/1 var(--font-body), system-ui, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9fb4d8;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -4px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s var(--ease-db);
+}
+.db-globe-hint svg {
+  width: 15px;
+  height: 15px;
+}
+.db-globe-hint.is-shown,
+.db-lockup:hover .db-globe-hint {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* =========================================================================
+   Loading screen — no progress bar, just the globe
+   ========================================================================= */
+.db-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    opacity 0.2s ease 0.86s,
+    visibility 0s linear 1.06s;
+}
+.db-boot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(52% 52% at 50% 44%, rgb(46 82 255 / 0.23), transparent 72%),
+    radial-gradient(52% 42% at 50% 100%, rgb(226 51 36 / 0.14), transparent 72%), #010409;
+  transition: opacity 0.78s var(--ease-db);
+}
+.db-boot::after {
+  content: "";
+  position: absolute;
+  inset: -15%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.42;
+  background:
+    linear-gradient(115deg, transparent 36%, rgb(46 82 255 / 0.13) 47%, transparent 55%),
+    linear-gradient(70deg, transparent 45%, rgb(226 51 36 / 0.09) 52%, transparent 60%);
+  transform: translateX(-8%);
+  animation: db-boot-ambient 2.8s ease-in-out infinite alternate;
+  transition: opacity 0.45s ease;
+}
+@keyframes db-boot-ambient {
+  to {
+    transform: translateX(8%);
+  }
+}
+.db-boot__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.db-boot__mark {
+  position: relative;
+  width: clamp(140px, 17vw, 200px);
+  height: clamp(140px, 17vw, 200px);
+  margin-bottom: 30px;
+  will-change: transform;
+  transform-origin: 50% 50%;
+  transition: transform 0.92s cubic-bezier(0.18, 0.76, 0.18, 1);
+}
+.db-boot__rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+  transition:
+    opacity 0.32s ease,
+    transform 0.7s cubic-bezier(0.18, 0.76, 0.18, 1);
+}
+.db-boot__sphere {
+  position: absolute;
+  left: 15%;
+  top: 15%;
+  width: 70%;
+  height: 70%;
+  will-change: filter, opacity;
+  filter: drop-shadow(0 0 22px rgb(120 160 255 / 0.45));
+  transition:
+    filter 0.75s ease,
+    opacity 0.14s ease 0.82s;
+}
+.db-boot__brand {
+  transition:
+    opacity 0.28s ease,
+    transform 0.44s var(--ease-db);
+}
+@keyframes db-boot-spin {
+  to {
+    stroke-dashoffset: -100px;
+  }
+}
+.db-boot-spin {
+  animation: db-boot-spin linear infinite;
+}
+.db-boot-spin--b {
+  animation-duration: 2.4s;
+}
+.db-boot-spin--r {
+  animation-duration: 3.6s;
+  animation-direction: reverse;
+}
+.db-boot.is-shifting::before,
+.db-boot.is-shifting::after {
+  opacity: 0;
+}
+.db-boot.is-shifting .db-boot__brand {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.db-boot.is-shifting .db-boot__rings {
+  opacity: 0;
+  transform: scale(1.24);
+}
+.db-boot.is-shifting .db-boot__mark {
+  transform: translate3d(var(--boot-dx, 0px), var(--boot-dy, 0px), 0) scale(var(--boot-scale, 1));
+}
+.db-boot.is-shifting .db-boot__sphere {
+  opacity: 0;
+  filter: drop-shadow(0 0 32px rgb(120 160 255 / 0.62));
+}
+.db-boot.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* the hero holds still until the loader globe has landed */
+.db-hero-hold [data-hero-reveal] {
+  opacity: 0;
+}
+.db-hero-hold .db-globe-el {
+  opacity: 0;
+}
+
+/* =========================================================================
+   Scroll reveals — also the fallback when GSAP is unavailable
+   ========================================================================= */
+.db-anim {
+  opacity: 0;
+  transform: translateY(26px);
+}
+.db-anim.is-in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.75s ease,
+    transform 0.85s var(--ease-db);
+}
+
+/* =========================================================================
+   Reduced motion
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .db-runners {
+    display: none;
+  }
+  .db-globe-ring {
+    display: none;
+  }
+  .db-anim {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .db-hero-hold [data-hero-reveal],
+  .db-hero-hold .db-globe-el {
+    opacity: 1;
+  }
+}
