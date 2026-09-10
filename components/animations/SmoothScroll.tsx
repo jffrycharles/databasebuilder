@@ -25,21 +25,42 @@ export function scrollToId(id: string) {
 
 export default function SmoothScroll() {
   useEffect(() => {
-    // Anchor clicks are handled either way; only the easing is optional.
+    /* Captured before the Next router sees it: a link that points at the page
+       we are already on is a scroll, not a navigation. Anything else (another
+       route, an external URL, mailto/tel) is left alone. */
     const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
       const link = (e.target as HTMLElement | null)?.closest?.("a");
-      if (!link) return;
-      const href = link.getAttribute("href");
-      if (!href || href === "#" || !href.startsWith("#")) return;
-      if (!document.querySelector(href)) return;
-      e.preventDefault();
-      scrollToId(href);
-      history.replaceState(null, "", href);
+      if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
+
+      const raw = link.getAttribute("href");
+      if (!raw || raw === "#") return;
+
+      let url: URL;
+      try {
+        url = new URL(raw, window.location.href);
+      } catch {
+        return;
+      }
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname !== window.location.pathname) return;
+
+      if (url.hash) {
+        if (!document.querySelector(url.hash)) return;
+        e.preventDefault();
+        scrollToId(url.hash);
+        history.replaceState(null, "", url.hash);
+      } else {
+        // "Home" while already home: take them back to the top
+        e.preventDefault();
+        if (current) current.scrollTo(0, { duration: 1 });
+        else window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+      }
     };
-    document.addEventListener("click", onClick);
+    document.addEventListener("click", onClick, true);
 
     if (prefersReducedMotion()) {
-      return () => document.removeEventListener("click", onClick);
+      return () => document.removeEventListener("click", onClick, true);
     }
 
     const lenis = new Lenis({
@@ -59,7 +80,7 @@ export default function SmoothScroll() {
     gsap.ticker.lagSmoothing(0);
 
     return () => {
-      document.removeEventListener("click", onClick);
+      document.removeEventListener("click", onClick, true);
       lenis.off("scroll", onScroll);
       gsap.ticker.remove(tick);
       gsap.ticker.lagSmoothing(500, 33);

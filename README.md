@@ -1,8 +1,38 @@
 # DatabaseBuilder — marketing site
 
-The DatabaseBuilder website, built as a Next.js App Router project. Same design,
-copy and artwork as before — now organised into typed React components with
-GSAP + Lenis driving the motion.
+The DatabaseBuilder website, built as a Next.js App Router project with
+GSAP + Lenis driving the motion. The homepage, Pricing and FAQ follow Adam
+Berman's September 2026 rebranding outline.
+
+## September 2026 content update
+
+- Updated the four hero cards, including the red Advanced Features card and
+  the two-way SMS wording and supporting descriptions.
+- Applied the supplied Why DatabaseBuilder copy, correcting obvious typos.
+- Included all 21 features in the brief's order, with green checks and the
+  source's ten key items emphasised.
+- Added `/faq` with all 11 questions and full answers, using native keyboard-
+  accessible accordions that work without JavaScript.
+- Added `/pricing` with a package for up to three users, additional users,
+  the 7-day trial, cancellation terms and separately billed usage/services.
+- Set Pricing and FAQ navigation to their actual pages.
+- Limited the import/export format badges to CSV, as specified in the brief.
+- About and Contact page files and their content are unchanged. The existing
+  design, loading screen, globe, animations and product mockups are retained.
+- This update is a local project package; no deployment was performed.
+
+**Pricing amounts are pending.** Adam marked pricing TBA. In `lib/pricing.ts`,
+`baseMonthly` and `additionalUserMonthly` are deliberately `null`. The page
+shows "Contact us for pricing" until approved amounts are supplied. The dollar
+symbol follows the outline; confirm the currency alongside the prices.
+
+**Validation:** `npm run build` passed, including TypeScript checks. Built HTML
+was checked for the 21 checklist items, ten emphasized key items, all 11 FAQ
+answers, the three-user pricing package, pending amounts, usage-charge copy,
+and Pricing/FAQ navigation. All 12 About/Contact files were compared with the
+original ZIP and are byte-for-byte unchanged. The review browser could not
+access the local server, so visual and interactive browser checks remain for
+local review with `npm run dev`.
 
 ```bash
 npm install
@@ -21,7 +51,11 @@ Requires Node 18.18+ (Node 20 or 22 recommended).
 ```
 app/
   layout.tsx            metadata, self-hosted fonts, icon sprite, app shell
-  page.tsx              server component — composes the five sections
+  page.tsx              home — server component, composes the five sections
+  about/page.tsx        /about — our story
+  contact/page.tsx      /contact — your ideas, our solution
+  pricing/page.tsx      /pricing — package, additional users and usage charges
+  faq/page.tsx          /faq — all 11 questions from the rebranding outline
   globals.css           design tokens + every custom rule the site needs
   fonts/                subset woff2: Anton, Oswald, Roboto
 
@@ -43,13 +77,22 @@ components/
     Hero.tsx            hero + entrance timeline
     HeroArt.tsx         orbit rings, floor ribbons, wave divider
     WhySection.tsx  FeaturesSection.tsx  BuiltForSection.tsx  CtaBand.tsx
+    about/              AboutHero, OriginStory, Timeline, QuoteBand,
+                        Leadership, ArchiveLinks
+    contact/            ContactHero, ContactForm
   ui/
     Globe.tsx           React wrapper around the sphere engine
     Icon.tsx            34-icon sprite + <Icon name="…" />
+    AmbientField.tsx    drifting light beams used by the About/Contact heroes
+    SmartLink.tsx       router link for internal hrefs, anchor for the rest
     Logo.tsx  CtaButton.tsx  NeonCard.tsx
 
 lib/
-  data.ts               all copy and list data (nav, checklist, KPIs, threads…)
+  data.ts               shared copy and list data (nav, checklist, KPIs, threads…)
+  about.ts              timeline, leadership bios, origin copy
+  contact.ts            address, phone, email, enquiry subjects
+  pricing.ts            package size, pending price amounts and usage charges
+  faq.ts                approved FAQ copy, with typos and punctuation corrected
   sphere.ts             the dot-sphere renderer and its interactions
   gsap.ts               plugin registration, reduced-motion helper, useGsap
   reveal.ts             one shared IntersectionObserver for scroll reveals
@@ -89,29 +132,46 @@ screen to the full section width — in place, flat, no modal. The copy's width 
 frozen in pixels first, otherwise its paragraphs reflow into a one-word-per-line
 column and the section triples in height mid-animation.
 
-**Client vs server.** `page.tsx`, `Footer` and `FeaturesSection` are server
-components. Only the hero, header, dashboards, showcase, globe and animation
-wrappers opt into `"use client"`.
+**Client vs server.** The five `page.tsx` files, `Footer` and most About
+sections are server components. Only the hero, header, dashboards, showcase,
+globe, timeline, contact form and animation wrappers opt into `"use client"`.
 
-## Deploying to Vercel
+**About and Contact.** Both pages share the homepage's palette, type and glow
+but not its composition — no globe stage, no neon card row. Their recurring
+device is `AmbientField` (slow vertical light beams) over a thin
+blue→white→red rule. Content comes from the original databasebuilder.com:
+the Our Team and History pages and the CEO's letter.
 
-1. Push the repository to GitHub/GitLab/Bitbucket.
-2. In Vercel, **Add New → Project**, import the repo.
-3. Framework preset is detected as **Next.js**; leave the build command
-   (`next build`) and output directory as they are. There are no environment
-   variables to set.
-4. Deploy.
+**The contact form has no backend.** It validates in the browser and hands a
+fully composed message to the visitor's mail client, then shows a confirmation
+panel with the same details. To post to a real endpoint, replace `handoff()` in
+`components/sections/contact/ContactForm.tsx` with a fetch to your API route and
+keep the existing `sent` state for the confirmation.
 
-Or from the command line:
+## Deploying to the existing Vercel project
+
+Use the existing DatabaseBuilder project. Do not create another project.
+This downloaded working folder has no `.vercel/project.json` link or Git history.
+
+1. Run `npx vercel login` and sign in with the account that owns DatabaseBuilder.
+2. Run `npx vercel project ls` in the owning team and confirm the existing project.
+3. Run `npx vercel link`, choose that team, and choose the **existing** DatabaseBuilder
+   project. Verify `.vercel/project.json` matches the confirmed project before deploying.
+4. Run `npm run typecheck`, `npm run lint`, and `npm run build`.
+5. Verify all five pages on desktop and mobile, then run exactly:
 
 ```bash
-npm i -g vercel
-vercel          # preview
-vercel --prod   # production
+npx vercel --prod
 ```
 
-Set the production domain in **Project → Settings → Domains**, then update
-`SITE.url` in `lib/data.ts` so canonical and Open Graph URLs match.
+Confirm the production alias loads on desktop and mobile before sharing it with the
+client. No deployment was performed during this refinement pass: the CLI required
+sign-in and no existing project link could be verified.
+
+The contact form prepares an email in the visitor's mail app; it does not submit to
+a backend. Pricing amounts remain pending approved figures. Placeholder legal and
+unconfigured social links have been removed until real destinations are supplied.
+
 
 ## Notes
 

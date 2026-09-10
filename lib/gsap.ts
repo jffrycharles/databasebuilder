@@ -40,6 +40,5 @@ export function useGsap(
     if (prefersReducedMotion()) return;
     const ctx = gsap.context((self) => saved.current(self), scope);
     return () => ctx.revert();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }

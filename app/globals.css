@@ -2,10 +2,13 @@
 
 /* =========================================================================
    DatabaseBuilder design tokens
-   Every colour, font and radius the site uses lives here. Components never
-   hard-code a brand colour — they reference these.
+
+   Every colour, font, type step, spacing step and radius the site uses lives
+   here. Components never hard-code a brand colour, a font size or a radius —
+   they reference these, or the utility classes built from them further down.
    ========================================================================= */
 @theme {
+  /* ---- brand ---- */
   --color-db-black: #010409;
   --color-db-red: #e23324;
   --color-db-red-hot: #ff5947;
@@ -23,18 +26,61 @@
   --color-navy: #0b1730;
   --color-green: #16a34a;
 
+  /* ---- type ---- */
   --font-display: var(--font-anton), "Oswald", Impact, sans-serif;
   --font-ui: var(--font-oswald), "Arial Narrow", sans-serif;
   --font-body: var(--font-roboto), system-ui, -apple-system, sans-serif;
 
+  /* ---- radii: four steps, nothing in between ---- */
+  --radius-db-control: 8px;
+  --radius-db-card: 12px;
+  --radius-db-panel: 18px;
+
   --ease-db: cubic-bezier(0.22, 0.68, 0.16, 1);
+}
+
+/* =========================================================================
+   Scale
+
+   One type ramp and one spacing ramp for the whole site. Before this, five
+   pages carried forty near-identical clamp() expressions; the difference
+   between clamp(15px,.9vw,17.5px) and clamp(15px,.92vw,17.5px) is invisible
+   to a reader and fatal to a design system.
+   ========================================================================= */
+:root {
+  /* type ramp — 7 steps, deliberately few */
+  --db-display: clamp(32px, 3.55vw, 60px); /* homepage hero H1, Anton */
+  --db-h1: clamp(30px, 3vw, 50px); /* inner-page H1, Anton */
+  --db-h2: clamp(26px, 2.35vw, 39px); /* section heading, Roboto bold */
+  --db-h3: clamp(17.5px, 1.3vw, 21px); /* card heading */
+  --db-h4: clamp(15.5px, 1.02vw, 17px); /* list / sub heading */
+  --db-lede: clamp(16px, 1.06vw, 19px); /* standfirst under a heading */
+  --db-body: clamp(15px, 0.95vw, 16.5px); /* running copy */
+  --db-sm: clamp(13.5px, 0.85vw, 14.75px); /* captions, meta, notes */
+  --db-xs: 12.5px;
+
+  /* the largest heading is never more than ~2.4x the body beside it */
+
+  /* spacing ramp */
+  --db-section-y: clamp(60px, 5vw, 104px);
+  --db-section-y-sm: clamp(40px, 3.2vw, 64px);
+  --db-gap: clamp(20px, 2.2vw, 36px);
+  --db-gap-lg: clamp(28px, 3.4vw, 60px);
+
+  /* measured header height — inner heroes subtract it to fill the first screen */
+  --db-header-h: 66px;
+}
+@media (min-width: 640px) {
+  :root {
+    --db-header-h: 100px;
+  }
 }
 
 /* =========================================================================
    Base
    ========================================================================= */
 html {
-  scroll-padding-top: 96px;
+  scroll-padding-top: calc(var(--db-header-h) + 16px);
   -webkit-text-size-adjust: 100%;
 }
 html,
@@ -46,6 +92,7 @@ body {
   background: var(--color-db-black);
   color: var(--color-ink);
   font-family: var(--font-body);
+  font-size: var(--db-body);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -114,9 +161,20 @@ html::-webkit-scrollbar-corner {
 
 /* =========================================================================
    Layout rhythm
+
+   `.db-section` is the only vertical spacing a section needs. Two sections
+   sitting on the same surface collapse the join to a single step, so a run of
+   light sections reads as one continuous page rather than a stack of slabs
+   separated by twice the intended gap.
    ========================================================================= */
 .db-section {
-  padding-block: clamp(64px, 5.5vw, 116px);
+  padding-block: var(--db-section-y);
+}
+.db-section--sm {
+  padding-block: var(--db-section-y-sm);
+}
+[data-surface="page"] + [data-surface="page"] {
+  padding-top: 0;
 }
 .db-shell {
   width: 100%;
@@ -124,14 +182,641 @@ html::-webkit-scrollbar-corner {
   margin-inline: auto;
   padding-inline: clamp(20px, 3vw, 40px);
 }
+/* editorial width — long-form copy never runs the full 1560px */
+.db-shell--narrow {
+  max-width: 1180px;
+}
+.db-measure {
+  max-width: 64ch;
+}
+.db-measure-sm {
+  max-width: 52ch;
+}
 @media (max-height: 620px) {
   .db-section {
-    padding-block: clamp(44px, 5vw, 76px);
+    padding-block: clamp(40px, 4vw, 72px);
   }
 }
 
 /* =========================================================================
-   Hero
+   Type utilities
+
+   A component sets one of these instead of inventing a clamp. Colour is left
+   to the caller so the same step works on light and dark surfaces.
+   ========================================================================= */
+@layer components {
+.db-display {
+  font-family: var(--font-display);
+  font-size: var(--db-display);
+  line-height: 1.04;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.db-h1 {
+  font-family: var(--font-display);
+  font-size: var(--db-h1);
+  line-height: 1.04;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.db-h2 {
+  font-family: var(--font-body);
+  font-size: var(--db-h2);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.db-h3 {
+  font-family: var(--font-body);
+  font-size: var(--db-h3);
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.db-h4 {
+  font-family: var(--font-body);
+  font-size: var(--db-h4);
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0;
+}
+.db-lede {
+  font-size: var(--db-lede);
+  line-height: 1.6;
+  margin: 0;
+}
+.db-body {
+  font-size: var(--db-body);
+  line-height: 1.68;
+  margin: 0;
+}
+.db-sm {
+  font-size: var(--db-sm);
+  line-height: 1.58;
+  margin: 0;
+}
+.db-xs {
+  font-size: var(--db-xs);
+  line-height: 1.5;
+  margin: 0;
+}
+/* stacked paragraphs inside a prose block */
+.db-prose > * + * {
+  margin-top: 1.1em;
+}
+
+/* small uppercase marker used inside cards and rails, where the full
+   coloured-bar Label would be too loud */
+.db-kicker {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin: 0;
+}
+}
+
+/* the brand hairline: blue into red, used to close a heading block */
+.db-rule {
+  display: block;
+  width: 96px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-brand) 0%, #8fa8ff 52%, var(--color-db-red) 100%);
+}
+.db-rule--sm {
+  width: 56px;
+}
+.db-rule--vert {
+  width: 2px;
+  height: auto;
+  align-self: stretch;
+  background: linear-gradient(180deg, var(--color-brand) 0%, #8fa8ff 52%, var(--color-db-red) 100%);
+}
+
+/* the opening paragraph of the story */
+.db-dropcap::first-letter {
+  float: left;
+  margin: 0.04em 0.11em 0 0;
+  font-family: var(--font-display);
+  font-size: 3.1em;
+  line-height: 0.82;
+  color: var(--color-db-red);
+}
+
+/* monogram, for a person with no photograph on file */
+.db-mono {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #16264f 0%, #0b1330 55%, #060b1b 100%);
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffffd9;
+}
+
+/* =========================================================================
+   Section label — the homepage's coloured-bar marker
+   ========================================================================= */
+.db-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.db-label__bars {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.db-label__bars i {
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+}
+.db-label__bars i:nth-child(1) {
+  width: 26px;
+  background: var(--color-brand);
+}
+.db-label__bars i:nth-child(2) {
+  width: 26px;
+  background: var(--color-db-red);
+}
+.db-label__bars i:nth-child(3) {
+  width: 14px;
+  background: var(--color-ink-3);
+}
+.db-label--on-dark .db-label__bars i:nth-child(3) {
+  background: #64748b;
+}
+
+/* =========================================================================
+   Buttons
+
+   Three variants and three sizes, site-wide. Header, hero, pricing card, map
+   band and contact form all draw from this — there is no fourth button.
+   ========================================================================= */
+.db-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  isolation: isolate;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-db-control);
+  padding: 0.86em 1.35em;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.18s var(--ease-db),
+    box-shadow 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    filter 0.18s ease;
+}
+.db-btn:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 3px;
+}
+.db-btn--sm {
+  padding: 0.72em 1.05em;
+  font-size: 13.5px;
+}
+.db-btn--lg {
+  padding: 0.82em 1.4em;
+  font-size: clamp(16px, 1.35vw, 22px);
+}
+.db-btn--block {
+  display: flex;
+  width: 100%;
+}
+
+/* primary: the brand red, the only filled button on the site */
+.db-btn--primary {
+  background: linear-gradient(#f5382a 0%, #d8281b 55%, #b01d13 100%);
+  color: #fff;
+  box-shadow:
+    0 0 26px #e2332452,
+    inset 0 1px #ffffff38;
+}
+.db-btn--primary:hover {
+  filter: brightness(1.07);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 38px #e2332480,
+    inset 0 1px #ffffff47;
+}
+.db-btn--primary:focus-visible {
+  outline-color: #fff;
+  outline-offset: 4px;
+}
+/* the sheen, once, on hover */
+.db-btn--primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(105deg, #fff0 38%, #ffffff54 50%, #fff0 62%);
+  transform: translateX(-120%);
+  transition: transform 0.65s var(--ease-db);
+}
+.db-btn--primary:hover::after {
+  transform: translateX(120%);
+}
+
+/* ghost: on a dark surface */
+.db-btn--ghost {
+  background: transparent;
+  color: #fff;
+  box-shadow: inset 0 0 0 1px #ffffff33;
+}
+.db-btn--ghost:hover {
+  background: #ffffff12;
+  box-shadow: inset 0 0 0 1px #ffffff6b;
+}
+
+/* quiet: on a light surface */
+.db-btn--quiet {
+  background: #fff;
+  color: var(--color-ink);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+.db-btn--quiet:hover {
+  color: var(--color-brand);
+  box-shadow: inset 0 0 0 1px #b9cbe6;
+}
+
+/* text link that behaves like an action */
+.db-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 600;
+  color: var(--color-brand);
+  transition: gap 0.24s var(--ease-db);
+}
+.db-link svg {
+  width: 1em;
+  height: 1em;
+  transition: transform 0.24s var(--ease-db);
+}
+.db-link:hover svg {
+  transform: translateX(3px);
+}
+.db-link--on-dark {
+  color: var(--color-db-cyan);
+}
+
+/* =========================================================================
+   Surfaces
+
+   Three, and they never nest: a white card on the light page, a navy panel
+   for an inset statement, and a translucent surface for a card on a dark
+   band. A `.db-surface` inside a `.db-panel` is a card inside a card — use
+   hairline-divided rows instead.
+   ========================================================================= */
+.db-card {
+  border-radius: var(--radius-db-card);
+  border: 1px solid var(--color-line);
+  background: #fff;
+  box-shadow:
+    0 1px 2px #0d15260f,
+    0 4px 12px #0d15260d;
+}
+/* older name, same thing */
+.db-card-flat {
+  border-radius: var(--radius-db-card);
+  border: 1px solid var(--color-line);
+  background: #fff;
+  box-shadow:
+    0 1px 2px #0d15260f,
+    0 4px 12px #0d15260d;
+}
+@media (hover: hover) {
+  .db-card--lift {
+    transition:
+      transform 0.3s var(--ease-db),
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+  .db-card--lift:hover {
+    transform: translateY(-3px);
+    border-color: #c9d8ec;
+    box-shadow:
+      0 1px 2px #0d15260f,
+      0 14px 32px #0d15261f;
+  }
+  .db-card-flat ol li {
+    transition: background-color 0.2s ease;
+  }
+  .db-card-flat ol li:hover {
+    background: #f4f7fc;
+  }
+}
+
+.db-panel {
+  border-radius: var(--radius-db-panel);
+  background: var(--color-navy);
+  color: #fff;
+}
+
+.db-surface {
+  border-radius: var(--radius-db-card);
+  border: 1px solid #ffffff1f;
+  background: #ffffff0a;
+}
+
+/* rows divided by a hairline — the alternative to nesting cards */
+.db-rows > * + * {
+  border-top: 1px solid var(--color-line);
+}
+.db-rows--on-dark > * + * {
+  border-top: 1px solid #ffffff1a;
+}
+
+.db-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  padding: 4px 11px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.db-chip i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* the record card the contact form lives in */
+.db-record {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-db-panel);
+  background: #fff;
+  box-shadow:
+    0 1px 2px #0d15260f,
+    0 12px 32px #0d152614;
+}
+
+/* the navy band used for the closing call to action */
+.db-section[data-surface="page"]:has(+ .db-cta-section) {
+  padding-bottom: clamp(28px, 3vw, 44px);
+}
+.db-cta-section {
+  padding-block: clamp(28px, 3vw, 44px) 24px;
+}
+.db-cta-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 22px;
+  padding: 28px 24px;
+  color: #fff;
+  text-align: center;
+  border-radius: var(--radius-db-panel);
+  background:
+    radial-gradient(700px 340px at 14% 55%, #1d6fe857, #0000 66%),
+    linear-gradient(135deg, #0b1730 0%, #081026 55%, #0a0f22 100%);
+  box-shadow: 0 8px 24px #0b173024;
+}
+.db-cta-globe {
+  width: 88px;
+  height: 88px;
+  margin-inline: auto;
+  filter: drop-shadow(0 0 24px #2e7dff66);
+}
+.db-cta-message,
+.db-cta-action {
+  min-width: 0;
+}
+.db-cta-message h2 {
+  max-width: 24ch;
+  margin-inline: auto;
+}
+.db-cta-signoff {
+  margin: 14px 0 0;
+  font-size: 16px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.db-cta-action {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  max-width: 320px;
+  margin-inline: auto;
+}
+.db-cta-action .db-btn {
+  min-height: 44px;
+  white-space: normal;
+  line-height: 1.25;
+}
+@media (min-width: 640px) {
+  .db-cta-band {
+    grid-template-columns: 104px minmax(0, 1fr);
+    gap: 24px 28px;
+    padding: 30px;
+    text-align: left;
+  }
+  .db-cta-globe {
+    width: 104px;
+    height: 104px;
+  }
+  .db-cta-message h2 {
+    margin-inline: 0;
+  }
+  .db-cta-action {
+    grid-column: 2;
+    margin-inline: 0;
+  }
+}
+@media (min-width: 1024px) {
+  .db-cta-band {
+    grid-template-columns: clamp(104px, 9vw, 136px) minmax(0, 1fr) minmax(260px, 300px);
+    gap: clamp(24px, 2.5vw, 40px);
+    padding: clamp(28px, 2.6vw, 40px);
+  }
+  .db-cta-globe {
+    width: 100%;
+    height: auto;
+  }
+  .db-cta-action {
+    grid-column: auto;
+  }
+  .db-cta-message {
+    justify-self: center;
+    max-width: 100%;
+  }
+}
+
+/* =========================================================================
+   Header
+   ========================================================================= */
+.db-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  will-change: transform;
+  background: var(--color-db-black);
+  transition:
+    transform 0.42s var(--ease-db),
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.db-header.is-stuck {
+  background: #010409d9;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 14px 34px #00000073;
+}
+.db-header.is-hidden {
+  transform: translateY(-102%);
+}
+.db-header[data-nav-open="true"] {
+  transform: none;
+}
+.db-nav-link {
+  position: relative;
+  font-family: var(--font-ui);
+  font-size: clamp(14.5px, 1.05vw, 17px);
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #fff;
+  transition: color 0.22s ease;
+}
+.db-nav-link:hover {
+  color: var(--color-db-red-hot);
+}
+.db-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+  height: 2px;
+  background: var(--color-db-red);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.32s var(--ease-db);
+}
+.db-nav-link:hover::after,
+.db-nav-link:focus-visible::after,
+.db-nav-link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+.db-nav-link[aria-current="page"] {
+  color: #fff;
+}
+
+.db-mobile-nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+  background: var(--color-db-black);
+  border-bottom: 1px solid #ffffff17;
+  box-shadow: 0 26px 50px #0000008c;
+  transition:
+    grid-template-rows 0.28s var(--ease-db),
+    opacity 0.2s ease,
+    visibility 0s linear 0.28s;
+}
+.db-mobile-nav > div {
+  min-height: 0;
+  overflow: hidden;
+}
+[data-nav-open="true"] .db-mobile-nav > div {
+  max-height: calc(100dvh - var(--db-header-h));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.db-header:focus-within {
+  transform: none;
+}
+[data-nav-open="true"] .db-mobile-nav {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.28s var(--ease-db),
+    opacity 0.2s ease;
+}
+@media (min-width: 1280px) {
+  .db-mobile-nav {
+    display: none;
+  }
+}
+.db-mobile-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding-block: 6px;
+  font-family: var(--font-ui);
+  font-size: 19px;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.db-mobile-link + .db-mobile-link {
+  border-top: 1px solid #ffffff0f;
+}
+.db-mobile-link[aria-current="page"] {
+  color: var(--color-db-red-hot);
+}
+.db-burger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: #fff;
+  transition:
+    transform 0.26s var(--ease-db),
+    opacity 0.18s;
+}
+.db-burger span + span {
+  margin-top: 5px;
+}
+[data-nav-open="true"] .db-burger span:first-child {
+  transform: translateY(7px) rotate(45deg);
+}
+[data-nav-open="true"] .db-burger span:nth-child(2) {
+  opacity: 0;
+}
+[data-nav-open="true"] .db-burger span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* =========================================================================
+   Homepage hero
    ========================================================================= */
 .db-hero-bg {
   display: flex;
@@ -217,17 +902,23 @@ html::-webkit-scrollbar-corner {
   transform: translateX(-50%);
   pointer-events: none;
 }
+/* Below the two-column breakpoint the cards stack, so the floor needs its own
+   room underneath them — otherwise the ellipses sit behind the card grid and
+   only slivers show past its edges. */
 @media (max-width: 1023px) {
+  .db-stage {
+    padding-bottom: clamp(74px, 17vw, 128px);
+  }
   .db-floor {
-    width: 126%;
-    bottom: 2%;
+    left: 50%;
+    bottom: 0;
+    width: 172%;
   }
 }
 @media (max-width: 639px) {
   .db-floor {
-    width: 140%;
-    bottom: 3%;
-    opacity: 0.75;
+    width: 192%;
+    bottom: -1%;
   }
 }
 
@@ -290,6 +981,7 @@ html::-webkit-scrollbar-corner {
    Neon cards
    ========================================================================= */
 .db-neon-card {
+  border-radius: var(--radius-db-card);
   background: linear-gradient(
     170deg,
     var(--color-db-card-1) 0%,
@@ -334,172 +1026,8 @@ html::-webkit-scrollbar-corner {
 }
 
 /* =========================================================================
-   Buttons
+   Product screens
    ========================================================================= */
-.db-cta-btn {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background: linear-gradient(#f5382a 0%, #d8281b 55%, #b01d13 100%);
-  box-shadow:
-    0 0 34px #e2332473,
-    inset 0 1px #ffffff38;
-  transition:
-    transform 0.18s,
-    box-shadow 0.18s,
-    filter 0.18s;
-}
-.db-cta-btn:hover {
-  filter: brightness(1.07);
-  transform: translateY(-2px);
-  box-shadow:
-    0 0 48px #e233249e,
-    inset 0 1px #ffffff47;
-}
-.db-cta-btn:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: 4px;
-}
-.db-cta-btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(105deg, #fff0 38%, #ffffff5c 50%, #fff0 62%);
-  transform: translateX(-120%);
-  transition: transform 0.65s var(--ease-db);
-}
-.db-cta-btn:hover::after {
-  transform: translateX(120%);
-}
-
-/* =========================================================================
-   Header
-   ========================================================================= */
-.db-header {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  will-change: transform;
-  background: var(--color-db-black);
-  transition:
-    transform 0.42s var(--ease-db),
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-.db-header.is-stuck {
-  background: #010409d9;
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 14px 34px #00000073;
-}
-.db-header.is-hidden {
-  transform: translateY(-102%);
-}
-.db-header[data-nav-open="true"] {
-  transform: none;
-}
-.db-header nav a {
-  position: relative;
-}
-.db-header nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -6px;
-  height: 2px;
-  background: var(--color-db-red);
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  transition: transform 0.32s var(--ease-db);
-}
-.db-header nav a:hover::after,
-.db-header nav a:focus-visible::after {
-  transform: scaleX(1);
-}
-
-.db-mobile-nav {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 30;
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  visibility: hidden;
-  overflow: hidden;
-  background: var(--color-db-black);
-  border-bottom: 1px solid #ffffff17;
-  box-shadow: 0 26px 50px #0000008c;
-  transition:
-    grid-template-rows 0.28s var(--ease-db),
-    opacity 0.2s ease,
-    visibility 0s linear 0.28s;
-}
-.db-mobile-nav > div {
-  min-height: 0;
-  overflow: hidden;
-}
-[data-nav-open="true"] .db-mobile-nav {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  visibility: visible;
-  transition:
-    grid-template-rows 0.28s var(--ease-db),
-    opacity 0.2s ease;
-}
-@media (min-width: 1280px) {
-  .db-mobile-nav {
-    display: none;
-  }
-}
-.db-burger span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  border-radius: 2px;
-  background: #fff;
-  transition:
-    transform 0.26s var(--ease-db),
-    opacity 0.18s;
-}
-.db-burger span + span {
-  margin-top: 5px;
-}
-[data-nav-open="true"] .db-burger span:first-child {
-  transform: translateY(7px) rotate(45deg);
-}
-[data-nav-open="true"] .db-burger span:nth-child(2) {
-  opacity: 0;
-}
-[data-nav-open="true"] .db-burger span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
-}
-
-/* =========================================================================
-   Light-section furniture
-   ========================================================================= */
-.db-card-flat {
-  border: 1px solid var(--color-line);
-  background: #fff;
-  border-radius: 14px;
-  box-shadow:
-    0 1px 2px #0d15260f,
-    0 4px 12px #0d15260d;
-}
-@media (hover: hover) {
-  .db-card-flat ol li {
-    transition: background-color 0.2s ease;
-  }
-  .db-card-flat ol li:hover {
-    background: #f4f7fc;
-  }
-}
-
-/* product screens: always flat, always front-facing */
 .db-app-wrap {
   width: 100%;
   align-self: center;
@@ -509,7 +1037,7 @@ html::-webkit-scrollbar-corner {
   width: 100%;
   overflow: hidden;
   border: 1px solid var(--color-line);
-  border-radius: 12px;
+  border-radius: var(--radius-db-card);
   background: #fff;
   font-size: clamp(10px, 1.6cqi, 16px);
   box-shadow:
@@ -531,22 +1059,15 @@ html::-webkit-scrollbar-corner {
     0 22px 54px #1d6fe838;
 }
 
-.db-cta-band {
-  background:
-    radial-gradient(700px 340px at 14% 55%, #1d6fe857, #0000 66%),
-    linear-gradient(135deg, #0b1730 0%, #081026 55%, #0a0f22 100%);
-  box-shadow: 0 24px 60px #0b173047;
-}
-
 /* the clickable colour bars that expand a dashboard */
 .db-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-top: 26px;
   padding: 6px 10px 6px 0;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-db-control);
   background: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -581,12 +1102,12 @@ html::-webkit-scrollbar-corner {
   align-items: center;
   gap: 6px;
   font-family: var(--font-body);
-  font-size: clamp(13px, 0.9vw, 16px);
+  font-size: 14.5px;
   font-weight: 500;
   color: var(--color-brand);
   white-space: nowrap;
-  opacity: 0;
-  transform: translateX(-8px);
+  opacity: 0.55;
+  transform: translateX(-6px);
   transition:
     opacity 0.32s,
     transform 0.42s var(--ease-db);
@@ -618,13 +1139,12 @@ html::-webkit-scrollbar-corner {
 /* the showcase grid that collapses its copy when a dashboard expands */
 .db-showcase {
   display: grid;
-  gap: 40px;
+  gap: var(--db-gap-lg);
   align-items: center;
 }
 @media (min-width: 1024px) {
   .db-showcase {
     grid-template-columns: 0.78fr 1.22fr;
-    gap: 56px;
     transition: grid-template-columns 0.62s var(--ease-db);
   }
   .db-showcase[data-expanded="true"] {
@@ -886,14 +1406,572 @@ html::-webkit-scrollbar-corner {
    ========================================================================= */
 .db-anim {
   opacity: 0;
-  transform: translateY(26px);
+  transform: translateY(22px);
 }
 .db-anim.is-in {
   opacity: 1;
   transform: none;
   transition:
-    opacity 0.75s ease,
-    transform 0.85s var(--ease-db);
+    opacity 0.7s ease,
+    transform 0.8s var(--ease-db);
+}
+
+/* =========================================================================
+   Inner page band
+
+   The dark opener every inner page shares: the homepage hero's own gradient
+   recipe at a shorter height, plus the data field below.
+   ========================================================================= */
+.db-page-band {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--color-db-black);
+  background-image:
+    radial-gradient(46% 88% at 96% 6%, #e2332421, #0000 62%),
+    radial-gradient(52% 74% at 76% 88%, #1226f029, #0000 70%),
+    linear-gradient(#04060e 0%, #010409 62%, #000 100%);
+}
+
+/* Where a dark band meets the light page, the join is marked by the brand's
+   own blue-to-red hairline — the one transition detail every page shares. */
+[data-surface="page"] + .db-page-band::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-brand) 0%, #8fa8ff 50%, var(--color-db-red) 100%);
+}
+
+.db-page-hero {
+  display: flex;
+  flex-direction: column;
+  /* two thirds of a screen, not all of it: an inner page exists to hand you
+     to its content, and a full-height opener just adds a dark empty room */
+  min-height: max(420px, min(72svh, 680px));
+}
+@media (max-height: 620px) {
+  .db-page-hero {
+    min-height: 400px;
+  }
+}
+
+/* --- the data field -------------------------------------------------------
+   Replaces the three full-bleed neon rails that used to cut straight through
+   the headline. Thin paths, a faint measured grid and a few data points,
+   masked away from the text column so type always sits on clean ground. */
+.db-heroart {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.db-heroart__grid {
+  position: absolute;
+  inset: -1px;
+  background-image:
+    linear-gradient(90deg, #ffffff0a 1px, #0000 1px),
+    linear-gradient(#ffffff08 1px, #0000 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: radial-gradient(120% 90% at 82% 50%, #000 0%, #0000 72%);
+  mask-image: radial-gradient(120% 90% at 82% 50%, #000 0%, #0000 72%);
+}
+.db-heroart__glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(38% 52% at 84% 74%, #1d6fe830, #0000 70%),
+    radial-gradient(26% 38% at 96% 12%, #e2332420, #0000 72%);
+}
+.db-heroart__paths {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* the left column is where the headline lives — keep it clear */
+  -webkit-mask-image: linear-gradient(100deg, #0000 0%, #0000 26%, #000 56%, #000 100%);
+  mask-image: linear-gradient(100deg, #0000 0%, #0000 26%, #000 56%, #000 100%);
+}
+@media (max-width: 1023px) {
+  /* stacked layout: the art sits under the type, so fade it from the top */
+  .db-heroart__paths {
+    -webkit-mask-image: linear-gradient(#0000 0%, #000 46%, #000 100%);
+    mask-image: linear-gradient(#0000 0%, #000 46%, #000 100%);
+  }
+  .db-heroart__grid {
+    -webkit-mask-image: radial-gradient(130% 70% at 70% 84%, #000 0%, #0000 74%);
+    mask-image: radial-gradient(130% 70% at 70% 84%, #000 0%, #0000 74%);
+  }
+}
+.db-heroart__dot {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+/* =========================================================================
+   Timeline
+   ========================================================================= */
+.db-spine {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: #ffffff17;
+  overflow: hidden;
+}
+.db-spine i {
+  position: absolute;
+  inset: 0 0 auto;
+  display: block;
+  height: 100%;
+  transform-origin: 50% 0;
+  background: linear-gradient(var(--color-brand), #8fa8ff 52%, var(--color-db-red));
+}
+.db-node {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 2px solid #4d5f88;
+  background: #04070f;
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+.db-node.is-lit {
+  border-color: #fff;
+  box-shadow:
+    0 0 0 4px #2e52ff2e,
+    0 0 14px #2e52ff94;
+}
+
+/* =========================================================================
+   Forms
+   ========================================================================= */
+.db-field-wrap {
+  position: relative;
+}
+.db-input {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-db-control);
+  background: #fff;
+  padding: 13px 14px 13px 42px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-ink);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.db-input--plain {
+  padding-left: 14px;
+}
+.db-input::placeholder {
+  color: #9aa7ba;
+}
+.db-input:hover {
+  border-color: #c2cddd;
+}
+.db-input:focus {
+  outline: none;
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 3px #1d6fe82e;
+}
+.db-input[aria-invalid="true"] {
+  border-color: var(--color-db-red);
+  box-shadow: 0 0 0 3px #e2332426;
+}
+.db-field-icon {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 17px;
+  height: 17px;
+  color: #93a1b5;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+.db-field-wrap:focus-within .db-field-icon {
+  color: var(--color-brand);
+}
+
+/* contact channel rows on the dark band */
+.db-channel {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s var(--ease-db);
+}
+@media (hover: hover) {
+  .db-channel:hover {
+    transform: translateX(4px);
+    border-color: #33509b;
+    background: #ffffff12;
+  }
+}
+
+/* =========================================================================
+   FAQ accordion
+
+   Native <details> so it works without JavaScript, is keyboard accessible by
+   default and cannot desync from React state. Rows are hairline-divided
+   inside one card rather than a card per question.
+   ========================================================================= */
+.db-faq {
+  position: relative;
+  scroll-margin-top: calc(var(--db-header-h) + 24px);
+}
+.db-faq + .db-faq {
+  border-top: 1px solid var(--color-line);
+}
+.db-faq summary::-webkit-details-marker {
+  display: none;
+}
+.db-faq summary {
+  position: relative;
+  transition: color 0.2s ease;
+}
+.db-faq summary:hover {
+  color: var(--color-brand);
+}
+.db-faq summary:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: -3px;
+  border-radius: 4px;
+}
+/* the active marker: a short blue rule that grows down the open row */
+.db-faq::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(var(--color-brand), var(--color-db-red));
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  transition: transform 0.36s var(--ease-db);
+}
+.db-faq[open]::before {
+  transform: scaleY(1);
+}
+.db-faq__icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--color-line);
+  color: var(--color-brand);
+  transition:
+    transform 0.36s var(--ease-db),
+    border-color 0.24s ease,
+    background-color 0.24s ease;
+}
+.db-faq[open] .db-faq__icon {
+  transform: rotate(45deg);
+  border-color: var(--color-db-red);
+  background: #e233240f;
+  color: var(--color-db-red);
+}
+.db-faq__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.36s var(--ease-db);
+}
+.db-faq[open] .db-faq__body {
+  grid-template-rows: 1fr;
+}
+.db-faq__body > * {
+  min-height: 0;
+  overflow: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .db-faq__body {
+    transition: none;
+  }
+}
+
+/* the details/summary used for "read more" */
+.db-more summary::-webkit-details-marker {
+  display: none;
+}
+.db-more summary:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* =========================================================================
+   Office map
+   ========================================================================= */
+.db-map {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: var(--radius-db-panel);
+  border: 1px solid #ffffff1f;
+  background: #05070d;
+  aspect-ratio: 16 / 10;
+  box-shadow:
+    0 0 0 1px #1226f01f,
+    0 30px 70px #00000073;
+}
+@media (max-width: 1023px) {
+  .db-map {
+    aspect-ratio: 3 / 2;
+  }
+}
+@media (max-width: 639px) {
+  .db-map {
+    aspect-ratio: 4 / 3;
+  }
+}
+/* Keep the lazy-loaded MapLibre stylesheet from changing this to relative. */
+.db-map > .db-map__canvas {
+  position: absolute;
+  inset: 0;
+  filter: saturate(0.85) contrast(1.06);
+}
+.db-map__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(64% 64% at 50% 50%, #0000 42%, #05070db3 100%),
+    linear-gradient(#0000 62%, #05070d94 100%);
+}
+.db-map__fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(58% 58% at 50% 46%, #1226f038, #0000 72%),
+    radial-gradient(46% 46% at 76% 78%, #e2332433, #0000 72%), #05070d;
+}
+.db-map__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(90deg, #ffffff12 1px, #0000 1px),
+    linear-gradient(#ffffff0f 1px, #0000 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(70% 70% at 50% 50%, #000, #0000 88%);
+  mask-image: radial-gradient(70% 70% at 50% 50%, #000, #0000 88%);
+}
+.db-pin {
+  position: relative;
+  width: 22px;
+  height: 22px;
+}
+.db-pin__dot {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: var(--color-db-red);
+  box-shadow:
+    0 0 0 3px #ffffffe0,
+    0 0 18px #e23324cc;
+}
+.db-pin__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #e2332480;
+  animation: db-pin-pulse 2.8s var(--ease-db) infinite;
+}
+@keyframes db-pin-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.85;
+  }
+  70%,
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .db-pin__ring {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+.db-map .maplibregl-ctrl-attrib {
+  background: #05070dcc;
+  color: #ffffff8c;
+  font-size: 11px;
+}
+.db-map .maplibregl-ctrl-attrib a {
+  color: #9fb4d8;
+}
+.db-map .maplibregl-ctrl-bottom-right {
+  z-index: 3;
+}
+.db-map .maplibregl-cooperative-gesture-screen {
+  background: #05070dd9;
+}
+/* keyless OpenStreetMap embed, darkened to match — used only if MapLibre fails */
+.db-map__embed {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  filter: invert(0.92) hue-rotate(185deg) saturate(0.7) brightness(0.95) contrast(1.05);
+}
+
+/* =========================================================================
+   Leadership
+
+   Two across on desktop. The portraits are 268-320px square at source, so the
+   frame is capped at 224px wide — big enough to carry the card, small enough
+   that nothing is ever upscaled into softness. Below 560px the photograph
+   becomes a byline circle and the biography runs the full card width.
+   ========================================================================= */
+.db-leaders {
+  display: grid;
+  gap: clamp(16px, 1.8vw, 26px);
+}
+@media (min-width: 900px) {
+  .db-leaders {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.db-leader {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  grid-template-areas:
+    "photo head"
+    "body  body";
+  align-items: center;
+  gap: 0 16px;
+  padding: 18px;
+  overflow: hidden;
+}
+.db-leader__photo {
+  grid-area: photo;
+}
+.db-leader__head {
+  grid-area: head;
+}
+.db-leader__body {
+  grid-area: body;
+  padding-top: 16px;
+}
+.db-portrait {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, #16264f 0%, #0b1330 55%, #060b1b 100%);
+}
+.db-portrait img {
+  transition: transform 0.7s var(--ease-db);
+}
+@media (hover: hover) {
+  .db-leader:hover .db-portrait img {
+    transform: scale(1.035);
+  }
+}
+
+@media (max-width: 559px) {
+  .db-leader__photo {
+    width: 112px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+}
+@media (min-width: 560px) {
+  .db-leader {
+    grid-template-columns: clamp(158px, 25vw, 224px) minmax(0, 1fr);
+    grid-template-areas:
+      "photo head"
+      "photo body";
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+  }
+  .db-leader__head {
+    align-self: start;
+  }
+  .db-leader__photo {
+    grid-row: 1 / -1;
+    align-self: stretch;
+    min-height: clamp(198px, 24vw, 272px);
+  }
+  /* a hint of the brand across the foot of the portrait */
+  .db-leader__photo::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-brand), var(--color-db-red));
+  }
+  .db-leader__head {
+    padding: clamp(18px, 1.9vw, 28px) clamp(18px, 1.9vw, 28px) 0;
+  }
+  .db-leader__body {
+    padding: 14px clamp(18px, 1.9vw, 28px) clamp(18px, 1.9vw, 28px);
+  }
+}
+
+/* =========================================================================
+   The 45-years mark in the About hero
+   ========================================================================= */
+.db-years {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  padding-left: clamp(18px, 2vw, 30px);
+  border-left: 2px solid transparent;
+  border-image: linear-gradient(180deg, var(--color-brand), #8fa8ff 48%, var(--color-db-red)) 1;
+}
+.db-years__figure {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.14em;
+  font-family: var(--font-display);
+  font-size: clamp(62px, 7.4vw, 118px);
+  line-height: 0.84;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.db-years__figure em {
+  font-style: normal;
+  font-size: 0.3em;
+  letter-spacing: 0.03em;
+  color: var(--color-db-red);
+  text-transform: uppercase;
+}
+.db-years__label {
+  margin: 0;
+  max-width: 30ch;
+  color: #ffffff8c;
+}
+.db-years__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 4px 0 0;
+  padding: 14px 0 0;
+  list-style: none;
+  border-top: 1px solid #ffffff1a;
+  width: 100%;
+  max-width: 34ch;
+}
+.db-years__facts b {
+  color: #fff;
+  font-weight: 700;
 }
 
 /* =========================================================================
@@ -910,10 +1988,9 @@ html::-webkit-scrollbar-corner {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .db-runners {
-    display: none;
-  }
-  .db-globe-ring {
+  .db-runners,
+  .db-globe-ring,
+  .db-heroart .db-run {
     display: none;
   }
   .db-anim {

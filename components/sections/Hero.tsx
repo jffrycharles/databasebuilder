@@ -15,22 +15,31 @@ export default function Hero() {
   const hintRef = useRef<HTMLSpanElement>(null);
   const played = useRef(false);
 
-  /* Hold the hero still until the loader has handed the globe over. Applied
-     from the client so a no-JS render is never left hidden. */
+  /* Hold the hero only while the loader is still on screen — and never on a
+     remount after it has landed. Adding the hold unconditionally was what left
+     the heading, buttons and globe stuck at opacity 0 when navigating back to
+     Home, because the entrance below would then decline to replay. */
   useIsoLayoutEffect(() => {
-    if (!root.current || prefersReducedMotion()) return;
-    root.current.classList.add("db-hero-hold");
-  }, []);
+    const el = root.current;
+    if (!el || prefersReducedMotion()) return;
+    if (ready) el.classList.remove("db-hero-hold");
+    else el.classList.add("db-hero-hold");
+  }, [ready]);
 
   useEffect(() => {
     const el = root.current;
-    if (!el || !ready || played.current) return;
-    played.current = true;
+    if (!el || !ready) return;
 
-    if (prefersReducedMotion()) {
-      el.classList.remove("db-hero-hold");
-      return;
+    // Whatever happens below, the hero ends up visible. An entrance that never
+    // starts must not be able to hide the page's own content.
+    const show = () => el.classList.remove("db-hero-hold");
+    const safety = window.setTimeout(show, 1400);
+
+    if (prefersReducedMotion() || played.current) {
+      show();
+      return () => window.clearTimeout(safety);
     }
+    played.current = true;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
@@ -62,7 +71,11 @@ export default function Hero() {
       }
     }, el);
 
-    return () => ctx.revert();
+    return () => {
+      window.clearTimeout(safety);
+      ctx.revert();
+      show(); // reverting inline styles must not re-hide the hero
+    };
   }, [ready]);
 
   return (
@@ -72,7 +85,7 @@ export default function Hero() {
         <div>
           <h1
             data-hero-reveal
-            className="font-display mb-[clamp(22px,3vw,40px)] text-[clamp(32px,3.62vw,62px)] leading-[1.05] tracking-[.005em] text-white uppercase"
+            className="db-display mb-[clamp(20px,2.6vw,36px)] text-white"
           >
             A Simple Alternative
             <br />
@@ -80,18 +93,18 @@ export default function Hero() {
           </h1>
           <p
             data-hero-reveal
-            className="font-body mb-[clamp(22px,3vw,40px)] text-[clamp(16px,1.65vw,27px)] leading-[1.42] font-light text-[#f2f5fb]"
+            className="font-body mb-[clamp(22px,2.8vw,38px)] text-[clamp(16px,1.5vw,24px)] leading-[1.42] font-light text-[#f2f5fb]"
           >
             Sales Software,
             <br />
             Designed by Salespeople
           </p>
           <div data-hero-reveal>
-            <CtaButton className="text-[clamp(18px,2.05vw,34px)]" />
+            <CtaButton size="lg">Start 7-Day Free Trial</CtaButton>
           </div>
           <p
             data-hero-reveal
-            className="font-ui border-db-cyan text-db-cyan mt-[clamp(22px,3vw,34px)] border-l-[3px] pl-4 text-[clamp(14px,1.35vw,22px)] font-light tracking-[.01em]"
+            className="font-ui border-db-cyan text-db-cyan mt-[clamp(20px,2.4vw,30px)] border-l-[3px] pl-4 text-[clamp(14px,1.15vw,19px)] font-light tracking-[.01em]"
           >
             No long-term commitment required
           </p>

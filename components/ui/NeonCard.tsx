@@ -89,30 +89,23 @@ function CardArt({ art }: { art: HeroCard["art"] }) {
 }
 
 export default function NeonCard({ card }: { card: HeroCard }) {
-  const label = "font-ui text-center text-[clamp(13px,2.3vw,22px)] leading-[1.16] font-semibold text-white sm:text-[clamp(13px,1.55vw,26px)]";
+  const label =
+    "font-ui text-center text-[clamp(20px,2.6vw,22px)] leading-[1.18] font-medium tracking-[.01em] text-white sm:text-[clamp(20px,1.55vw,26px)]";
   return (
     <div
-      className={`db-neon-card flex flex-col items-center rounded-[14px] px-[clamp(6px,.6vw,10px)] pt-[clamp(12px,1.6vw,26px)] pb-[clamp(14px,1.8vw,28px)] ${
+      className={`db-neon-card flex flex-col items-center rounded-[14px] px-[clamp(10px,1vw,18px)] pt-[clamp(12px,1.6vw,26px)] pb-[clamp(14px,1.8vw,28px)] ${
         card.alert ? "db-neon-card--alert" : ""
       }`}
     >
-      <div className={`min-h-[2.35em] ${label}`}>
-        {card.top.map((line) => (
-          <span key={line} className="block">
-            {line}
-          </span>
-        ))}
-      </div>
-      <div className="my-[clamp(10px,1.6vw,26px)] flex h-[clamp(52px,7.4vw,124px)] items-center justify-center [&>svg]:h-full [&>svg]:w-auto">
+      <h2 className={`m-0 flex min-h-[2.3em] items-center justify-center ${label}`}>
+        {card.title}
+      </h2>
+      <div className="my-[clamp(12px,1.7vw,24px)] flex h-[clamp(50px,6.8vw,112px)] items-center justify-center [&>svg]:h-full [&>svg]:w-auto">
         <CardArt art={card.art} />
       </div>
-      <div className={`mt-auto ${label}`}>
-        {card.bottom.map((line) => (
-          <span key={line} className="block">
-            {line}
-          </span>
-        ))}
-      </div>
+      <p className="font-body m-0 mt-auto min-h-[2.9em] max-w-[24ch] text-center text-[clamp(16px,1.05vw,18px)] leading-[1.45] text-balance text-white/80">
+        {card.description}
+      </p>
     </div>
   );
 }

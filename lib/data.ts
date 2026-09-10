@@ -5,7 +5,7 @@ export const SITE = {
   tagline: "Sales Solution",
   title: "DatabaseBuilder — A Simple Alternative to Your Overpriced CRM",
   description:
-    "Sales software designed by salespeople. Advanced features at no additional cost, call recording, email and SMS, and live human support.",
+    "Sales software designed by salespeople. Advanced features, call recording, email and two-way SMS, and live human support. Start a 7-day free trial.",
   url: "https://www.databasebuilder.com",
   register:
     "https://app.databasebuilder.com:446/Account/Register?id=9edcb5d7-b24a-44cc-80be-58cb47a7a2fc",
@@ -13,60 +13,78 @@ export const SITE = {
 } as const;
 
 export const NAV_LINKS = [
-  { label: "Home", href: "#top" },
-  { label: "Our Story", href: "#why" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "FAQs", href: "#features" },
-  { label: "Contact Us", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "Our Story", href: "/about" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Contact Us", href: "/contact" },
 ] as const;
 
 /* ---- hero -------------------------------------------------------------- */
 export type HeroCard = {
-  top: string[];
-  bottom: string[];
+  title: string;
+  description: string;
   art: "checklist" | "dialer" | "messaging" | "support";
   alert?: boolean;
 };
 
 export const HERO_CARDS: HeroCard[] = [
-  { top: ["Advanced", "Features"], bottom: ["At No", "Additional Cost"], art: "checklist" },
-  { top: ["Click To Dial", "With Automatic"], bottom: ["Call", "Recording"], art: "dialer" },
-  { top: ["Email & SMS"], bottom: ["Messaging", "Included"], art: "messaging" },
-  { top: ["Live", "Support"], bottom: ["Not an AI", "Chatbot"], art: "support", alert: true },
+  {
+    title: "Advanced features, included",
+    description: "All the essentials. No extra feature fees.",
+    art: "checklist",
+    alert: true,
+  },
+  {
+    title: "Click to dial",
+    description: "Automatic call recording included.",
+    art: "dialer",
+  },
+  {
+    title: "Email & two-way SMS",
+    description: "Build your own email and text campaigns.",
+    art: "messaging",
+  },
+  {
+    title: "Live support",
+    description: "Real human support, not AI.",
+    art: "support",
+  },
 ];
 
 /* ---- why --------------------------------------------------------------- */
 export const WHY_PARAGRAPHS = [
-  "A productive CRM does not have to cost a fortune to be effective.",
-  "DatabaseBuilder is a simple-to-use CRM offered at a reasonable price, designed for salespeople by salespeople.",
-  "Our all-in-one pricing keeps the product easy to understand, without the complicated features the average salesperson is unlikely to use.",
-  "We build the features you want to see, not the features a software developer wants you to see.",
+  "A productive CRM does not need to cost a fortune to be effective. DatabaseBuilder.com is an easy-to-use CRM system, offered at a reasonable price, and designed for salespeople by salespeople.",
+  'Our "all-in-one" pricing makes our product easy to understand without all the complicated features that the average person is unlikely to use.',
+  "We provide all the features you want to see, not features a software developer wants you to use.",
+  "Give DatabaseBuilder.com a try and start a free trial today.",
 ];
 
 /* ---- feature checklist -------------------------------------------------- */
-export type ChecklistItem = { icon: IconName; label: string };
+export type ChecklistItem = { icon: IconName; label: string; featured?: boolean };
 
 export const CHECKLIST: ChecklistItem[] = [
-  { icon: "phone", label: "Click to dial calling" },
-  { icon: "rec", label: "Automatic call recording" },
-  { icon: "user", label: "Simple lead management with customizable data fields" },
-  { icon: "swap", label: "Import/Export functionality for all your data" },
-  { icon: "shield", label: "Safe and secure security controls" },
-  { icon: "share", label: "Shareable data for your sales team" },
-  { icon: "mail", label: "Email and two-way SMS communications included" },
-  { icon: "voicemail", label: "Auto voicemail library" },
-  { icon: "chat", label: "Sales talking points" },
-  { icon: "chart", label: "Customizable features and KPI dashboard" },
-  { icon: "api", label: "Scalable, with API access" },
-  { icon: "video", label: "Integrated video conferencing email invitations" },
-  { icon: "pin", label: "Local presence" },
-  { icon: "headset", label: "Whisper coaching" },
-  { icon: "monitor", label: "Real-time call monitoring" },
-  { icon: "bell", label: "Real-time agent notification and call transfer" },
-  { icon: "user", label: "Live human customer support when you need it" },
-  { icon: "tag", label: "No long-term commitment" },
-  { icon: "card", label: "Billed monthly" },
-  { icon: "clock", label: "30-day cancellation" },
+  { icon: "phone", label: "Click to dial calling - included", featured: true },
+  { icon: "rec", label: "Automatic call recording - included", featured: true },
+  { icon: "user", label: "Simple lead management with customizable data fields", featured: true },
+  { icon: "swap", label: "Import/Export functionality for all your data", featured: true },
+  { icon: "video", label: "Integrated video conferencing email invitations", featured: true },
+  { icon: "voicemail", label: "Auto voicemail library", featured: true },
+  { icon: "shield", label: "Safe and secure platform" },
+  { icon: "share", label: "Shareable data for your team" },
+  { icon: "mail", label: "Email and two-way SMS included" },
+  { icon: "chat", label: "Talking Points functionality" },
+  { icon: "chart", label: "Customizable KPI dashboard" },
+  { icon: "api", label: "Custom integration with API access" },
+  { icon: "pin", label: "Local Presence calling" },
+  { icon: "headset", label: "Whisper coaching", featured: true },
+  { icon: "monitor", label: "Real-time call monitoring", featured: true },
+  { icon: "bell", label: "Real-time agent call transfer with popup notification", featured: true },
+  { icon: "user", label: "Customer profile popup when transferred", featured: true },
+  { icon: "headset", label: "Live customer support when you need it" },
+  { icon: "tag", label: "No long-term contract or commitment" },
+  { icon: "clock", label: "Pay as you go with 30-day cancellation" },
+  { icon: "share", label: "Scalable for most size businesses" },
 ];
 
 export type ValueCard = {
@@ -85,8 +103,6 @@ export const VALUE_CARDS: ValueCard[] = [
     tint: "#14b8a6",
     formats: [
       { label: "CSV", tint: "#16a34a" },
-      { label: "XLSX", tint: "#1d6fe8" },
-      { label: "JSON", tint: "#ea580c" },
     ],
   },
   {
@@ -218,25 +234,25 @@ export const FOOTER_COLUMNS: { title: string; links: { label: string; href: stri
   {
     title: "Product",
     links: [
-      { label: "Features", href: "#features" },
-      { label: "Pricing", href: "#pricing" },
-      { label: "Integrations", href: "#features" },
+      { label: "Features", href: "/#features" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Integrations", href: "/#features" },
     ],
   },
   {
     title: "Company",
     links: [
-      { label: "Our Story", href: "#why" },
-      { label: "Careers", href: "#contact" },
-      { label: "Contact Us", href: "#contact" },
+      { label: "Our Story", href: "/about" },
+      { label: "Leadership", href: "/about#leadership" },
+      { label: "Contact Us", href: "/contact" },
     ],
   },
   {
     title: "Resources",
     links: [
-      { label: "FAQs", href: "#features" },
-      { label: "Support", href: "#contact" },
-      { label: "Blog", href: "#why" },
+      { label: "FAQ", href: "/faq" },
+      { label: "History", href: "/about#history" },
+      { label: "Support", href: "/contact" },
     ],
   },
 ];
@@ -244,6 +260,4 @@ export const FOOTER_COLUMNS: { title: string; links: { label: string; href: stri
 export const SOCIALS: { icon: IconName; label: string; href: string }[] = [
   { icon: "fb", label: "Facebook", href: "https://www.facebook.com/profile.php?id=61554575739247" },
   { icon: "li", label: "LinkedIn", href: "https://www.linkedin.com/company/databasebuilder-com" },
-  { icon: "tw", label: "X", href: "#top" },
-  { icon: "yt", label: "YouTube", href: "#top" },
 ];

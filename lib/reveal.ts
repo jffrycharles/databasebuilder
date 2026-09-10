@@ -42,6 +42,11 @@ export function observeReveal(el: Element | null) {
   }
   queue.add(el);
   io.observe(el);
+  // belt and braces: anything already on screen when the page settles is shown
+  window.setTimeout(() => {
+    const box = el.getBoundingClientRect();
+    if (box.top < window.innerHeight && box.bottom > 0) el.classList.add("is-in");
+  }, 1200);
   return () => {
     io.unobserve(el);
     queue.delete(el);

@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import SmartLink from "@/components/ui/SmartLink";
 import Globe from "@/components/ui/Globe";
 import Logo from "@/components/ui/Logo";
 import { NAV_LINKS, SITE } from "@/lib/data";
 
 export default function Header() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLElement>(null);
 
@@ -40,6 +43,8 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => setOpen(false), [pathname]);
+
   /* close the panel on outside click or Escape */
   useEffect(() => {
     if (!open) return;
@@ -62,8 +67,7 @@ export default function Header() {
     };
   }, [open]);
 
-  const navLink =
-    "font-ui text-[clamp(15px,1.1vw,19px)] whitespace-nowrap text-white uppercase tracking-[.055em] transition-colors hover:text-db-red-hot";
+  const current = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   return (
     <header
@@ -72,22 +76,31 @@ export default function Header() {
       data-nav-open={open ? "true" : "false"}
     >
       <div className="relative mx-auto flex max-w-[1640px] items-center gap-2 sm:gap-11">
-        <a href="#top" aria-label={`${SITE.name} home`} className="flex shrink-0 items-center gap-2 sm:gap-3.5">
+        <SmartLink
+          href="/"
+          aria-label={`${SITE.name} home`}
+          className="flex shrink-0 items-center gap-2 sm:gap-3.5"
+        >
           <Globe
-            className="block h-[42px] w-[42px] shrink-0 sm:h-[64px] sm:w-[64px]"
+            className="hidden h-[42px] w-[42px] shrink-0 min-[360px]:block sm:h-[64px] sm:w-[64px]"
             rings={11}
             density={17}
             spin={26}
           />
           <Logo size={20} className="sm:hidden" />
           <Logo size={30} className="hidden sm:block" />
-        </a>
+        </SmartLink>
 
-        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-[clamp(16px,1.6vw,38px)] xl:flex">
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-[clamp(18px,1.7vw,38px)] xl:flex">
           {NAV_LINKS.map((l) => (
-            <a key={l.label} href={l.href} className={navLink}>
+            <SmartLink
+              key={l.label}
+              href={l.href}
+              aria-current={current(l.href) ? "page" : undefined}
+              className="db-nav-link"
+            >
               {l.label}
-            </a>
+            </SmartLink>
           ))}
         </nav>
 
@@ -99,7 +112,7 @@ export default function Header() {
             e.stopPropagation();
             setOpen((v) => !v);
           }}
-          className="ml-auto cursor-pointer p-1.5 xl:hidden"
+          className="-mr-2 ml-auto grid h-11 w-11 shrink-0 cursor-pointer place-items-center xl:hidden"
         >
           <span className="sr-only">Menu</span>
           <span className="db-burger block" aria-hidden="true">
@@ -109,35 +122,30 @@ export default function Header() {
           </span>
         </button>
 
-        <div className="flex shrink-0 items-center gap-2.5 sm:gap-[26px] xl:ml-auto">
-          <a href={SITE.login} className={`hidden sm:inline ${navLink}`}>
+        <div className="flex shrink-0 items-center gap-4 sm:gap-[26px] xl:ml-auto">
+          <a href={SITE.login} className="db-nav-link hidden sm:inline">
             Sign In
           </a>
-          <a
-            href={SITE.register}
-            className="font-ui bg-db-red hover:bg-db-red-hot rounded-[5px] px-3 py-2 text-[14px] font-medium tracking-[.055em] text-white uppercase transition hover:-translate-y-px"
-          >
+          <a href={SITE.register} className="db-btn db-btn--primary db-btn--sm">
             Try Free
           </a>
         </div>
       </div>
 
       <nav id="db-mobile-nav" className="db-mobile-nav" aria-hidden={!open}>
-        <div className="mx-auto flex w-full max-w-[1640px] flex-col gap-1 px-4 pt-3 pb-5 sm:px-10">
+        <div className="mx-auto flex w-full max-w-[1640px] flex-col px-4 pt-2 pb-5 sm:px-10">
           {NAV_LINKS.map((l) => (
-            <a
+            <SmartLink
               key={l.label}
               href={l.href}
+              aria-current={current(l.href) ? "page" : undefined}
               onClick={() => setOpen(false)}
-              className="font-ui py-2 text-[19px] tracking-[.055em] text-white uppercase"
+              className="db-mobile-link"
             >
               {l.label}
-            </a>
+            </SmartLink>
           ))}
-          <a
-            href={SITE.login}
-            className="font-ui py-2 text-[19px] tracking-[.055em] text-white uppercase sm:hidden"
-          >
+          <a href={SITE.login} className="db-mobile-link sm:hidden">
             Sign In
           </a>
         </div>
