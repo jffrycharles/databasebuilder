@@ -94,7 +94,7 @@ export default function NeonCard({ card }: { card: HeroCard }) {
   return (
     <div
       className={`db-neon-card flex flex-col items-center rounded-[14px] px-[clamp(10px,1vw,18px)] pt-[clamp(12px,1.6vw,26px)] pb-[clamp(14px,1.8vw,28px)] ${
-        card.alert ? "db-neon-card--alert" : ""
+        card.tone === "red" ? "db-neon-card--red" : ""
       }`}
     >
       <h2 className={`m-0 flex min-h-[2.3em] items-center justify-center ${label}`}>

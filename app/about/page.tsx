@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import AboutHero from "@/components/sections/about/AboutHero";
 import OriginStory from "@/components/sections/about/OriginStory";
-import QuoteBand from "@/components/sections/about/QuoteBand";
 import Timeline from "@/components/sections/about/Timeline";
+import QuoteBand from "@/components/sections/about/QuoteBand";
 import Leadership from "@/components/sections/about/Leadership";
+import ArchiveLinks from "@/components/sections/about/ArchiveLinks";
 import CtaBand from "@/components/sections/CtaBand";
 
 export const metadata: Metadata = {
@@ -20,16 +21,17 @@ export const metadata: Metadata = {
   },
 };
 
-/* Three acts, three surfaces: the dark opener, the story on the light page,
-   the history on a dark band, then the people and the close back on light. */
 export default function AboutPage() {
   return (
-    <main id="main">
+    <main>
+      {/* Order of the story: why it exists, who built it, the founder in his
+          own words, then the year-by-year and the archive. */}
       <AboutHero />
       <OriginStory />
+      <Leadership />
       <QuoteBand />
       <Timeline />
-      <Leadership />
+      <ArchiveLinks />
       <CtaBand id="trial" />
     </main>
   );

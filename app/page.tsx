@@ -10,7 +10,7 @@ import CtaBand from "@/components/sections/CtaBand";
    animate or respond to input opt into the client. */
 export default function Page() {
   return (
-    <main id="main">
+    <main>
       <Hero />
       <WhySection />
       <FeaturesSection />

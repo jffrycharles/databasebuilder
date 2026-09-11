@@ -5,12 +5,8 @@ import PageHero from "@/components/ui/PageHero";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { ABOUT } from "@/lib/about";
 
-/**
- * The years mark. It used to be a number floating in a pulsing radial blob;
- * now it hangs off a blue-to-red rule that ties it back to the headline, and
- * it carries two supporting facts so the figure is evidence rather than
- * decoration.
- */
+/** One number instead of a specification panel: the 45 years counts up once,
+    then breathes. Everything else in the hero is type. */
 function YearsMark() {
   const root = useRef<HTMLDivElement>(null);
   const num = useRef<HTMLSpanElement>(null);
@@ -23,13 +19,18 @@ function YearsMark() {
       const obj = { v: 0 };
       gsap.to(obj, {
         v: 45,
-        duration: 1.5,
+        duration: 1.6,
         ease: "power2.out",
-        delay: 0.35,
+        delay: 0.25,
         onUpdate: () => {
           el.textContent = String(Math.round(obj.v));
         },
       });
+      gsap.fromTo(
+        ".db-years__glow",
+        { opacity: 0.35, scale: 0.94 },
+        { opacity: 0.7, scale: 1.04, duration: 3.4, ease: "sine.inOut", repeat: -1, yoyo: true },
+      );
     }, root);
 
     return () => {
@@ -40,24 +41,14 @@ function YearsMark() {
 
   return (
     <div ref={root} className="db-years">
+      <span className="db-years__glow" aria-hidden="true" />
       <p className="db-years__figure">
         <span ref={num}>45</span>
         <em>yrs</em>
       </p>
-      <p className="db-years__label db-body">
+      <p className="db-years__label">
         of selling behind the product — most of it before CRMs existed
       </p>
-      <ul className="db-years__facts db-sm text-white/55">
-        <li>
-          <b>20M</b> records
-        </li>
-        <li>
-          <b>1</b> all-in-one price
-        </li>
-        <li>
-          <b>No</b> setup fees
-        </li>
-      </ul>
     </div>
   );
 }

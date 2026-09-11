@@ -4,74 +4,107 @@ import Label from "@/components/ui/Label";
 import { Icon } from "@/components/ui/Icon";
 import { ORIGIN, OWNERSHIP } from "@/lib/about";
 
-/* The story reads as a piece of writing: one measured column at a comfortable
-   line length, a lead paragraph a step up from the body, and the numbers on a
-   hairline rail beside it rather than boxed into a card of their own. */
+/* Three stacked movements rather than one crowded two-column block:
+
+   1. a masthead — the heading on the left, the opening paragraph facing it,
+   2. the three figures, full width, at the largest type on the page,
+   3. the rest of the letter, with the ownership panel beside it.
+
+   Each one is allowed to end on its own line, which is what stops the section
+   reading as two columns of unequal length. */
 export default function OriginStory() {
   return (
-    <section id="origin" data-surface="page" className="db-section bg-page">
-      <div className="db-shell db-shell--narrow">
-        <div className="grid gap-[var(--db-gap-lg)] lg:grid-cols-[1.25fr_0.75fr]">
-          {/* the letter, in the CEO's own framing */}
+    <section id="origin" className="bg-page db-section db-section--airy">
+      <div className="db-shell">
+        {/* ---- masthead ---- */}
+        <div className="grid items-start gap-[clamp(26px,3.8vw,80px)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
           <div>
             <Reveal>
-              <Label className="mb-4">Where it started</Label>
+              <Label className="mb-6">Origin</Label>
             </Reveal>
-
             <Reveal delay={70}>
-              <p className="db-dropcap text-ink max-w-[58ch] text-[var(--db-lede)] leading-[1.62] font-light">
-                {ORIGIN.lead}
-              </p>
+              <h2 className="db-origin__title max-w-[10ch]">
+                Where it <span className="text-db-red">started</span>
+              </h2>
             </Reveal>
-
             <Reveal delay={130}>
-              <div className="db-prose text-ink-2 mt-7 max-w-[58ch]">
-                {ORIGIN.body.map((p) => (
-                  <p key={p} className="db-body">
-                    {p}
-                  </p>
-                ))}
-              </div>
+              <span className="db-rule mt-8 block" />
             </Reveal>
           </div>
 
-          {/* the numbers, on a rail */}
-          <Reveal delay={90} className="lg:pt-1.5">
-            <span className="db-rule db-rule--sm mb-6" />
-            <dl className="db-rows m-0 grid">
-              {ORIGIN.stats.map((s) => (
-                <div key={s.label} className="grid gap-1 py-5 first:pt-0 last:pb-0">
-                  <dt className="font-body text-ink text-[clamp(30px,2.7vw,42px)] leading-none font-bold tracking-[-.02em]">
-                    <CountUp value={s.value} />
-                    <span className="text-db-red">{s.suffix}</span>
-                  </dt>
-                  <dd className="db-sm text-ink-2 m-0 max-w-[26ch]">{s.label}</dd>
-                </div>
-              ))}
-            </dl>
+          <Reveal delay={160}>
+            <p className="db-dropcap db-origin__lead">{ORIGIN.lead}</p>
           </Reveal>
         </div>
 
-        {/* what the story means for the customer's own data */}
-        <Reveal delay={60} className="mt-[clamp(40px,4vw,72px)]">
-          <div className="border-line grid gap-[var(--db-gap)] border-t pt-[clamp(28px,3vw,48px)] lg:grid-cols-[0.9fr_1.1fr]">
-            <div>
-              <h2 className="db-h2 text-ink max-w-[16ch]">{OWNERSHIP.title}</h2>
-              <span className="db-rule mt-6" />
-            </div>
-            <div>
-              <p className="db-body text-ink-2 max-w-[58ch]">{OWNERSHIP.body}</p>
-              <ul className="db-rows m-0 mt-6 grid list-none p-0">
+        {/* ---- the three figures ---- */}
+        <Reveal delay={90}>
+          <dl className="border-line mt-[clamp(46px,5.5vw,96px)] mb-0 grid overflow-hidden rounded-[20px] border bg-white sm:grid-cols-3">
+            {ORIGIN.stats.map((s, i) => (
+              <div
+                key={s.label}
+                className={`p-[clamp(24px,2.6vw,44px)] ${
+                  i ? "border-line border-t sm:border-t-0 sm:border-l" : ""
+                }`}
+              >
+                <dt className="db-stat__figure">
+                  <CountUp value={s.value} />
+                  <span className="text-db-red">{s.suffix}</span>
+                </dt>
+                <dd className="text-ink-2 m-0 mt-4 max-w-[22ch] text-[clamp(14px,0.92vw,16.5px)] leading-[1.55]">
+                  {s.label}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
+
+        {/* ---- the rest of the letter, and what it means for your data ---- */}
+        <div className="mt-[clamp(46px,5.5vw,100px)] grid items-start gap-[clamp(38px,5vw,92px)] lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)]">
+          <div>
+            <Reveal>
+              <div className="text-ink-2 max-w-[62ch] space-y-5 text-[clamp(15.5px,0.98vw,18px)] leading-[1.72]">
+                {ORIGIN.body.map((p) => (
+                  <p key={p}>{p}</p>
+                ))}
+              </div>
+            </Reveal>
+
+            <Reveal delay={120} className="mt-[clamp(34px,3.6vw,60px)]">
+              <blockquote className="db-pullquote">
+                <p className="font-body text-ink m-0 max-w-[26ch] text-[clamp(20px,1.75vw,31px)] leading-[1.24] font-bold tracking-[-.022em]">
+                  {ORIGIN.pullQuote}
+                </p>
+                <cite className="text-ink-3 mt-4 block text-[13.5px] not-italic">
+                  From the letter to our customers
+                </cite>
+              </blockquote>
+            </Reveal>
+          </div>
+
+          <Reveal delay={90}>
+            <div className="bg-navy rounded-[20px] p-[clamp(26px,2.6vw,44px)] text-white">
+              <h3 className="font-body m-0 max-w-[20ch] text-[clamp(20px,1.6vw,28px)] leading-[1.2] font-bold tracking-[-.018em]">
+                {OWNERSHIP.title}
+              </h3>
+              <p className="mt-4 max-w-[48ch] text-[clamp(14px,0.9vw,16px)] leading-[1.66] text-white/70">
+                {OWNERSHIP.body}
+              </p>
+              <ul className="mt-8 grid list-none gap-4 p-0">
                 {OWNERSHIP.points.map((p) => (
-                  <li key={p.text} className="flex items-start gap-3.5 py-3.5 first:pt-0 last:pb-0">
-                    <Icon name={p.icon} className="text-brand mt-0.5 h-[18px] w-[18px] shrink-0" />
-                    <span className="db-sm text-ink">{p.text}</span>
+                  <li key={p.text} className="flex items-start gap-3.5">
+                    <span className="mt-px grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-white/10 text-[#8fb6ff]">
+                      <Icon name={p.icon} className="h-4 w-4" />
+                    </span>
+                    <span className="text-[clamp(14px,0.9vw,15.5px)] leading-[1.5] text-white/85">
+                      {p.text}
+                    </span>
                   </li>
                 ))}
               </ul>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

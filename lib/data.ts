@@ -25,7 +25,8 @@ export type HeroCard = {
   title: string;
   description: string;
   art: "checklist" | "dialer" | "messaging" | "support";
-  alert?: boolean;
+  /** the one card that carries the brand red instead of the default blue */
+  tone?: "red";
 };
 
 export const HERO_CARDS: HeroCard[] = [
@@ -33,7 +34,6 @@ export const HERO_CARDS: HeroCard[] = [
     title: "Advanced features, included",
     description: "All the essentials. No extra feature fees.",
     art: "checklist",
-    alert: true,
   },
   {
     title: "Click to dial",
@@ -49,6 +49,7 @@ export const HERO_CARDS: HeroCard[] = [
     title: "Live support",
     description: "Real human support, not AI.",
     art: "support",
+    tone: "red",
   },
 ];
 
@@ -260,4 +261,6 @@ export const FOOTER_COLUMNS: { title: string; links: { label: string; href: stri
 export const SOCIALS: { icon: IconName; label: string; href: string }[] = [
   { icon: "fb", label: "Facebook", href: "https://www.facebook.com/profile.php?id=61554575739247" },
   { icon: "li", label: "LinkedIn", href: "https://www.linkedin.com/company/databasebuilder-com" },
+  { icon: "tw", label: "X", href: "#top" },
+  { icon: "yt", label: "YouTube", href: "#top" },
 ];

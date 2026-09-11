@@ -85,7 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <style>{`.db-boot{display:none!important}.db-anim{opacity:1!important;transform:none!important}`}</style>
         </noscript>
 
-        <a className="db-skiplink" href="#main">
+        <a className="db-skiplink" href="#why">
           Skip to main content
         </a>
         <IconSprite />

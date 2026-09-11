@@ -85,7 +85,7 @@ export default function Hero() {
         <div>
           <h1
             data-hero-reveal
-            className="db-display mb-[clamp(20px,2.6vw,36px)] text-white"
+            className="font-display mb-[clamp(22px,3vw,40px)] text-[clamp(32px,3.62vw,62px)] leading-[1.05] tracking-[.005em] text-white uppercase"
           >
             A Simple Alternative
             <br />
@@ -93,18 +93,18 @@ export default function Hero() {
           </h1>
           <p
             data-hero-reveal
-            className="font-body mb-[clamp(22px,2.8vw,38px)] text-[clamp(16px,1.5vw,24px)] leading-[1.42] font-light text-[#f2f5fb]"
+            className="font-body mb-[clamp(22px,3vw,40px)] text-[clamp(16px,1.65vw,27px)] leading-[1.42] font-light text-[#f2f5fb]"
           >
             Sales Software,
             <br />
             Designed by Salespeople
           </p>
           <div data-hero-reveal>
-            <CtaButton size="lg">Start 7-Day Free Trial</CtaButton>
+            <CtaButton className="text-[clamp(18px,2.05vw,34px)]">Start 7-Day Free Trial</CtaButton>
           </div>
           <p
             data-hero-reveal
-            className="font-ui border-db-cyan text-db-cyan mt-[clamp(20px,2.4vw,30px)] border-l-[3px] pl-4 text-[clamp(14px,1.15vw,19px)] font-light tracking-[.01em]"
+            className="font-ui border-db-cyan text-db-cyan mt-[clamp(22px,3vw,34px)] border-l-[3px] pl-4 text-[clamp(14px,1.35vw,22px)] font-light tracking-[.01em]"
           >
             No long-term commitment required
           </p>

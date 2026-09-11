@@ -48,11 +48,13 @@ export default function SmoothScroll() {
       if (url.hash) {
         if (!document.querySelector(url.hash)) return;
         e.preventDefault();
+        e.stopPropagation();
         scrollToId(url.hash);
         history.replaceState(null, "", url.hash);
       } else {
         // "Home" while already home: take them back to the top
         e.preventDefault();
+        e.stopPropagation();
         if (current) current.scrollTo(0, { duration: 1 });
         else window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
       }

@@ -23,9 +23,7 @@ export const metadata: Metadata = {
   },
 };
 
-/* Four promises, said as sentences. The product's argument is that there is
-   nothing to decode, so the page must not ask anyone to decode a grid. */
-const PROMISES = [
+const PHILOSOPHY = [
   {
     title: "No tiers to decode",
     body: "There is one package. You are not comparing three columns to work out which features you lose.",
@@ -47,22 +45,8 @@ const PROMISES = [
 export default function PricingPage() {
   const hasPrice = PRICING.baseMonthly !== null;
 
-  const TERMS: [string, string][] = [
-    ["Included users", `Up to ${PRICING.includedUsers}`],
-    [
-      "Additional users",
-      PRICING.additionalUserMonthly === null
-        ? "Per licence, per month"
-        : `${PRICING.currencySymbol}${PRICING.additionalUserMonthly} / month`,
-    ],
-    ["Billing", "Monthly"],
-    ["Cancellation", "30 days' notice"],
-    ["Setup fee", "None"],
-    ["Free trial", "7 days"],
-  ];
-
   return (
-    <main id="main">
+    <main>
       <PageHero
         label="Pricing"
         title={
@@ -71,73 +55,107 @@ export default function PricingPage() {
           </>
         }
         lede="A simple CRM at a reasonable all-in-one price — designed to be understood in a minute, not decoded from a comparison table."
+        aside={
+          <ul className="m-0 grid list-none gap-2.5 p-0">
+            {[
+              "7-day free trial",
+              `Up to ${PRICING.includedUsers} users included`,
+              "Additional user licences available",
+              "30-day cancellation, billed monthly",
+            ].map((item) => (
+              <li
+                key={item}
+                className="flex items-center gap-3 rounded-[12px] border border-white/12 bg-white/[0.035] px-4 py-3"
+              >
+                <Icon name="check" className="text-db-cyan h-[17px] w-[17px] shrink-0" />
+                <span className="text-[clamp(14px,0.92vw,16px)] text-white/85">{item}</span>
+              </li>
+            ))}
+          </ul>
+        }
       />
 
-      {/* ---- the offer: the reasoning on the left, the terms on the right ---- */}
-      <section data-surface="page" className="db-section bg-page">
+      {/* ---- the offer, asymmetric: reasoning left, the card right ---- */}
+      <section className="db-section bg-page">
         <div className="db-shell">
-          <div className="grid items-start gap-[var(--db-gap-lg)] lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="grid items-start gap-[clamp(28px,3.4vw,60px)] lg:grid-cols-[1.05fr_0.95fr]">
             <div>
               <SectionHeading
                 label="How we price"
                 title={
                   <>
-                    Pricing you can explain to your team in{" "}
-                    <span className="text-db-red">one sentence</span>
+                    Pricing you can explain to your team in <span className="text-db-red">one sentence</span>
                   </>
                 }
                 lede="Most CRM companies added complexity and raised the price. We went the other way — one subscription, everything in it."
               />
 
-              <div className="db-rows mt-[clamp(24px,2.6vw,40px)] grid max-w-[56ch]">
-                {PROMISES.map((p, i) => (
-                  <Reveal key={p.title} delay={i * 70} className="py-4 first:pt-0 last:pb-0">
-                    <h3 className="db-h4 text-ink flex items-center gap-2.5">
+              <div className="mt-8 grid gap-5 sm:grid-cols-2">
+                {PHILOSOPHY.map((p, i) => (
+                  <Reveal key={p.title} delay={i * 80}>
+                    <h3 className="font-body text-ink m-0 flex items-center gap-2.5 text-[clamp(15.5px,1.05vw,17.5px)] font-bold">
                       <Icon name="check" className="text-green h-[18px] w-[18px] shrink-0" />
                       {p.title}
                     </h3>
-                    <p className="db-sm text-ink-2 mt-1.5 pl-[28px]">{p.body}</p>
+                    <p className="text-ink-2 mt-2 text-[clamp(14px,0.88vw,15.8px)] leading-[1.62]">
+                      {p.body}
+                    </p>
                   </Reveal>
                 ))}
               </div>
             </div>
 
-            <Reveal delay={90} className="lg:sticky lg:top-[calc(var(--db-header-h)+28px)]">
-              <div className="db-card relative overflow-hidden p-[clamp(22px,2.4vw,38px)]">
+            <Reveal delay={90}>
+              <div className="db-card-flat relative overflow-hidden p-[clamp(22px,2.4vw,38px)]">
                 <span aria-hidden="true" className="bg-db-red absolute inset-x-0 top-0 h-1.5" />
-                <p className="db-kicker text-brand mt-2 mb-4">The all-in-one package</p>
+                <p className="font-ui text-brand mt-2 mb-3 text-[12px] font-semibold tracking-[.14em] uppercase">
+                  The all-in-one package
+                </p>
 
                 {hasPrice ? (
                   <>
-                    <p className="db-sm text-ink-2">Pricing starts at</p>
-                    <p className="font-body text-ink m-0 text-[clamp(38px,3.4vw,54px)] leading-none font-bold tracking-[-.02em]">
+                    <p className="text-ink-2 m-0 text-[14px]">Pricing starts at</p>
+                    <p className="font-body text-ink m-0 text-[clamp(34px,3.2vw,50px)] leading-none font-bold">
                       {PRICING.currencySymbol}
                       {PRICING.baseMonthly}
-                      <span className="text-ink-2 text-[17px] font-normal"> / month</span>
+                      <span className="text-ink-2 text-[16px] font-normal"> / month</span>
                     </p>
                   </>
                 ) : (
-                  <>
-                    <p className="db-h2 text-ink">One price, every feature.</p>
-                    <p className="db-sm text-ink-2 mt-3 max-w-[36ch]">
-                      Up to {PRICING.includedUsers} users included. Talk to us for the current
-                      monthly figure — there is only ever one.
-                    </p>
-                  </>
+                  <p className="font-body text-ink m-0 text-[clamp(22px,2vw,30px)] leading-tight font-bold">
+                    Contact us for current pricing
+                  </p>
                 )}
 
-                <dl className="db-rows border-line mt-7 grid border-t pt-1">
-                  {TERMS.map(([k, v]) => (
-                    <div key={k} className="flex items-baseline justify-between gap-4 py-3">
-                      <dt className="db-sm text-ink-2">{k}</dt>
-                      <dd className="db-sm text-ink m-0 text-right font-semibold">{v}</dd>
+                <dl className="border-line mt-6 grid gap-0 border-t">
+                  {[
+                    ["Included users", `Up to ${PRICING.includedUsers}`],
+                    [
+                      "Additional users",
+                      PRICING.additionalUserMonthly === null
+                        ? "Per licence, per month"
+                        : `${PRICING.currencySymbol}${PRICING.additionalUserMonthly} / month`,
+                    ],
+                    ["Billing", "Monthly"],
+                    ["Cancellation", "30 days' notice"],
+                    ["Setup fee", "None"],
+                    ["Free trial", "7 days"],
+                  ].map(([k, v]) => (
+                    <div
+                      key={k}
+                      className="border-line flex items-baseline justify-between gap-4 border-b py-3 last:border-b-0"
+                    >
+                      <dt className="text-ink-2 text-[14.5px]">{k}</dt>
+                      <dd className="text-ink m-0 text-right text-[14.5px] font-semibold">{v}</dd>
                     </div>
                   ))}
                 </dl>
 
                 <div className="mt-7">
-                  <CtaButton block>Start 7-Day Free Trial</CtaButton>
-                  <p className="db-xs text-ink-3 mt-3.5 text-center">
+                  <CtaButton className="w-full text-center text-[clamp(16px,1.15vw,19px)]">
+                    Start 7-Day Free Trial
+                  </CtaButton>
+                  <p className="text-ink-3 mt-3 text-center text-[13px]">
                     No card required to start.{" "}
                     <SmartLink href="/contact" className="text-brand font-semibold">
                       Talk to us first
@@ -150,73 +168,92 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ---- everything included, as a table of capabilities ---- */}
-      <section id="included" data-surface="page" className="db-section bg-page">
+      {/* ---- everything included, grouped by capability ---- */}
+      <section className="bg-page pb-[clamp(48px,5vw,88px)]">
         <div className="db-shell">
           <SectionHeading
             label="What's included"
+            align="center"
             title={
               <>
                 Every capability, in the <span className="text-db-red">one</span> package
               </>
             }
-            lede="Twenty-one features, grouped the way a sales floor actually uses them. Nothing on this list is an upgrade."
-            className="mb-[clamp(20px,2.2vw,34px)]"
+            lede="Twenty-one features, grouped the way a sales floor actually uses them."
+            className="mb-9"
           />
 
-          <div className="db-rows border-line grid border-t">
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {FEATURE_GROUPS.map((group, i) => (
-              <Reveal key={group.title} delay={i * 60}>
+              <Reveal key={group.title} delay={i * 70}>
                 <FeatureGroup group={group} />
               </Reveal>
             ))}
+            {/* fills the grid and gives the section somewhere to go */}
+            <Reveal delay={FEATURE_GROUPS.length * 70}>
+              <div className="bg-navy flex h-full flex-col justify-center rounded-[14px] p-[clamp(18px,1.8vw,28px)] text-white">
+                <h3 className="font-body m-0 text-[clamp(16.5px,1.2vw,20px)] leading-snug font-bold">
+                  Not sure which of these you need?
+                </h3>
+                <p className="mt-2.5 text-[clamp(14px,0.88vw,15.5px)] leading-[1.6] text-white/70">
+                  Tell us how your team sells and we will show you the parts that matter. Everything
+                  listed here is in the one package either way.
+                </p>
+                <SmartLink
+                  href="/contact"
+                  className="text-db-cyan mt-5 inline-flex items-center gap-2 text-[14.5px] font-semibold"
+                >
+                  Talk to a person
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+                    <path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </SmartLink>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
       {/* ---- usage charges, said plainly ---- */}
-      <section id="usage" data-surface="page" className="db-section bg-page">
+      <section className="bg-page pb-[clamp(48px,5vw,88px)]">
         <div className="db-shell">
-          <div className="grid gap-[var(--db-gap-lg)] lg:grid-cols-[0.8fr_1.2fr]">
-            <SectionHeading
-              label="Billed separately"
-              title={
-                <>
-                  What sits <span className="text-db-red">outside</span> the subscription
-                </>
-              }
-              lede="A few third-party services are consumables rather than features, so they are invoiced monthly alongside the subscription."
-            />
-
-            <Reveal delay={80}>
-              <dl className="db-rows border-line m-0 grid border-t">
+          <Reveal>
+            <div className="bg-navy rounded-[18px] p-[clamp(24px,3vw,48px)] text-white">
+              <div className="max-w-[52ch]">
+                <h2 className="font-body m-0 text-[clamp(21px,1.9vw,30px)] leading-tight font-bold tracking-[-.02em]">
+                  What is billed separately
+                </h2>
+                <p className="mt-3.5 max-w-[38ch] text-[clamp(14.5px,0.92vw,16.5px)] leading-[1.62] text-white/70">
+                  A few third-party services are consumables rather than features, so they are
+                  invoiced monthly alongside the subscription.
+                </p>
+              </div>
+              <div className="mt-7 grid gap-4 sm:grid-cols-3">
                 {USAGE_CHARGES.map((c) => (
-                  <div
-                    key={c.title}
-                    className="grid gap-x-8 gap-y-1.5 py-5 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
-                  >
-                    <dt className="db-h4 text-ink">{c.title}</dt>
-                    <dd className="db-sm text-ink-2 m-0">{c.body}</dd>
+                  <div key={c.title} className="rounded-[12px] border border-white/10 bg-white/[0.04] p-4">
+                    <h3 className="font-body m-0 text-[15px] leading-snug font-bold text-white">
+                      {c.title}
+                    </h3>
+                    <p className="mt-2 text-[13.5px] leading-[1.6] text-white/60">{c.body}</p>
                   </div>
                 ))}
-              </dl>
+              </div>
+            </div>
+          </Reveal>
 
-              <p className="db-sm text-ink-2 mt-7">
-                Still deciding?{" "}
-                <SmartLink href="/faq" className="text-brand font-semibold underline underline-offset-4">
-                  Read the FAQ
-                </SmartLink>{" "}
-                or{" "}
-                <SmartLink
-                  href="/contact"
-                  className="text-brand font-semibold underline underline-offset-4"
-                >
-                  ask us directly
-                </SmartLink>
-                .
-              </p>
-            </Reveal>
-          </div>
+          <Reveal className="mt-8 text-center">
+            <p className="text-ink-2 m-0 text-[clamp(14.5px,0.9vw,16px)]">
+              Still deciding?{" "}
+              <SmartLink href="/faq" className="text-brand font-semibold underline underline-offset-4">
+                Read the FAQ
+              </SmartLink>{" "}
+              or{" "}
+              <SmartLink href="/contact" className="text-brand font-semibold underline underline-offset-4">
+                ask us directly
+              </SmartLink>
+              .
+            </p>
+          </Reveal>
         </div>
       </section>
 

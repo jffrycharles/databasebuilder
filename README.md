@@ -148,30 +148,25 @@ panel with the same details. To post to a real endpoint, replace `handoff()` in
 `components/sections/contact/ContactForm.tsx` with a fetch to your API route and
 keep the existing `sent` state for the confirmation.
 
-## Deploying to the existing Vercel project
+## Deploying to Vercel
 
-Use the existing DatabaseBuilder project. Do not create another project.
-This downloaded working folder has no `.vercel/project.json` link or Git history.
+1. Push the repository to GitHub/GitLab/Bitbucket.
+2. In Vercel, **Add New → Project**, import the repo.
+3. Framework preset is detected as **Next.js**; leave the build command
+   (`next build`) and output directory as they are. There are no environment
+   variables to set.
+4. Deploy.
 
-1. Run `npx vercel login` and sign in with the account that owns DatabaseBuilder.
-2. Run `npx vercel project ls` in the owning team and confirm the existing project.
-3. Run `npx vercel link`, choose that team, and choose the **existing** DatabaseBuilder
-   project. Verify `.vercel/project.json` matches the confirmed project before deploying.
-4. Run `npm run typecheck`, `npm run lint`, and `npm run build`.
-5. Verify all five pages on desktop and mobile, then run exactly:
+Or from the command line:
 
 ```bash
-npx vercel --prod
+npm i -g vercel
+vercel          # preview
+vercel --prod   # production
 ```
 
-Confirm the production alias loads on desktop and mobile before sharing it with the
-client. No deployment was performed during this refinement pass: the CLI required
-sign-in and no existing project link could be verified.
-
-The contact form prepares an email in the visitor's mail app; it does not submit to
-a backend. Pricing amounts remain pending approved figures. Placeholder legal and
-unconfigured social links have been removed until real destinations are supplied.
-
+Set the production domain in **Project → Settings → Domains**, then update
+`SITE.url` in `lib/data.ts` so canonical and Open Graph URLs match.
 
 ## Notes
 

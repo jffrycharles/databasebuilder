@@ -1,6 +1,7 @@
 import Reveal from "@/components/animations/Reveal";
 import Label from "@/components/ui/Label";
-import HeroField from "@/components/ui/HeroField";
+import { WaveDivider } from "@/components/sections/HeroArt";
+import GlowLines from "@/components/ui/GlowLines";
 
 type Props = {
   label: string;
@@ -8,23 +9,23 @@ type Props = {
   lede?: React.ReactNode;
   /** optional right-hand column — keeps inner pages asymmetric, like the homepage */
   aside?: React.ReactNode;
-  /** the aside is content, not decoration, so it can take the wider half */
-  asideWide?: boolean;
 };
 
 /**
- * The dark opener for every inner page: the homepage hero's gradient recipe,
- * the same coloured-bar label and the same display face, at roughly two
- * thirds of a screen rather than all of it — a full-height opener on a page
- * whose job is to hand you to the content just leaves a dark empty room.
+ * The dark opener for every inner page. Same gradient recipe, same column
+ * lines and the same wave hand-off into the light page as the homepage hero —
+ * just shorter, and with the homepage's heading scale rather than a display
+ * headline, so no inner page shouts louder than the hero. The chrome is fixed
+ * and transparent, so the band reserves its height rather than sitting under
+ * it.
  */
-export default function PageHero({ label, title, lede, aside, asideWide = false }: Props) {
+export default function PageHero({ label, title, lede, aside }: Props) {
   return (
-    <section id="top" className="db-page-band db-page-hero">
-      <HeroField />
+    <section id="top" className="db-page-band db-under-header flex min-h-[max(560px,100svh)] flex-col">
+      <GlowLines />
       <div
-        className={`db-shell relative z-[2] grid flex-1 grid-cols-1 content-center items-center gap-[var(--db-gap-lg)] pt-[clamp(36px,4vw,64px)] pb-[clamp(44px,5vw,84px)] ${
-          aside ? (asideWide ? "lg:grid-cols-[1fr_1fr]" : "lg:grid-cols-[1.15fr_0.85fr]") : ""
+        className={`db-shell relative z-[2] flex-1 grid content-center items-center gap-[clamp(28px,3.4vw,56px)] pt-[clamp(40px,5vw,72px)] pb-[clamp(56px,6vw,96px)] ${
+          aside ? "lg:grid-cols-[1.12fr_0.88fr]" : ""
         }`}
       >
         <div>
@@ -34,16 +35,21 @@ export default function PageHero({ label, title, lede, aside, asideWide = false 
             </Label>
           </Reveal>
           <Reveal delay={70}>
-            <h1 className="db-h1 max-w-[17ch] text-white">{title}</h1>
+            <h1 className="font-display m-0 max-w-[18ch] text-[clamp(30px,3.6vw,56px)] leading-[1.02] tracking-[.005em] text-white uppercase">
+              {title}
+            </h1>
           </Reveal>
           {lede && (
             <Reveal delay={130}>
-              <p className="db-lede mt-5 max-w-[52ch] text-white/70">{lede}</p>
+              <p className="mt-4 max-w-[54ch] text-[clamp(15px,1vw,18px)] leading-[1.62] text-white/70">
+                {lede}
+              </p>
             </Reveal>
           )}
         </div>
         {aside && <Reveal delay={160}>{aside}</Reveal>}
       </div>
+      <WaveDivider />
     </section>
   );
 }

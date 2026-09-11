@@ -5,7 +5,7 @@ import SmartLink from "@/components/ui/SmartLink";
 
 function Column({ items, from }: { items: typeof CHECKLIST; from: number }) {
   return (
-    <div className="db-card px-1.5 py-2.5">
+    <div className="db-card-flat px-1.5 py-2.5">
       <ol start={from} className="m-0 list-none p-0">
         {items.map((item, i) => (
           <li
@@ -35,13 +35,13 @@ export default function FeaturesSection() {
   const half = Math.ceil(CHECKLIST.length / 2);
 
   return (
-    <section id="features" data-surface="page" className="db-section bg-page">
+    <section id="features" className="db-section bg-page">
       <div className="db-shell">
-        <Reveal className="mx-auto mb-[clamp(28px,3vw,48px)] max-w-[660px] text-center">
-          <h2 className="db-h2 text-ink">
+        <Reveal className="mx-auto mb-10 max-w-[640px] text-center">
+          <h2 className="font-body text-ink text-[clamp(28px,2.7vw,44px)] leading-[1.08] font-bold tracking-[-.02em]">
             Product Features <span className="text-db-red">Checklist</span>
           </h2>
-          <p className="db-lede text-ink-2 mt-4">
+          <p className="text-ink-2 mt-3 text-[clamp(15px,0.9vw,17.5px)]">
             Everything your sales team needs to close more deals.
           </p>
         </Reveal>
@@ -55,7 +55,7 @@ export default function FeaturesSection() {
           </Reveal>
         </div>
 
-        <p className="db-sm text-ink-2 mx-auto mt-6 max-w-[78ch] text-center">
+        <p className="text-ink-2 mt-5 text-center text-[13.5px] leading-relaxed">
           Features are included in the subscription. Dialer minutes, SMS usage, additional phone numbers
           and custom programming are charged separately.{" "}
           <SmartLink href="/pricing#usage" className="text-brand font-semibold underline underline-offset-4">
@@ -66,7 +66,7 @@ export default function FeaturesSection() {
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {VALUE_CARDS.map((card, i) => (
             <Reveal key={card.title} delay={i * 90}>
-              <div className="db-card db-card--lift h-full p-5">
+              <div className="db-card-flat h-full p-5 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
                 <div className="mb-3 flex items-center gap-3">
                   <span
                     className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-[9px] text-white"
@@ -74,11 +74,11 @@ export default function FeaturesSection() {
                   >
                     <Icon name={card.icon} className="h-5 w-5" />
                   </span>
-                  <h3 className="db-h4 text-ink">
+                  <h3 className="font-body text-ink m-0 text-[clamp(15.5px,0.95vw,17.5px)] leading-tight font-bold">
                     {card.title}
                   </h3>
                 </div>
-                <p className="db-sm text-ink-2">{card.body}</p>
+                <p className="text-ink-2 m-0 text-[clamp(14.5px,0.85vw,16px)] leading-relaxed">{card.body}</p>
                 {card.formats && (
                   <div className="mt-4 flex gap-3.5">
                     {card.formats.map((f) => (

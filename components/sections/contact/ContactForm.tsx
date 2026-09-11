@@ -81,8 +81,6 @@ export default function ContactForm() {
       next.email = "That address looks incomplete.";
     if (values.message.trim().length < 10) next.message = "A sentence or two is plenty.";
     setErrors(next);
-    const first = Object.keys(next)[0];
-    if (first) root.current?.querySelector<HTMLElement>(`#f-${first}`)?.focus();
     return Object.keys(next).length === 0;
   };
 
@@ -107,6 +105,8 @@ export default function ContactForm() {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) {
+      const first = root.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
+      first?.focus();
       return;
     }
     setSent(values);
@@ -117,7 +117,7 @@ export default function ContactForm() {
   };
 
   return (
-    <section data-surface="page" className="db-section bg-page">
+    <section className="db-section bg-page">
       <div className="db-shell">
         <div ref={root} className="db-record overflow-hidden">
           {/* record header */}
@@ -126,10 +126,10 @@ export default function ContactForm() {
               <i />
               New enquiry
             </span>
-            <h2 className="db-h3 text-ink">
+            <h2 className="font-body text-ink m-0 text-[clamp(16px,1.2vw,20px)] font-bold">
               Get in touch
             </h2>
-            <span className="db-sm text-ink-3 ml-auto hidden sm:block">
+            <span className="text-ink-3 ml-auto hidden text-[13px] sm:block">
               Usually answered within one business day
             </span>
           </div>
@@ -139,14 +139,14 @@ export default function ContactForm() {
             <div className="p-[clamp(20px,2.4vw,36px)]">
               {sent ? (
                 <div ref={panel}>
-                  <div className="bg-green/10 text-green db-sm mb-5 inline-flex items-center gap-2.5 rounded-full px-4 py-2 font-semibold">
+                  <div className="bg-green/10 text-green mb-5 inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-[14px] font-semibold">
                     <Icon name="check" className="h-4 w-4" />
                     Draft ready in your email app
                   </div>
-                  <h3 className="db-h2 text-ink">
+                  <h3 className="font-body text-ink m-0 text-[clamp(19px,1.5vw,25px)] font-bold tracking-[-.01em]">
                     Thanks, {sent.name.split(" ")[0]}.
                   </h3>
-                  <p className="db-body text-ink-2 mt-3 max-w-[52ch]">
+                  <p className="text-ink-2 mt-2.5 max-w-[52ch] text-[15px] leading-[1.6]">
                     Your message has been handed to your email client, addressed to{" "}
                     <a className="text-brand font-semibold" href={`mailto:${CONTACT.email}`}>
                       {CONTACT.email}
@@ -170,16 +170,16 @@ export default function ContactForm() {
                           i === 0 ? "" : "border-line border-t"
                         }`}
                       >
-                        <dt className="db-kicker text-ink-3">
+                        <dt className="font-ui text-ink-3 text-[11.5px] tracking-[.14em] uppercase">
                           {k}
                         </dt>
-                        <dd className="db-sm text-ink m-0 break-words">{v}</dd>
+                        <dd className="text-ink m-0 text-[14.5px] leading-snug break-words">{v}</dd>
                       </div>
                     ))}
                   </dl>
 
                   <div className="mt-6 flex flex-wrap gap-3">
-                    <button type="button" onClick={handoff} className="db-btn db-btn--primary">
+                    <button type="button" onClick={handoff} className="db-cta-btn font-ui rounded-[9px] px-5 py-3 text-[15px] font-semibold tracking-[.03em] text-white uppercase">
                       Open email again
                     </button>
                     <button
@@ -188,7 +188,7 @@ export default function ContactForm() {
                         setSent(null);
                         setValues(EMPTY);
                       }}
-                      className="db-btn db-btn--quiet"
+                      className="border-line text-ink-2 hover:text-brand rounded-[9px] border bg-white px-5 py-3 text-[15px] font-semibold transition-colors"
                     >
                       Write another
                     </button>
@@ -201,7 +201,7 @@ export default function ContactForm() {
                       <div key={f.name} data-row className={f.half ? "" : "sm:col-span-2"}>
                         <label
                           htmlFor={`f-${f.name}`}
-                          className="db-sm text-ink mb-1.5 block font-semibold"
+                          className="text-ink mb-1.5 block text-[13.5px] font-semibold"
                         >
                           {f.label}
                           {!f.required && <span className="text-ink-3 font-normal"> (optional)</span>}
@@ -211,10 +211,7 @@ export default function ContactForm() {
                           <input
                             id={`f-${f.name}`}
                             type={f.type}
-                            name={f.name}
-                            required={f.required}
-                            autoComplete={f.name === "company" ? "organization" : f.type === "tel" ? "tel" : f.name}
-                            className="db-input"
+                            className="db-field"
                             placeholder={f.placeholder}
                             value={values[f.name]}
                             onChange={(e) => set(f.name, e.target.value)}
@@ -223,7 +220,7 @@ export default function ContactForm() {
                           />
                         </div>
                         {errors[f.name] && (
-                          <p id={`e-${f.name}`} className="db-xs text-db-red mt-1.5 font-semibold">
+                          <p id={`e-${f.name}`} className="text-db-red mt-1.5 text-[12.5px] font-semibold">
                             {errors[f.name]}
                           </p>
                         )}
@@ -231,12 +228,12 @@ export default function ContactForm() {
                     ))}
 
                     <div data-row className="sm:col-span-2">
-                      <label htmlFor="f-subject" className="db-sm text-ink mb-1.5 block font-semibold">
+                      <label htmlFor="f-subject" className="text-ink mb-1.5 block text-[13.5px] font-semibold">
                         What is it about?
                       </label>
                       <select
                         id="f-subject"
-                        className="db-input db-input--plain"
+                        className="db-field db-field--plain"
                         value={values.subject}
                         onChange={(e) => set("subject", e.target.value)}
                       >
@@ -247,15 +244,13 @@ export default function ContactForm() {
                     </div>
 
                     <div data-row className="sm:col-span-2">
-                      <label htmlFor="f-message" className="db-sm text-ink mb-1.5 block font-semibold">
+                      <label htmlFor="f-message" className="text-ink mb-1.5 block text-[13.5px] font-semibold">
                         Message
                       </label>
                       <textarea
                         id="f-message"
-                        name="message"
-                        required
                         rows={5}
-                        className="db-input db-input--plain resize-y"
+                        className="db-field db-field--plain resize-y"
                         placeholder="Tell us what you are trying to do and we will point you at the right part of the product."
                         value={values.message}
                         onChange={(e) => set("message", e.target.value)}
@@ -263,7 +258,7 @@ export default function ContactForm() {
                         aria-describedby={errors.message ? "e-message" : undefined}
                       />
                       {errors.message && (
-                        <p id="e-message" className="db-xs text-db-red mt-1.5 font-semibold">
+                        <p id="e-message" className="text-db-red mt-1.5 text-[12.5px] font-semibold">
                           {errors.message}
                         </p>
                       )}
@@ -273,11 +268,11 @@ export default function ContactForm() {
                   <div data-row className="mt-6 flex flex-wrap items-center gap-4">
                     <button
                       type="submit"
-                      className="db-btn db-btn--primary"
+                      className="db-cta-btn font-ui rounded-[9px] px-6 py-3.5 text-[clamp(15px,1.05vw,17px)] font-semibold tracking-[.03em] text-white uppercase"
                     >
                       Send message
                     </button>
-                    <p className="db-xs text-ink-3 m-0 max-w-[34ch]">
+                    <p className="text-ink-3 m-0 max-w-[34ch] text-[12.5px] leading-snug">
                       Opens a prefilled email to {CONTACT.email} — nothing is stored on this site.
                     </p>
                   </div>
@@ -295,8 +290,8 @@ export default function ContactForm() {
                       <Icon name={a.icon} className="h-4 w-4" />
                     </span>
                     <span>
-                      <span className="db-h4 text-ink block">{a.title}</span>
-                      <span className="db-sm text-ink-2 mt-1 block">{a.body}</span>
+                      <span className="text-ink block text-[14.5px] font-bold">{a.title}</span>
+                      <span className="text-ink-2 mt-1 block text-[13.5px] leading-snug">{a.body}</span>
                     </span>
                   </li>
                 ))}
@@ -306,7 +301,7 @@ export default function ContactForm() {
                 <p className="db-kicker text-ink-3 mb-3">Rather talk now?</p>
                 <a
                   href={CONTACT.phone.href}
-                  className="font-body text-ink hover:text-brand block text-[clamp(20px,1.6vw,26px)] leading-none font-bold tracking-[-.01em] transition-colors"
+                  className="font-body text-ink hover:text-brand block text-[clamp(19px,1.5vw,24px)] font-bold tracking-[-.01em] transition-colors"
                 >
                   {CONTACT.phone.label}
                 </a>
@@ -314,7 +309,7 @@ export default function ContactForm() {
                   href={CONTACT.maps}
                   target="_blank"
                   rel="noreferrer"
-                  className="db-sm text-ink-2 hover:text-brand mt-3 block transition-colors"
+                  className="text-ink-2 hover:text-brand mt-3 block text-[14px] leading-snug transition-colors"
                 >
                   {CONTACT.address.line1}
                   <br />

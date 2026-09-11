@@ -7,32 +7,41 @@ type Props = {
   lede?: React.ReactNode;
   align?: "left" | "center";
   tone?: "light" | "dark";
-  /** renders an <h3> where the section already owns the page's <h2> */
-  as?: "h2" | "h3";
   className?: string;
 };
 
-/** Every section heading on the site: bar label, one H2 step, one lede step. */
+/** Section headings, sized to the homepage's own H2 — not oversized. */
 export default function SectionHeading({
   label,
   title,
   lede,
   align = "left",
   tone = "light",
-  as: Tag = "h2",
   className = "",
 }: Props) {
   const centered = align === "center";
   return (
-    <Reveal className={`${centered ? "mx-auto max-w-[660px] text-center" : "max-w-[54ch]"} ${className}`}>
+    <Reveal className={`${centered ? "mx-auto max-w-[640px] text-center" : "max-w-[52ch]"} ${className}`}>
       {label && (
         <Label tone={tone} className="mb-4">
           {label}
         </Label>
       )}
-      <Tag className={`db-h2 ${tone === "dark" ? "text-white" : "text-ink"}`}>{title}</Tag>
+      <h2
+        className={`font-body m-0 text-[clamp(26px,2.4vw,40px)] leading-[1.1] font-bold tracking-[-.02em] ${
+          tone === "dark" ? "text-white" : "text-ink"
+        }`}
+      >
+        {title}
+      </h2>
       {lede && (
-        <p className={`db-lede mt-4 ${tone === "dark" ? "text-white/70" : "text-ink-2"}`}>{lede}</p>
+        <p
+          className={`mt-3.5 text-[clamp(15px,0.92vw,17.5px)] leading-[1.62] ${
+            tone === "dark" ? "text-white/70" : "text-ink-2"
+          } ${centered ? "mx-auto" : ""}`}
+        >
+          {lede}
+        </p>
       )}
     </Reveal>
   );

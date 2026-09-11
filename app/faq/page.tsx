@@ -6,7 +6,6 @@ import Accordion from "@/components/ui/Accordion";
 import CtaBand from "@/components/sections/CtaBand";
 import CtaButton from "@/components/ui/CtaButton";
 import SmartLink from "@/components/ui/SmartLink";
-import Label from "@/components/ui/Label";
 import { Icon } from "@/components/ui/Icon";
 import { FAQ_ITEMS, FAQ_CATEGORIES } from "@/lib/faq";
 import { CONTACT } from "@/lib/contact";
@@ -28,7 +27,7 @@ export default function FaqPage() {
   const byId = (id: string) => FAQ_ITEMS.find((f) => f.id === id);
 
   return (
-    <main id="main">
+    <main>
       <PageHero
         label="FAQ"
         title={
@@ -38,30 +37,32 @@ export default function FaqPage() {
         }
         lede="Everything customers ask before they start, in plain language. If yours is not here, a person will answer it."
         aside={
-          <div className="db-surface p-[clamp(20px,2vw,30px)]">
-            <p className="db-kicker text-white/40">Rather just ask</p>
+          <div className="rounded-[16px] border border-white/12 bg-white/[0.035] p-[clamp(18px,1.8vw,26px)]">
+            <p className="font-ui text-[11.5px] tracking-[.16em] text-white/40 uppercase">
+              Rather just ask
+            </p>
             <a
               href={CONTACT.phone.href}
-              className="font-body mt-2.5 block text-[clamp(20px,1.7vw,27px)] leading-none font-bold text-white transition-opacity hover:opacity-80"
+              className="font-body mt-2 block text-[clamp(19px,1.6vw,26px)] font-bold text-white transition-opacity hover:opacity-80"
             >
               {CONTACT.phone.label}
             </a>
             <a
               href={`mailto:${CONTACT.email}`}
-              className="db-link db-link--on-dark db-sm mt-3.5"
+              className="text-db-cyan mt-2 inline-flex items-center gap-2 text-[14.5px] font-semibold"
             >
-              <Icon name="mail" />
+              <Icon name="mail" className="h-4 w-4" />
               {CONTACT.email}
             </a>
           </div>
         }
       />
 
-      <section data-surface="page" className="db-section bg-page">
+      <section className="db-section bg-page">
         <div className="db-shell">
-          <div className="grid gap-[var(--db-gap-lg)] lg:grid-cols-[0.62fr_1.38fr]">
-            {/* orientation, and a way out — travels with the reader */}
-            <div className="lg:sticky lg:top-[calc(var(--db-header-h)+32px)] lg:self-start">
+          <div className="grid gap-[clamp(28px,3.4vw,56px)] lg:grid-cols-[0.72fr_1.28fr]">
+            {/* left rail: orientation and a way out */}
+            <div>
               <SectionHeading
                 label={`${FAQ_ITEMS.length} questions`}
                 title={
@@ -69,66 +70,60 @@ export default function FaqPage() {
                     Grouped so you can find <span className="text-db-red">yours</span>
                   </>
                 }
+                lede="Four groups, from what happens to your data through to what support looks like once you are running."
               />
 
               <Reveal delay={90}>
-                <nav className="db-rows border-line mt-7 grid border-y" aria-label="FAQ sections">
+                <nav className="mt-7 grid gap-2" aria-label="FAQ sections">
                   {FAQ_CATEGORIES.map((c) => (
                     <a
                       key={c.title}
                       href={`#${c.ids[0]}`}
-                      className="db-h4 text-ink hover:text-brand group flex items-center gap-3 py-3.5 transition-colors"
+                      className="db-card-flat text-ink hover:border-brand/40 group flex items-center gap-3 px-4 py-3 text-[15px] font-semibold transition-colors"
                     >
                       {c.title}
-                      <span className="db-sm text-ink-3 ml-auto font-normal tabular-nums">
+                      <span className="text-ink-3 ml-auto text-[13px] font-normal">
                         {c.ids.length}
                       </span>
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="text-brand h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M5 12h13M13 6l6 6-6 6"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
+                      <svg viewBox="0 0 24 24" className="text-brand h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true">
+                        <path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </a>
                   ))}
                 </nav>
               </Reveal>
 
-              <Reveal delay={150} className="mt-8">
-                <h2 className="db-h3 text-ink">Still not sure it fits?</h2>
-                <p className="db-sm text-ink-2 mt-2 max-w-[36ch]">
-                  Take the 7-day trial, or talk it through with someone who uses the product daily.
-                </p>
-                <div className="mt-5 flex flex-wrap items-center gap-3">
-                  <CtaButton>Start Free Trial</CtaButton>
-                  <SmartLink href="/contact" className="db-link db-sm">
-                    Contact us
-                  </SmartLink>
+              <Reveal delay={150}>
+                <div className="bg-navy mt-6 rounded-[16px] p-[clamp(20px,2vw,28px)] text-white">
+                  <h2 className="font-body m-0 text-[clamp(17px,1.3vw,21px)] font-bold">
+                    Still not sure it fits?
+                  </h2>
+                  <p className="mt-2.5 text-[14.5px] leading-[1.6] text-white/70">
+                    Take the 7-day trial, or talk it through with someone who uses the product daily.
+                  </p>
+                  <div className="mt-5 flex flex-wrap items-center gap-3">
+                    <CtaButton className="text-[15px]">Start Free Trial</CtaButton>
+                    <SmartLink href="/contact" className="text-db-cyan text-[14.5px] font-semibold">
+                      Contact us
+                    </SmartLink>
+                  </div>
                 </div>
               </Reveal>
             </div>
 
-            {/* every question, grouped */}
-            <div className="grid gap-[clamp(32px,3.4vw,56px)]">
+            {/* right: every question, grouped */}
+            <div className="grid gap-8">
               {FAQ_CATEGORIES.map((cat, i) => {
-                const items = cat.ids
-                  .map(byId)
-                  .filter((f): f is (typeof FAQ_ITEMS)[number] => Boolean(f));
+                const items = cat.ids.map(byId).filter((f): f is (typeof FAQ_ITEMS)[number] => Boolean(f));
                 return (
                   <Reveal key={cat.title} delay={i * 60}>
-                    <div className="mb-4">
-                      <Label className="mb-3">{cat.title}</Label>
-                      <p className="db-sm text-ink-2 max-w-[46ch]">{cat.blurb}</p>
+                    <div className="mb-3.5">
+                      <h2 className="font-body text-ink m-0 text-[clamp(17px,1.3vw,22px)] font-bold tracking-[-.01em]">
+                        {cat.title}
+                      </h2>
+                      <p className="text-ink-2 mt-1 text-[clamp(14px,0.88vw,15.5px)]">{cat.blurb}</p>
                     </div>
-                    <Accordion items={items} openFirst={i === 0} bare />
+                    <Accordion items={items} openFirst={i === 0} />
                   </Reveal>
                 );
               })}
