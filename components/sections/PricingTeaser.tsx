@@ -14,11 +14,12 @@ export default function PricingTeaser() {
     <section id="pricing" className="bg-page db-section">
       <div className="db-shell">
         <Reveal className="mx-auto mb-10 max-w-[640px] text-center">
-          <h2 className="font-body text-ink text-[clamp(28px,2.7vw,44px)] leading-[1.08] font-bold tracking-[-.02em]">
+          <h2 className="font-display text-[clamp(25px,2.45vw,40px)] leading-[1.08] text-balance text-ink">
             One plan. <span className="text-db-red">Everything in it.</span>
           </h2>
           <p className="text-ink-2 mt-3 text-[clamp(15px,0.9vw,17.5px)] leading-[1.6]">
-            No tiers, no à la carte, no paying extra for the features that make the difference.
+            No tiers, no à la carte add-ons, and no paying extra for the features that make the
+            difference.
             Our all-in-one price keeps the product easy to understand.
           </p>
         </Reveal>
@@ -42,7 +43,7 @@ export default function PricingTeaser() {
                     <span className="text-ink-2 text-[clamp(15px,1vw,17px)]">per month</span>
                   </>
                 ) : (
-                  <span className="font-display text-ink text-[clamp(30px,3.4vw,50px)] leading-none uppercase">
+                  <span className="font-display text-ink text-[clamp(21px,1.95vw,32px)] leading-[1.12] text-balance">
                     Straightforward monthly pricing
                   </span>
                 )}

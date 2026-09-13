@@ -7,6 +7,8 @@ type Props = {
   lede?: React.ReactNode;
   align?: "left" | "center";
   tone?: "light" | "dark";
+  /** the story pages set their headings in the display face, like the heroes */
+  display?: boolean;
   className?: string;
 };
 
@@ -17,20 +19,29 @@ export default function SectionHeading({
   lede,
   align = "left",
   tone = "light",
+  display = false,
   className = "",
 }: Props) {
   const centered = align === "center";
   return (
-    <Reveal className={`${centered ? "mx-auto max-w-[640px] text-center" : "max-w-[52ch]"} ${className}`}>
+    <Reveal
+      className={`${
+        centered
+          ? `mx-auto text-center ${display ? "max-w-[880px]" : "max-w-[640px]"}`
+          : "max-w-[52ch]"
+      } ${className}`}
+    >
       {label && (
         <Label tone={tone} className="mb-4">
           {label}
         </Label>
       )}
       <h2
-        className={`font-body m-0 text-[clamp(26px,2.4vw,40px)] leading-[1.1] font-bold tracking-[-.02em] ${
-          tone === "dark" ? "text-white" : "text-ink"
-        }`}
+        className={`m-0 ${
+          display
+            ? "font-display text-[clamp(25px,2.45vw,40px)] leading-[1.04] font-normal tracking-[.005em] text-balance uppercase"
+            : "font-body text-[clamp(26px,2.4vw,40px)] leading-[1.1] font-bold tracking-[-.02em]"
+        } ${tone === "dark" ? "text-white" : "text-ink"}`}
       >
         {title}
       </h2>

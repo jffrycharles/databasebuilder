@@ -17,7 +17,7 @@ export default function Page() {
       <BuiltForSection />
       <PricingTeaser />
       <HomeFaq />
-      <CtaBand showTrialLength showSignOff />
+      <CtaBand showTrialLength showSignOff sentenceCase />
     </main>
   );
 }

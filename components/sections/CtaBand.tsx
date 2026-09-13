@@ -10,46 +10,81 @@ type Props = {
   showTrialLength?: boolean;
   /** Adam's closing line from the outline — the homepage signs off with it */
   showSignOff?: boolean;
+  /** The homepage sets its headings in sentence case; every other page keeps
+      the display face in caps. This band appears on both. */
+  sentenceCase?: boolean;
 };
 
+/**
+ * The trial band.
+ *
+ * Composed rather than centred. Everything readable is locked to the panel's
+ * left edge, which is what gives the black field an anchor — the previous
+ * version centred a column of five elements inside a wide track, so the copy
+ * floated with dead space either side of it and the globe sat stranded in a
+ * column of its own. Here the globe balances the right instead of occupying a
+ * separate one, and the closing strip runs the full width so the panel has a
+ * base: it also rehouses the sign-off and the commitment line, which were
+ * orphaned underneath the button.
+ *
+ * The sign-off is deliberately small. Set at display size it was a second
+ * headline arguing with the first across a glowing button.
+ */
 export default function CtaBand({
   id = "contact",
   showTrialLength = false,
   showSignOff = false,
+  sentenceCase = false,
 }: Props) {
   return (
     <section id={id} className="db-section bg-page">
       <div className="db-shell">
         <Reveal>
-          <div className="db-cta-band grid items-center gap-8 rounded-[18px] px-6 py-10 text-center text-white sm:px-11 sm:py-12 lg:grid-cols-[minmax(180px,240px)_minmax(0,1fr)] lg:gap-12 lg:px-14 lg:py-14 lg:text-left">
-            <Globe
-              className="mx-auto h-[clamp(120px,18vw,200px)] w-[clamp(120px,18vw,200px)] [filter:drop-shadow(0_0_34px_rgba(46,125,255,.55))]"
-              interactive
-              rings={15}
-              density={25}
-              spin={26}
-              fill="#4da3ff"
-              label={`${SITE.name} globe. Drag to spin it, press Enter for a pulse.`}
-            />
-            <div className="text-center">
-              <h2 className="font-body m-0 mb-2.5 text-[clamp(24px,2.5vw,40px)] leading-tight font-bold tracking-[-.02em]">
-                A productive CRM shouldn&apos;t cost a <span className="text-db-red-hot">fortune.</span>
-              </h2>
-              <p className="m-0 mb-7 text-[clamp(15px,1vw,19px)] text-white/80">
-                {showTrialLength
-                  ? "Start your 7-day free trial today and see the difference."
-                  : "Start your free trial today and see the difference."}
-              </p>
-              <CtaButton className="text-[clamp(18px,2.05vw,32px)]">
-                {showTrialLength ? "Start 7-Day Free Trial" : "Start Free Trial"}
-              </CtaButton>
+          <div
+            data-cta-band
+            className="db-trial-band px-[clamp(24px,4vw,72px)] pt-[clamp(36px,4.2vw,64px)] pb-[clamp(24px,2.4vw,36px)] text-white"
+          >
+            <div className="grid items-center gap-[clamp(30px,3.6vw,60px)] lg:grid-cols-[minmax(0,1fr)_auto]">
+              {/* the globe balances the right — on mobile it crowns the stack */}
+              <Globe
+                className="db-trial-band__globe order-1 h-[clamp(124px,22vw,328px)] w-[clamp(124px,22vw,328px)] lg:order-2"
+                interactive
+                rings={15}
+                density={25}
+                spin={26}
+                label={`${SITE.name} globe. Drag to spin it, press Enter for a pulse.`}
+              />
+
+              <div className="order-2 lg:order-1">
+                <h2
+                  className={`font-display m-0 max-w-[27ch] text-[clamp(24px,3vw,48px)] ${
+                    sentenceCase ? "leading-[1.08]" : "leading-[1.03] tracking-[.005em] uppercase"
+                  }`}
+                >
+                  A productive CRM shouldn&apos;t cost a <span className="text-db-red-hot">fortune.</span>
+                </h2>
+                <p className="mt-[clamp(12px,1.15vw,19px)] mb-0 max-w-[44ch] text-[clamp(15px,1vw,18.5px)] leading-[1.6] text-white/70">
+                  {showTrialLength
+                    ? "Start your 7-day free trial today and see the difference."
+                    : "Start your free trial today and see the difference."}
+                </p>
+                <CtaButton className="mt-[clamp(22px,2.2vw,36px)] text-[clamp(17px,1.75vw,27px)]">
+                  {showTrialLength ? "Start 7-Day Free Trial" : "Start Free Trial"}
+                </CtaButton>
+              </div>
+            </div>
+
+            {/* The base of the panel. Carries whichever of the two closing lines
+                this page asked for, so a missing sign-off leaves a strip that is
+                still deliberate rather than a hole. */}
+            <div className="mt-[clamp(28px,3vw,48px)] flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t border-white/10 pt-[clamp(16px,1.5vw,24px)]">
               {showSignOff && (
-                <p className="font-display mt-7 text-[clamp(19px,2vw,32px)] leading-none text-white uppercase">
+                <p className="font-display m-0 text-[clamp(14px,1.22vw,20px)] leading-none tracking-[.045em] text-white/85 uppercase">
                   Salespeople close deals,
                   <span className="text-db-red-hot"> not software.</span>
                 </p>
               )}
-              <p className="text-db-cyan mt-4 flex items-center justify-center gap-2 text-[14px] font-semibold">
+              <p className="text-db-cyan m-0 flex items-center gap-2 text-[13.5px] font-semibold">
                 <Icon name="check" className="h-4 w-4" />
                 No long-term commitment required
               </p>

@@ -26,7 +26,7 @@ export const ORIGIN = {
   stats: [
     { value: 45, suffix: " yrs", label: "Of sales experience behind the product" },
     { value: 20, suffix: "M", label: "Business and consumer records in the database" },
-    { value: 1, suffix: " price", label: "All-in-one, with no tiers and no à la carte" },
+    { value: 1, suffix: " price", label: "All-in-one, with no tiers and no à la carte add-ons" },
   ],
 };
 
@@ -138,7 +138,7 @@ export const LEADERS: Leader[] = [
     name: "Sergiu Durlesteanu",
     photo: "/team/sergiu-durlesteanu.webp",
     summary: "Joined as a backend developer in 2013 and helped build DatabaseBuilder itself.",
-    role: "Chief Technology Officer",
+    role: "Director of Business Technology & Senior Software Developer",
     initials: "SD",
     since: "Since 2013",
     bio: "Sergiu joined in 2013 as a backend developer and worked his way up to Senior Lead Developer, then Director of Business Technology. He helped build DatabaseBuilder itself, and his knowledge of databases and programming shapes how the platform handles data at scale.",

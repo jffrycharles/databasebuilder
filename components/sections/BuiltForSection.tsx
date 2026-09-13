@@ -12,7 +12,7 @@ export default function BuiltForSection() {
           action="See the dashboard"
           copy={
             <Reveal>
-              <h2 className="font-body text-ink mb-5 text-[clamp(28px,2.7vw,44px)] leading-[1.08] font-bold tracking-[-.02em]">
+              <h2 className="font-display text-[clamp(25px,2.45vw,40px)] leading-[1.08] text-balance text-ink mb-5">
                 Built for
                 <br />
                 <span className="text-db-red">Salespeople.</span>

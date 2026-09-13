@@ -25,7 +25,7 @@ export default function HomeFaq() {
       <div className="db-shell">
         <div className="grid gap-[clamp(28px,3.4vw,64px)] lg:grid-cols-[0.8fr_1.2fr]">
           <Reveal>
-            <h2 className="font-body text-ink text-[clamp(28px,2.7vw,44px)] leading-[1.08] font-bold tracking-[-.02em]">
+            <h2 className="font-display text-[clamp(25px,2.45vw,40px)] leading-[1.08] text-balance text-ink">
               Questions, <span className="text-db-red">answered</span>
             </h2>
             <p className="text-ink-2 mt-3 max-w-[38ch] text-[clamp(15px,0.9vw,17.5px)] leading-[1.6]">

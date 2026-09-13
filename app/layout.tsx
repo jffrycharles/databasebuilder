@@ -8,6 +8,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { IconSprite } from "@/components/ui/Icon";
 import { SITE } from "@/lib/data";
+import { CONTACT } from "@/lib/contact";
+import { OG_IMAGE } from "@/lib/seo";
 
 /* Self-hosted and subset: no third-party request, no layout shift. */
 const anton = localFont({
@@ -54,15 +56,18 @@ export const metadata: Metadata = {
   authors: [{ name: SITE.name }],
   openGraph: {
     type: "website",
+    locale: "en_US",
     url: SITE.url,
     siteName: SITE.name,
     title: "DatabaseBuilder — Sales CRM for small and mid-sized businesses",
     description: "Sales software, designed by salespeople. No long-term commitment required.",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "DatabaseBuilder — Sales CRM for small and mid-sized businesses",
     description: "Sales software, designed by salespeople. No long-term commitment required.",
+    images: [OG_IMAGE.url],
   },
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
@@ -85,7 +90,47 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <style>{`.db-boot{display:none!important}.db-anim{opacity:1!important;transform:none!important}`}</style>
         </noscript>
 
-        <a className="db-skiplink" href="#why">
+        {/* #top is the opening section of every page; #why is homepage-only,
+            which left this bypass inert on four of the five routes. */}
+        <script
+          type="application/ld+json"
+          // our own constants — no user input reaches this
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": `${SITE.url}/#organization`,
+                  name: SITE.name,
+                  url: SITE.url,
+                  logo: `${SITE.url}/og.png`,
+                  description: SITE.description,
+                  telephone: CONTACT.phone.label,
+                  email: CONTACT.email,
+                  address: {
+                    "@type": "PostalAddress",
+                    streetAddress: CONTACT.address.line1,
+                    addressLocality: "Chicago",
+                    addressRegion: "IL",
+                    postalCode: "60659",
+                    addressCountry: "US",
+                  },
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": `${SITE.url}/#website`,
+                  url: SITE.url,
+                  name: SITE.name,
+                  publisher: { "@id": `${SITE.url}/#organization` },
+                  inLanguage: "en-US",
+                },
+              ],
+            }).replace(/</g, "\\u003c"),
+          }}
+        />
+
+        <a className="db-skiplink" href="#top">
           Skip to main content
         </a>
         <IconSprite />

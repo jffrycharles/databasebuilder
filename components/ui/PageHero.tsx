@@ -1,7 +1,7 @@
 import Reveal from "@/components/animations/Reveal";
 import Label from "@/components/ui/Label";
 import { WaveDivider } from "@/components/sections/HeroArt";
-import GlowLines from "@/components/ui/GlowLines";
+import HeroAtmosphere from "@/components/ui/HeroAtmosphere";
 
 type Props = {
   label: string;
@@ -18,11 +18,15 @@ type Props = {
  * headline, so no inner page shouts louder than the hero. The chrome is fixed
  * and transparent, so the band reserves its height rather than sitting under
  * it.
+ *
+ * The backdrop is the same drifting, breathing atmosphere the story opener
+ * uses. The sweeping light lines it replaced ran straight through the lede on
+ * every one of these pages.
  */
 export default function PageHero({ label, title, lede, aside }: Props) {
   return (
-    <section id="top" className="db-page-band db-under-header flex min-h-[max(560px,100svh)] flex-col">
-      <GlowLines />
+    <section id="top" tabIndex={-1} className="db-page-band db-page-band--full db-under-header flex flex-col">
+      <HeroAtmosphere />
       <div
         className={`db-shell relative z-[2] flex-1 grid content-center items-center gap-[clamp(28px,3.4vw,56px)] pt-[clamp(40px,5vw,72px)] pb-[clamp(56px,6vw,96px)] ${
           aside ? "lg:grid-cols-[1.12fr_0.88fr]" : ""

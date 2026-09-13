@@ -37,7 +37,8 @@ export type SphereOptions = {
   spin?: number;
   fill?: string;
   interactive?: boolean;
-  /** publish the current spin speed to --db-spd on <html> */
+  /** publish the current spin speed as --db-spd, scoped to the nearest
+      [data-spin-scope] ancestor */
   drive?: boolean;
   label?: string;
 };
@@ -73,6 +74,8 @@ type Internal = SphereInstance & {
   vis: boolean;
   drive: boolean;
   lastSpd: number;
+  /** element the spin speed is published on — see the note in `spd()` */
+  scope: HTMLElement | SVGElement;
 };
 
 const list: Internal[] = [];
@@ -119,8 +122,16 @@ function step(it: Internal, dt: number) {
 
   if (it.drive) {
     const m = clamp(Math.abs(it.vel) / Math.max(0.08, it.auto), 1, 4);
-    if (Math.abs(m - it.lastSpd) > 0.04) {
-      document.documentElement.style.setProperty("--db-spd", m.toFixed(2));
+    /* Scoped on purpose. Setting a custom property on <html> invalidates
+       computed style for EVERY element in the document, because any of them
+       could inherit it — and hovering ramps the speed through this threshold
+       dozens of times in half a second. Measured in WebKit that was 19 frames
+       out of 119 over 30ms, peaking at 66ms. Published on the stage instead,
+       only that subtree is re-resolved. The threshold is also coarser now:
+       the single consumer is one ribbon opacity, which nobody can see move in
+       hundredths. */
+    if (Math.abs(m - it.lastSpd) > 0.12) {
+      it.scope.style.setProperty("--db-spd", m.toFixed(2));
       it.lastSpd = m;
     }
   }
@@ -181,6 +192,14 @@ export function createSphere(el: SVGSVGElement, opts: SphereOptions = {}): Spher
   while (el.firstChild) el.removeChild(el.firstChild);
   const paths: SVGPathElement[] = [];
   const buf: string[] = [];
+  /* Last string actually written to each path. WebKit does not elide a
+     same-value setAttribute on an SVG path: it still fires svgAttributeChanged,
+     re-parses the `d` string and re-tessellates the shape. A sphere at rest —
+     under prefers-reduced-motion, or simply idle — was rebuilding and
+     re-parsing ~14.7 KB of byte-identical path text every frame, and the
+     header and footer each mount another one on every page. The sentinel can
+     never equal a generated string, so the first render always writes. */
+  const prev: string[] = [];
   for (let b = 0; b < BUCKETS; b++) {
     const p = document.createElementNS(NS, "path");
     p.setAttribute("fill", fillColor);
@@ -188,6 +207,7 @@ export function createSphere(el: SVGSVGElement, opts: SphereOptions = {}): Spher
     el.appendChild(p);
     paths.push(p);
     buf.push("");
+    prev.push("\u0000");
   }
 
   const it: Internal = {
@@ -210,6 +230,7 @@ export function createSphere(el: SVGSVGElement, opts: SphereOptions = {}): Spher
     vis: true,
     drive: !!opts.drive,
     lastSpd: -1,
+    scope: el.closest<HTMLElement>("[data-spin-scope]") ?? document.documentElement,
     render: () => {},
     destroy: () => {},
     pulse: () => {},
@@ -257,7 +278,11 @@ export function createSphere(el: SVGSVGElement, opts: SphereOptions = {}): Spher
       const d2 = rr * 2;
       buf[bi] += `M${px - rr} ${py}a${rr} ${rr} 0 1 0 ${d2} 0a${rr} ${rr} 0 1 0 ${-d2} 0`;
     }
-    for (let w = 0; w < BUCKETS; w++) paths[w].setAttribute("d", buf[w]);
+    for (let w = 0; w < BUCKETS; w++) {
+      if (buf[w] === prev[w]) continue;
+      prev[w] = buf[w];
+      paths[w].setAttribute("d", buf[w]);
+    }
   };
 
   it.pulse = () => {
@@ -324,7 +349,7 @@ export function createSphere(el: SVGSVGElement, opts: SphereOptions = {}): Spher
         ly = e.clientY;
         lt = t;
         e.preventDefault();
-      } else if (fine()) {
+      } else if (!soft && fine()) {
         const px = (e.clientX - box.left) / box.width - 0.5;
         const py = (e.clientY - box.top) / box.height - 0.5;
         it.yawGoal = px * 0.55;

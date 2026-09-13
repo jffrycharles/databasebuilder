@@ -2,7 +2,7 @@
    defined once and referenced with <use>. */
 
 export const ICON_NAMES = [
-  "api", "bell", "bolt", "cal", "card", "chart", "chat", "check", "clip", "clock", "dots", "fb", "gear", "grid", "headset", "li", "mail", "monitor", "phone", "pin", "plus", "rec", "search", "send", "share", "shield", "swap", "tag", "tw", "upload", "user", "video", "voicemail", "yt",
+  "api", "bell", "bolt", "cal", "card", "chart", "chat", "check", "clip", "clock", "dots", "fb", "gear", "grid", "headset", "ig", "li", "mail", "monitor", "phone", "pin", "plus", "rec", "search", "send", "share", "shield", "swap", "tag", "tw", "upload", "user", "video", "voicemail", "yt",
 ] as const;
 
 export type IconName = (typeof ICON_NAMES)[number];
@@ -35,6 +35,7 @@ export function IconSprite() {
         <g id="i-gear"><circle cx="12" cy="12" r="3.1" fill="none" stroke="currentColor" strokeWidth="1.7"/><path d="M12 3v2.6M12 18.4V21M3 12h2.6M18.4 12H21M5.6 5.6l1.9 1.9M16.5 16.5l1.9 1.9M18.4 5.6l-1.9 1.9M7.5 16.5l-1.9 1.9" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></g>
         <g id="i-grid"><rect x="4" y="4" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.7"/><rect x="13" y="4" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.7"/><rect x="4" y="13" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.7"/><rect x="13" y="13" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.7"/></g>
         <g id="i-headset"><path d="M5 14v-2a7 7 0 0 1 14 0v2" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/><rect x="3" y="13" width="4" height="7" rx="1.8" fill="none" stroke="currentColor" strokeWidth="1.7"/><rect x="17" y="13" width="4" height="7" rx="1.8" fill="none" stroke="currentColor" strokeWidth="1.7"/></g>
+        <g id="i-ig"><rect x="3.8" y="3.8" width="16.4" height="16.4" rx="4.6" fill="none" stroke="currentColor" strokeWidth="1.7"/><circle cx="12" cy="12" r="3.9" fill="none" stroke="currentColor" strokeWidth="1.7"/><circle cx="16.7" cy="7.3" r="1.15" fill="currentColor"/></g>
         <g id="i-li"><path d="M5.5 9.5h3V20h-3zM7 4.4a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM10.6 9.5h2.9v1.4c.5-.9 1.6-1.7 3.2-1.7 2.5 0 3.8 1.6 3.8 4.5V20h-3v-5.6c0-1.4-.5-2.2-1.7-2.2-1.1 0-1.9.7-1.9 2.2V20h-3.3z" fill="currentColor"/></g>
         <g id="i-mail"><rect x="3" y="5.5" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" strokeWidth="1.7"/><path d="M3.8 7l8.2 6 8.2-6" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/></g>
         <g id="i-monitor"><rect x="3" y="4.5" width="18" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="1.7"/><path d="M9 20h6M12 16.5V20" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></g>

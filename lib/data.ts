@@ -258,9 +258,11 @@ export const FOOTER_COLUMNS: { title: string; links: { label: string; href: stri
   },
 ];
 
+/* X and YouTube used to sit here pointing at "#top", so clicking either just
+   scrolled you back up the page instead of opening a profile. Both are gone.
+   The footer skips any entry with an empty href, so adding a network later is
+   a one-line change — the `ig` glyph is already in the icon sprite. */
 export const SOCIALS: { icon: IconName; label: string; href: string }[] = [
-  { icon: "fb", label: "Facebook", href: "https://www.facebook.com/profile.php?id=61554575739247" },
   { icon: "li", label: "LinkedIn", href: "https://www.linkedin.com/company/databasebuilder-com" },
-  { icon: "tw", label: "X", href: "#top" },
-  { icon: "yt", label: "YouTube", href: "#top" },
+  { icon: "fb", label: "Facebook", href: "https://www.facebook.com/profile.php?id=61554575739247" },
 ];

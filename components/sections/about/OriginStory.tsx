@@ -17,18 +17,18 @@ export default function OriginStory() {
     <section id="origin" className="bg-page db-section db-section--airy">
       <div className="db-shell">
         {/* ---- masthead ---- */}
-        <div className="grid items-start gap-[clamp(26px,3.8vw,80px)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+        <div className="grid items-start gap-[clamp(26px,3vw,58px)] lg:grid-cols-[minmax(0,0.62fr)_minmax(0,1fr)]">
           <div>
             <Reveal>
               <Label className="mb-6">Origin</Label>
             </Reveal>
             <Reveal delay={70}>
-              <h2 className="db-origin__title max-w-[10ch]">
+              <h2 className="db-origin__title max-w-[9ch]">
                 Where it <span className="text-db-red">started</span>
               </h2>
             </Reveal>
             <Reveal delay={130}>
-              <span className="db-rule mt-8 block" />
+              <span className="db-rule mt-7 block" />
             </Reveal>
           </div>
 

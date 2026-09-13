@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import PageHero from "@/components/ui/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/animations/Reveal";
@@ -15,12 +16,12 @@ export const metadata: Metadata = {
   description:
     "One all-in-one CRM package for up to three users, with additional users available. No setup fees, no tiers, live human support and a 7-day free trial.",
   alternates: { canonical: "/pricing" },
-  openGraph: {
-    title: "Pricing — DatabaseBuilder",
-    description: "Simple, all-in-one CRM pricing. See what is included and how usage charges work.",
-    url: "/pricing",
-    type: "website",
-  },
+  ...pageMeta({
+    title: "Pricing — DatabaseBuilder CRM",
+    description:
+      "Simple, all-in-one CRM pricing. See what is included and how usage charges work.",
+    path: "/pricing"
+  }),
 };
 
 const PHILOSOPHY = [
@@ -76,11 +77,12 @@ export default function PricingPage() {
       />
 
       {/* ---- the offer, asymmetric: reasoning left, the card right ---- */}
-      <section className="db-section bg-page">
+      <section className="db-section db-section--airy bg-page">
         <div className="db-shell">
-          <div className="grid items-start gap-[clamp(28px,3.4vw,60px)] lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="grid items-start gap-[clamp(32px,4vw,76px)] lg:grid-cols-[1.05fr_0.95fr]">
             <div>
               <SectionHeading
+                display
                 label="How we price"
                 title={
                   <>
@@ -90,7 +92,7 @@ export default function PricingPage() {
                 lede="Most CRM companies added complexity and raised the price. We went the other way — one subscription, everything in it."
               />
 
-              <div className="mt-8 grid gap-5 sm:grid-cols-2">
+              <div className="mt-[clamp(30px,3.2vw,52px)] grid gap-[clamp(22px,2.4vw,38px)] sm:grid-cols-2">
                 {PHILOSOPHY.map((p, i) => (
                   <Reveal key={p.title} delay={i * 80}>
                     <h3 className="font-body text-ink m-0 flex items-center gap-2.5 text-[clamp(15.5px,1.05vw,17.5px)] font-bold">
@@ -115,14 +117,14 @@ export default function PricingPage() {
                 {hasPrice ? (
                   <>
                     <p className="text-ink-2 m-0 text-[14px]">Pricing starts at</p>
-                    <p className="font-body text-ink m-0 text-[clamp(34px,3.2vw,50px)] leading-none font-bold">
+                    <p className="font-display text-ink m-0 text-[clamp(36px,3.4vw,56px)] leading-none tracking-[.01em]">
                       {PRICING.currencySymbol}
                       {PRICING.baseMonthly}
                       <span className="text-ink-2 text-[16px] font-normal"> / month</span>
                     </p>
                   </>
                 ) : (
-                  <p className="font-body text-ink m-0 text-[clamp(22px,2vw,30px)] leading-tight font-bold">
+                  <p className="font-display text-ink m-0 text-[clamp(23px,2.1vw,34px)] leading-[1.05] tracking-[.01em] text-balance uppercase">
                     Contact us for current pricing
                   </p>
                 )}
@@ -169,9 +171,10 @@ export default function PricingPage() {
       </section>
 
       {/* ---- everything included, grouped by capability ---- */}
-      <section className="bg-page pb-[clamp(48px,5vw,88px)]">
+      <section className="bg-page pt-[clamp(56px,6vw,108px)] pb-[clamp(56px,6vw,108px)]">
         <div className="db-shell">
           <SectionHeading
+            display
             label="What's included"
             align="center"
             title={
@@ -180,10 +183,10 @@ export default function PricingPage() {
               </>
             }
             lede="Twenty-one features, grouped the way a sales floor actually uses them."
-            className="mb-9"
+            className="mb-[clamp(34px,3.8vw,64px)]"
           />
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-[clamp(18px,1.9vw,30px)] md:grid-cols-2 xl:grid-cols-3">
             {FEATURE_GROUPS.map((group, i) => (
               <Reveal key={group.title} delay={i * 70}>
                 <FeatureGroup group={group} />
@@ -192,7 +195,7 @@ export default function PricingPage() {
             {/* fills the grid and gives the section somewhere to go */}
             <Reveal delay={FEATURE_GROUPS.length * 70}>
               <div className="bg-navy flex h-full flex-col justify-center rounded-[14px] p-[clamp(18px,1.8vw,28px)] text-white">
-                <h3 className="font-body m-0 text-[clamp(16.5px,1.2vw,20px)] leading-snug font-bold">
+                <h3 className="font-display m-0 text-[clamp(18px,1.4vw,24px)] leading-none tracking-[.01em] uppercase">
                   Not sure which of these you need?
                 </h3>
                 <p className="mt-2.5 text-[clamp(14px,0.88vw,15.5px)] leading-[1.6] text-white/70">
@@ -215,12 +218,12 @@ export default function PricingPage() {
       </section>
 
       {/* ---- usage charges, said plainly ---- */}
-      <section className="bg-page pb-[clamp(48px,5vw,88px)]">
+      <section className="bg-page pb-[clamp(64px,7vw,124px)]">
         <div className="db-shell">
           <Reveal>
             <div className="bg-navy rounded-[18px] p-[clamp(24px,3vw,48px)] text-white">
               <div className="max-w-[52ch]">
-                <h2 className="font-body m-0 text-[clamp(21px,1.9vw,30px)] leading-tight font-bold tracking-[-.02em]">
+                <h2 className="font-display m-0 text-[clamp(21px,1.95vw,32px)] leading-none tracking-[.01em] uppercase">
                   What is billed separately
                 </h2>
                 <p className="mt-3.5 max-w-[38ch] text-[clamp(14.5px,0.92vw,16.5px)] leading-[1.62] text-white/70">
@@ -228,7 +231,7 @@ export default function PricingPage() {
                   invoiced monthly alongside the subscription.
                 </p>
               </div>
-              <div className="mt-7 grid gap-4 sm:grid-cols-3">
+              <div className="mt-[clamp(28px,2.8vw,44px)] grid gap-[clamp(16px,1.6vw,24px)] sm:grid-cols-3">
                 {USAGE_CHARGES.map((c) => (
                   <div key={c.title} className="rounded-[12px] border border-white/10 bg-white/[0.04] p-4">
                     <h3 className="font-body m-0 text-[15px] leading-snug font-bold text-white">
@@ -241,7 +244,7 @@ export default function PricingPage() {
             </div>
           </Reveal>
 
-          <Reveal className="mt-8 text-center">
+          <Reveal className="mt-[clamp(30px,3vw,48px)] text-center">
             <p className="text-ink-2 m-0 text-[clamp(14.5px,0.9vw,16px)]">
               Still deciding?{" "}
               <SmartLink href="/faq" className="text-brand font-semibold underline underline-offset-4">

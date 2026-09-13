@@ -65,6 +65,7 @@ export default function Timeline() {
         <SectionHeading
           tone="dark"
           align="center"
+          display
           label="History"
           title={
             <>

@@ -5,10 +5,18 @@ import { Icon } from "@/components/ui/Icon";
 import { LEADERS } from "@/lib/about";
 
 /* Four across on wide screens, two on tablets, one on phones. The portrait
-   frame is a fixed 4:5 so every card lines up whatever the source image is;
+   frame is a fixed square so every card lines up whatever the source image is;
    `object-cover` with a top-weighted position crops the sides, never the head.
    Where a photograph is missing the monogram fills the same frame, so the row
-   never collapses. */
+   never collapses.
+
+   The four photographs were shot against four different backdrops — two greys,
+   a beige and a tan — which made the row look like four unrelated pictures.
+   `.db-portrait` pulls the saturation back a touch so they read as one set.
+
+   Tenure sits on the photograph rather than in the body copy: it is the one
+   fact a leadership card is really answering, and putting it there keeps the
+   text block to name, role and summary. */
 export default function Leadership() {
   return (
     <section id="leadership" className="db-section db-section--airy bg-page">
@@ -16,6 +24,7 @@ export default function Leadership() {
         <SectionHeading
           label="Leadership"
           align="center"
+          display
           title={
             <>
               The people behind <span className="text-db-red">DatabaseBuilder</span>
@@ -43,6 +52,7 @@ export default function Leadership() {
                       <span>{p.initials}</span>
                     </span>
                   )}
+                  <span className="db-leader__since">{p.since}</span>
                 </div>
 
                 <div className="flex flex-1 flex-col p-[clamp(16px,1.5vw,22px)]">
@@ -53,7 +63,7 @@ export default function Leadership() {
                     {p.role}
                   </p>
 
-                  <p className="text-ink-2 mt-3 text-[clamp(13.5px,0.86vw,15px)] leading-[1.6]">
+                  <p className="text-ink-2 mt-3 min-h-[4.8em] text-[clamp(13.5px,0.86vw,15px)] leading-[1.6]">
                     {p.summary}
                   </p>
 
@@ -68,6 +78,11 @@ export default function Leadership() {
                     <p className="text-ink-2 mt-2 text-[clamp(13.5px,0.86vw,15px)] leading-[1.6]">
                       {p.bio}
                     </p>
+                    {p.quote && (
+                      <blockquote className="border-db-red text-ink mt-3.5 border-l-2 pl-3.5 text-[clamp(13.5px,0.86vw,15px)] leading-[1.55] font-semibold">
+                        {p.quote}
+                      </blockquote>
+                    )}
                   </details>
 
                   <div className="border-line mt-auto grid gap-1.5 border-t pt-3.5 text-[13.5px]">

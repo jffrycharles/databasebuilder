@@ -48,11 +48,13 @@ export default function Footer() {
               Stay connected
             </h2>
             <div className="flex gap-2.5">
-              {SOCIALS.map((s) => (
+              {SOCIALS.filter((s) => s.href).map((s) => (
                 <a
                   key={s.label}
                   href={s.href}
-                  aria-label={s.label}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label={`${s.label} (opens in a new tab)`}
                   className="bg-navy hover:bg-brand grid h-[34px] w-[34px] place-items-center rounded-full text-white transition hover:-translate-y-0.5"
                 >
                   <Icon name={s.icon} className="h-[15px] w-[15px]" />

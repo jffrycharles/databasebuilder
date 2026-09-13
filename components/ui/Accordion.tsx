@@ -11,11 +11,13 @@ export default function Accordion({ items, openFirst = false }: { items: FaqItem
         <details
           key={item.id}
           id={item.id}
-          className="db-faq group border-line px-[clamp(16px,1.6vw,26px)] [&:not(:first-child)]:border-t"
+          className="db-faq group border-line px-[clamp(18px,2vw,34px)] [&:not(:first-child)]:border-t"
           open={openFirst && i === 0}
         >
-          <summary className="text-ink flex cursor-pointer list-none items-start gap-4 py-[clamp(15px,1.4vw,20px)] text-[clamp(15px,1vw,17.5px)] leading-snug font-bold">
-            {item.question}
+          <summary className="db-faq__q text-ink flex cursor-pointer list-none items-start gap-5 py-[clamp(19px,1.85vw,30px)]">
+            <h3 className="m-0 text-[length:inherit] leading-[inherit] font-[inherit]">
+              {item.question}
+            </h3>
             <span className="border-line text-brand ml-auto grid h-7 w-7 shrink-0 place-items-center rounded-full border transition-transform duration-300 group-open:rotate-45">
               <Icon name="plus" className="h-3.5 w-3.5" />
             </span>
@@ -25,7 +27,7 @@ export default function Accordion({ items, openFirst = false }: { items: FaqItem
               {item.answer.map((p) => (
                 <p
                   key={p}
-                  className="text-ink-2 m-0 max-w-[68ch] pb-[clamp(14px,1.3vw,18px)] text-[clamp(14px,0.9vw,16.5px)] leading-[1.65]"
+                  className="text-ink-2 m-0 max-w-[68ch] pb-[clamp(18px,1.9vw,28px)] text-[clamp(14.5px,0.92vw,17px)] leading-[1.72] [&:first-child]:pt-1"
                 >
                   {p}
                 </p>

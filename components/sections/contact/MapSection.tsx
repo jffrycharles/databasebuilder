@@ -6,7 +6,7 @@ import { CONTACT } from "@/lib/contact";
 
 export default function MapSection() {
   return (
-    <section className="db-page-band py-[clamp(48px,5.5vw,92px)]">
+    <section className="db-page-band py-[clamp(60px,6.5vw,116px)]">
       <div className="db-shell relative z-[2]">
         <div className="grid items-center gap-[clamp(24px,3vw,52px)] lg:grid-cols-[1.35fr_0.65fr]">
           <Reveal>
@@ -16,6 +16,7 @@ export default function MapSection() {
           <Reveal delay={90}>
             <SectionHeading
               tone="dark"
+              display
               label="The office"
               title={
                 <>

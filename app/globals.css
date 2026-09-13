@@ -1,56 +1,5 @@
 @import "tailwindcss";
 
-/* Pricing and FAQ reuse the existing brand without changing the other pages. */
-.db-info-hero {
-  background: radial-gradient(ellipse at 85% 80%, #152968 0%, transparent 65%), #010409;
-  border-bottom: 2px solid #e23324;
-}
-.db-faq-item + .db-faq-item {
-  border-top: 1px solid var(--color-line);
-}
-.db-faq-item {
-  scroll-margin-top: calc(var(--db-header-h, 100px) + 16px);
-}
-.db-faq-item > summary {
-  display: grid;
-  grid-template-columns: 26px minmax(0, 1fr) 24px;
-  gap: 16px;
-  align-items: center;
-  padding: 24px clamp(18px, 3vw, 32px);
-  list-style: none;
-}
-.db-faq-item > summary::-webkit-details-marker {
-  display: none;
-}
-.db-faq-item > summary:focus-visible {
-  outline: 2px solid var(--color-brand);
-  outline-offset: -4px;
-}
-.db-faq-plus {
-  display: inline-block;
-  color: var(--color-brand);
-  font-size: 26px;
-  line-height: 1;
-  text-align: center;
-}
-.db-faq-item[open] .db-faq-plus {
-  transform: rotate(45deg);
-}
-.db-faq-answer {
-  padding: 0 clamp(18px, 3vw, 32px) 28px;
-  padding-left: calc(clamp(18px, 3vw, 32px) + 42px);
-}
-@media (max-width: 639px) {
-  .db-faq-item > summary {
-    gap: 10px;
-    grid-template-columns: 22px minmax(0, 1fr) 22px;
-    padding-block: 20px;
-  }
-  .db-faq-answer {
-    padding-left: 18px;
-  }
-}
-
 /* =========================================================================
    DatabaseBuilder design tokens
    Every colour, font and radius the site uses lives here. Components never
@@ -89,6 +38,8 @@ html {
      opening band of every page reserves exactly this much room for it. The
      Header component rewrites the value from its own box on mount. */
   --db-header-h: 66px;
+  /* the hand-off curve's height — the story hero offsets itself by it */
+  --db-wave-h: clamp(58px, 7vw, 132px);
   scroll-padding-top: calc(var(--db-header-h) + 18px);
   -webkit-text-size-adjust: 100%;
 }
@@ -174,6 +125,11 @@ html::-webkit-scrollbar-corner {
 }
 .db-skiplink:focus {
   top: 14px;
+}
+/* the bypass target is programmatically focusable, so it must not draw a ring
+   of its own when the caret lands on it */
+#top:focus {
+  outline: none;
 }
 
 /* =========================================================================
@@ -342,6 +298,7 @@ html::-webkit-scrollbar-corner {
   animation-direction: reverse;
   animation-delay: -4.5s;
 }
+
 /* spinning the globe flares the ribbons */
 .db-runners {
   opacity: calc(0.6 + 0.13 * var(--db-spd, 1));
@@ -352,7 +309,7 @@ html::-webkit-scrollbar-corner {
 .db-curve {
   display: block;
   width: 100%;
-  height: clamp(58px, 7vw, 132px);
+  height: var(--db-wave-h, clamp(58px, 7vw, 132px));
 }
 .db-wave::before {
   content: "";
@@ -622,10 +579,10 @@ html::-webkit-scrollbar-corner {
 /* Opening paragraph of a story column. */
 .db-dropcap::first-letter {
   float: left;
-  margin: 0.08em 0.12em 0 0;
+  margin: 0.1em 0.1em 0 0;
   font-family: var(--font-display);
-  font-size: 3.1em;
-  line-height: 0.78;
+  font-size: 2.5em;
+  line-height: 0.82;
   color: var(--color-db-red);
 }
 
@@ -667,11 +624,12 @@ html::-webkit-scrollbar-corner {
    ========================================================================= */
 .db-origin__title {
   margin: 0;
-  font-family: var(--font-body);
-  font-size: clamp(32px, 3.8vw, 58px);
-  font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -0.032em;
+  font-family: var(--font-display);
+  font-size: clamp(29px, 3vw, 50px);
+  font-weight: 400;
+  line-height: 0.96;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
   color: var(--color-ink);
   text-wrap: balance;
 }
@@ -685,11 +643,12 @@ html::-webkit-scrollbar-corner {
 }
 .db-stat__figure {
   display: block;
-  font-family: var(--font-body);
-  font-size: clamp(40px, 4.2vw, 66px);
-  font-weight: 700;
-  line-height: 0.94;
-  letter-spacing: -0.035em;
+  font-family: var(--font-display);
+  font-size: clamp(34px, 3.4vw, 56px);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   color: var(--color-ink);
   font-variant-numeric: tabular-nums;
 }
@@ -732,11 +691,49 @@ html::-webkit-scrollbar-corner {
     0 22px 54px #1d6fe838;
 }
 
+/* Black, not blue. The old recipe put a 700px blue radial at 14% across —
+   exactly where the globe sits — so the whole left half of the band read as a
+   blue pool. What is left is a neutral lift in the same place, just enough to
+   separate the mark from the panel. */
 .db-cta-band {
   background:
-    radial-gradient(700px 340px at 14% 55%, #1d6fe857, #0000 66%),
-    linear-gradient(135deg, #0b1730 0%, #081026 55%, #0a0f22 100%);
-  box-shadow: 0 24px 60px #0b173047;
+    radial-gradient(760px 380px at 14% 52%, #232a3a57, #0000 68%),
+    linear-gradient(135deg, #0b0e16 0%, #06080f 56%, #04060c 100%);
+  box-shadow: 0 24px 60px #00000066;
+}
+
+/* The trial band's own surface. Split off from .db-cta-band — which the founder
+   quote on /about also wears — so the CTA can carry structure the quote panel
+   does not need.
+
+   The point of the border and the lit top edge is that the panel needs an EDGE.
+   Painted as a bare black rectangle it read as a hole in the page rather than a
+   card sitting on it, and no amount of extra spacing fixed that. The two lifts
+   give the field somewhere to be brightest: neutral behind the globe, a trace
+   of the brand red under the button. Deliberately no blue anywhere. */
+.db-trial-band {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #ffffff17;
+  border-radius: 20px;
+  background:
+    radial-gradient(560px 320px at 84% 38%, #ffffff0d, #0000 70%),
+    radial-gradient(520px 300px at 16% 82%, #e2332421, #0000 72%),
+    linear-gradient(148deg, #0d1018 0%, #06080e 54%, #04050a 100%);
+  box-shadow: 0 28px 70px #00000073;
+}
+/* the lit top edge — white into brand red, the site's hairline idiom */
+.db-trial-band::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #0000 3%, #ffffff45 23%, var(--color-db-red) 58%, #0000 95%);
+}
+/* the globe is a per-frame rAF SVG, so it gets one cheap glow and nothing else */
+.db-trial-band__globe {
+  filter: drop-shadow(0 0 26px #ffffff2e);
 }
 
 /* the clickable colour bars that expand a dashboard */
@@ -1133,6 +1130,19 @@ html::-webkit-scrollbar-corner {
   .db-hero-hold .db-globe-el {
     opacity: 1;
   }
+  .db-story-hold [data-story-label],
+  .db-story-hold [data-story-lede],
+  .db-story-hold .db-globe-el,
+  .db-story-hold .db-orbit,
+  .db-story-hold [data-story-mark],
+  .db-story-hold .db-story-cue,
+  .db-story-hold .db-atmos__blob,
+  .db-story-hold .db-atmos__cols {
+    opacity: 1;
+  }
+  .db-story-hold .db-word > span {
+    transform: none;
+  }
 }
 
 /* =========================================================================
@@ -1156,59 +1166,28 @@ html::-webkit-scrollbar-corner {
     linear-gradient(#04060e 0%, #010409 62%, #000 100%);
 }
 
-/* the glowing sweeps that carry the colour */
-.db-lines {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0.9;
-  -webkit-mask-image: linear-gradient(#000 0 74%, #0000 100%);
-  mask-image: linear-gradient(#000 0 74%, #0000 100%);
-}
-@media (max-width: 767px) {
-  .db-lines {
-    opacity: 0.75;
-  }
-}
-
-
 /* Static version of the homepage's coloured-bar label. */
 .db-label {
   display: inline-flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
-.db-label__bars {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.db-label__bars i {
+/* one rule, not three dashes — the same blue-to-red as .db-rule */
+.db-label__bar {
   display: block;
+  width: 32px;
   height: 3px;
-  border-radius: 2px;
+  flex: none;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-brand) 0%, #6d8cf4 48%, var(--color-db-red) 100%);
 }
-.db-label__bars i:nth-child(1) {
-  width: 26px;
-  background: var(--color-brand);
-}
-.db-label__bars i:nth-child(2) {
-  width: 26px;
-  background: var(--color-db-red);
-}
-.db-label__bars i:nth-child(3) {
-  width: 14px;
-  background: var(--color-ink-3);
-}
-.db-label--on-dark .db-label__bars i:nth-child(3) {
-  background: #64748b;
+.db-label--on-dark .db-label__bar {
+  background: linear-gradient(90deg, #4f7bff 0%, #9db3ff 48%, var(--color-db-red-hot) 100%);
 }
 
 /* =========================================================================
@@ -1361,6 +1340,30 @@ html::-webkit-scrollbar-corner {
 .db-field--plain {
   padding-left: 14px;
 }
+
+/* The subject dropdown was rendering as the raw OS control — a macOS
+   double-chevron sitting in a form where every other field is custom-drawn,
+   and 3px shorter than the inputs beside it because the native widget brings
+   its own line box. Draw our own chevron and pin the line-height so the two
+   line up exactly. */
+.db-field--select {
+  appearance: none;
+  -webkit-appearance: none;
+  line-height: 23px;
+  padding-right: 46px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d6fe8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9.5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 15px 15px;
+}
+/* the arrow leans into the field as it opens, like the accordion's plus */
+.db-field--select:hover {
+  background-position: right 16px 60%;
+}
+.db-field--select::-ms-expand {
+  display: none;
+}
 .db-field::placeholder {
   color: #9aa7ba;
 }
@@ -1432,8 +1435,69 @@ html::-webkit-scrollbar-corner {
 
 /* FAQ accordion — native <details>, animated with CSS so the section can stay
    a server component. */
+/* A question addressed by URL hash has to clear the fixed chrome — this lived
+   on the old, unused .db-faq-item rules, so deep links were landing behind the
+   header. */
+.db-faq {
+  scroll-margin-top: calc(var(--db-header-h, 100px) + 20px);
+}
+/* The questions were set in the body face at 700, which read as a browser
+   default next to the display headings. Oswald is the site's own UI voice —
+   the nav and the buttons already speak it. */
+.db-faq__q {
+  font-family: var(--font-ui);
+  font-size: clamp(16px, 1.12vw, 19.5px);
+  font-weight: 500;
+  letter-spacing: 0.012em;
+  line-height: 1.32;
+}
+.db-faq__q h3 {
+  font: inherit;
+  letter-spacing: inherit;
+  margin: 0;
+}
+/* the rail rows, in the same voice as the nav they behave like */
+.db-faq-railrow {
+  font-family: var(--font-ui);
+  font-size: clamp(14px, 0.95vw, 16px);
+  font-weight: 500;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
 .db-faq summary::-webkit-details-marker {
   display: none;
+}
+.db-faq summary:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: -3px;
+  border-radius: 6px;
+}
+@media (hover: hover) {
+  .db-faq summary:hover {
+    color: var(--color-brand);
+  }
+}
+/* the row that a deep link or a category jump just opened. Mixed from the
+   brand token rather than a one-off hex, per this file's own rule. */
+.db-faq.is-targeted {
+  background: #f5f8ff;
+  background: color-mix(in srgb, var(--color-brand) 6%, #fff);
+}
+
+/* a group heading the rail links to has to clear the fixed chrome too */
+.db-faq-group {
+  scroll-margin-top: calc(var(--db-header-h, 100px) + 20px);
+}
+
+/* The orientation rail follows the list — but only where there is room for it.
+   Its own CTA is the bottom of the card, and a rail taller than the viewport
+   would pin that permanently off-screen. */
+@media (min-width: 1024px) and (min-height: 860px) {
+  .db-faq-rail {
+    position: sticky;
+    top: calc(var(--db-header-h) + 28px);
+    align-self: start;
+  }
 }
 .db-faq__body {
   display: grid;
@@ -1473,10 +1537,18 @@ html::-webkit-scrollbar-corner {
     aspect-ratio: 4 / 3;
   }
 }
-.db-map__canvas {
+/* MapLibre injects its own stylesheet at runtime, so `.maplibregl-map`
+   (position: relative) lands after this file and wins on equal specificity —
+   which drops `inset: 0` and collapses the host to zero height, leaving a
+   live GL canvas inside a box nobody can see. Two guards: the descendant
+   selector outranks it, and explicit 100%/100% sizes the host even if
+   something else ever wins `position` again. */
+.db-map .db-map__canvas {
   position: absolute;
   inset: 0;
-  filter: saturate(0.85) contrast(1.06);
+  width: 100%;
+  height: 100%;
+  filter: saturate(1.05) contrast(1.04) brightness(1.75);
 }
 .db-map__vignette {
   position: absolute;
@@ -1484,8 +1556,8 @@ html::-webkit-scrollbar-corner {
   z-index: 2;
   pointer-events: none;
   background:
-    radial-gradient(62% 62% at 50% 50%, #0000 40%, #05070dbf 100%),
-    linear-gradient(#0000 62%, #05070d99 100%);
+    radial-gradient(66% 66% at 50% 50%, #0000 46%, #05070d8f 100%),
+    linear-gradient(#0000 68%, #05070d70 100%);
 }
 .db-map__fallback {
   position: absolute;
@@ -1578,6 +1650,43 @@ html::-webkit-scrollbar-corner {
   overflow: hidden;
   background: linear-gradient(160deg, #16264f 0%, #0b1330 55%, #060b1b 100%);
 }
+/* Four backdrops, four colour temperatures. Easing the saturation and lifting
+   contrast slightly lets them sit together as a set without touching skin
+   tones the way a colour overlay would. */
+.db-portrait img {
+  filter: saturate(0.88) contrast(1.05);
+}
+/* How long they have been here, over the foot of the portrait. Solid rather
+   than a backdrop-filter — four blurred layers on one row is real cost for a
+   panel that never moves. */
+.db-leader__since {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px 4px;
+  border-radius: 999px;
+  background: #0b1730e6;
+  box-shadow: 0 2px 10px #0b173047;
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* a hairline under the photo so it meets the card body cleanly */
+.db-portrait::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: #0d152614;
+}
 .db-more summary::-webkit-details-marker {
   display: none;
 }
@@ -1587,51 +1696,286 @@ html::-webkit-scrollbar-corner {
   border-radius: 4px;
 }
 
-/* the 45-years mark in the About hero */
-.db-years {
-  position: relative;
-  display: grid;
-  justify-items: start;
-  padding-left: clamp(0px, 1vw, 18px);
-}
-.db-years__glow {
+/* =========================================================================
+   Story hero — the moving backdrop
+
+   Three stacked layers, each promoted once and then only ever transformed.
+   The softness is in the gradients, not in a filter, so drifting them costs
+   nothing per frame.
+   ========================================================================= */
+.db-atmos {
   position: absolute;
-  left: -8%;
-  top: 50%;
-  width: min(360px, 90%);
-  aspect-ratio: 1;
-  transform: translateY(-50%);
-  border-radius: 50%;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
   pointer-events: none;
-  background: radial-gradient(circle, #e2332452 0%, #1226f01f 45%, #0000 70%);
+}
+.db-atmos__layer,
+.db-atmos__cols {
+  position: absolute;
+  /* room to drift without ever showing an edge */
+  inset: -10%;
+  will-change: transform;
+}
+.db-atmos__blob {
+  position: absolute;
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 50%;
   will-change: transform, opacity;
 }
-.db-years__figure {
+.db-atmos__blob--a {
+  left: 52%;
+  top: -20%;
+  width: min(78vw, 1040px);
+  background: radial-gradient(circle, #1226f042 0%, #1226f019 32%, #1226f000 64%);
+}
+.db-atmos__blob--b {
+  left: -20%;
+  top: 32%;
+  width: min(70vw, 880px);
+  background: radial-gradient(circle, #e2332438 0%, #e2332414 34%, #e2332400 64%);
+}
+.db-atmos__blob--c {
+  left: 22%;
+  top: 50%;
+  width: min(62vw, 780px);
+  background: radial-gradient(circle, #5b3ce02b 0%, #5b3ce010 36%, #5b3ce000 66%);
+}
+
+/* the homepage hero's column lines, carried onto the story opener */
+.db-atmos__cols {
+  opacity: 0.75;
+  background-image:
+    linear-gradient(90deg, #0000 0 20%, #2e52ff1f 20.4% 21.1%, #0000 21.5%),
+    linear-gradient(90deg, #0000 0 33%, #2e52ff12 33.3% 33.9%, #0000 34.3%),
+    linear-gradient(90deg, #0000 0 71%, #e233241f 71.4% 72.2%, #0000 72.6%),
+    linear-gradient(90deg, #0000 0 85%, #e2332414 85.3% 85.9%, #0000 86.3%),
+    linear-gradient(90deg, #0000 0 92%, #e233240f 92.2% 92.8%, #0000 93.2%);
+  -webkit-mask-image: linear-gradient(#0000 0 4%, #000 26% 66%, #0000 96%);
+  mask-image: linear-gradient(#0000 0 4%, #000 26% 66%, #0000 96%);
+}
+@media (max-width: 767px) {
+  .db-atmos__cols {
+    opacity: 0.5;
+  }
+}
+
+/* The first screen is all hero: the curve — and the white page behind it —
+   starts exactly one wave-height below the fold, so no band of white ever
+   splits the opener. Every dark page-opener uses this; the mid-page bands
+   that reuse .db-page-band deliberately do not. */
+.db-page-band--full {
+  min-height: max(620px, calc(100svh + var(--db-wave-h)));
+}
+
+/* the invitation to keep going, sitting on the shell's own left margin */
+.db-story-cue-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--db-wave-h) + clamp(20px, 2.6vw, 46px));
+  z-index: 3;
+  pointer-events: none;
+}
+.db-story-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  pointer-events: auto;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ffffff85;
+  transition: color 0.3s ease;
+}
+.db-story-cue__ring {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid #ffffff26;
+  background: #ffffff0a;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}
+.db-story-cue__ring svg {
+  width: 15px;
+  height: 15px;
+  will-change: transform;
+}
+.db-story-cue:hover {
+  color: #fff;
+}
+.db-story-cue:hover .db-story-cue__ring {
+  border-color: #ffffff5c;
+  background: #ffffff17;
+}
+.db-story-cue:focus-visible {
+  outline: 3px solid var(--color-db-cyan);
+  outline-offset: 6px;
+  border-radius: 999px;
+}
+@media (max-width: 1023px) {
+  .db-story-cue-wrap {
+    display: none;
+  }
+}
+
+/* Keeps the reading side of the hero dark so the sweeps can stay bright on
+   the other side. Static by design — a moving scrim would defeat the point. */
+.db-atmos__scrim {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  background: linear-gradient(
+    101deg,
+    #010409e8 0%,
+    #010409ad 21%,
+    #01040933 39%,
+    #01040900 55%
+  );
+}
+@media (max-width: 1023px) {
+  /* stacked layout: the copy is up top, so the scrim runs down instead of across */
+  .db-atmos__scrim {
+    background: linear-gradient(
+      #010409e6 0%,
+      #010409c4 32%,
+      #0104096b 54%,
+      #01040914 78%,
+      #01040900 100%
+    );
+  }
+}
+
+/* Each word of the headline climbs out of a mask of its own. The padding and
+   its matching negative margin keep the clip clear of the glyphs without
+   moving the line. */
+.db-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  margin-right: 0.26em;
+  padding-block: 0.12em;
+  margin-block: -0.12em;
+}
+.db-word > span {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Nothing shows until the loader has handed the page over. */
+.db-story-hold [data-story-label],
+.db-story-hold [data-story-lede],
+.db-story-hold .db-globe-el,
+.db-story-hold .db-orbit,
+.db-story-hold [data-story-mark],
+.db-story-hold .db-story-cue,
+.db-story-hold .db-atmos__blob,
+.db-story-hold .db-atmos__cols {
+  opacity: 0;
+}
+.db-story-hold .db-word > span {
+  transform: translateY(115%);
+}
+
+/* The story lockup — the homepage's own stage, at the scale of a number.
+   One variable drives it: the orbit is a square box pinned to the globe's
+   centre, so the rings stay circular and the globe can never drift outside
+   them at any width. */
+.db-story-stage {
   position: relative;
-  margin: 0;
-  display: flex;
-  align-items: baseline;
-  gap: 0.16em;
+  display: grid;
+  justify-items: center;
+  --globe: clamp(96px, 8.6vw, 152px);
+  --orbit: min(104%, calc(var(--globe) * 3.5));
+  --stage-top: clamp(26px, 3.4vw, 62px);
+  padding-top: var(--stage-top);
+}
+.db-story-stage .db-orbit {
+  will-change: transform;
+}
+/* Stacked, the stage sits directly under the lede, and the rings reach well
+   above the globe — so they tuck in and drop clear of the paragraph. */
+@media (max-width: 1023px) {
+  .db-story-stage {
+    --orbit: min(100%, calc(var(--globe) * 2.9));
+    --stage-top: clamp(64px, 10vw, 98px);
+  }
+}
+.db-story-stage .db-lockup {
+  margin-bottom: 0;
+}
+/* the affordance sits in the gap under the lockup, not on top of the years */
+.db-story-stage .db-globe-hint {
+  bottom: -32px;
+}
+
+/* The 404's globe lockup — the story stage's geometry, centred on the page
+   rather than sitting in a column. */
+.db-404-stage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  --globe: clamp(104px, 9vw, 156px);
+  --orbit: min(340px, calc(var(--globe) * 3.4));
+  --stage-top: clamp(30px, 3.6vw, 66px);
+  padding-top: var(--stage-top);
+}
+.db-404-stage .db-lockup {
+  margin-bottom: 0;
+}
+.db-404__figure {
+  position: relative;
+  margin: clamp(10px, 1.2vw, 18px) 0 0;
   font-family: var(--font-display);
-  font-size: clamp(76px, 11vw, 168px);
-  line-height: 0.86;
+  font-size: clamp(52px, 5.4vw, 92px);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
   color: #fff;
   font-variant-numeric: tabular-nums;
 }
+
+/* the years, where the homepage puts its wordmark */
+.db-years__figure {
+  position: relative;
+  margin: clamp(10px, 1.2vw, 18px) 0 0;
+  display: grid;
+  justify-items: center;
+  gap: 0.1em;
+  font-family: var(--font-display);
+  font-size: clamp(46px, 4.4vw, 76px);
+  line-height: 0.9;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+/* Oswald at wide tracking — the same caption treatment as SALES SOLUTION
+   under the homepage globe. The indent balances the trailing letter-space so
+   it stays optically centred. */
 .db-years__figure em {
+  font-family: var(--font-ui);
   font-style: normal;
-  font-size: 0.32em;
-  letter-spacing: 0.02em;
+  font-size: 0.28em;
+  font-weight: 500;
+  letter-spacing: 0.52em;
+  text-indent: 0.52em;
   color: var(--color-db-red);
   text-transform: uppercase;
 }
 .db-years__label {
   position: relative;
-  margin: 18px 0 0;
-  max-width: 28ch;
+  margin: clamp(44px, 3.6vw, 62px) 0 0;
+  max-width: 32ch;
+  text-align: center;
   font-size: clamp(14px, 0.95vw, 16.5px);
   line-height: 1.55;
-  color: #ffffff8c;
+  color: #ffffffab;
 }
 
 /* keyless OpenStreetMap embed, darkened to match — used only if MapLibre fails */

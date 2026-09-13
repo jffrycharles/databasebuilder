@@ -79,7 +79,7 @@ export default function Hero() {
   }, [ready]);
 
   return (
-    <section id="top" ref={root} className="db-hero-bg relative overflow-hidden">
+    <section id="top" tabIndex={-1} ref={root} className="db-hero-bg relative overflow-hidden">
       <div className="relative z-[5] mx-auto grid w-full max-w-[1640px] grow items-center gap-[clamp(34px,4vw,52px)] px-5 pt-[34px] pb-[56px] sm:px-7 lg:grid-cols-[42%_58%] lg:gap-5 lg:px-10 lg:pb-[104px]">
         {/* ---- pitch ---- */}
         <div>
@@ -111,7 +111,9 @@ export default function Hero() {
         </div>
 
         {/* ---- stage: globe, rings and cards scale as one composition ---- */}
-        <div className="db-stage">
+        {/* the ribbons read --db-spd from here, so the globe publishes it on
+            this subtree rather than on <html> */}
+        <div className="db-stage" data-spin-scope>
           <div className="db-orbit">
             <OrbitRings />
           </div>

@@ -38,7 +38,7 @@ export default function FeaturesSection() {
     <section id="features" className="db-section bg-page">
       <div className="db-shell">
         <Reveal className="mx-auto mb-10 max-w-[640px] text-center">
-          <h2 className="font-body text-ink text-[clamp(28px,2.7vw,44px)] leading-[1.08] font-bold tracking-[-.02em]">
+          <h2 className="font-display text-[clamp(25px,2.45vw,40px)] leading-[1.08] text-balance text-ink">
             Product Features <span className="text-db-red">Checklist</span>
           </h2>
           <p className="text-ink-2 mt-3 text-[clamp(15px,0.9vw,17.5px)]">

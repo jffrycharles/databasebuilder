@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import AboutHero from "@/components/sections/about/AboutHero";
 import OriginStory from "@/components/sections/about/OriginStory";
 import Timeline from "@/components/sections/about/Timeline";
@@ -12,13 +13,13 @@ export const metadata: Metadata = {
   description:
     "DatabaseBuilder was created to give small and mid-sized businesses a simpler sales CRM. Sales software, designed by salespeople — our history, our leadership, and why we built it.",
   alternates: { canonical: "/about" },
-  openGraph: {
+  ...pageMeta({
     title: "Our Story — DatabaseBuilder",
     description:
       "Sales software, designed by salespeople. The history behind DatabaseBuilder and the people who built it.",
-    url: "/about",
-    type: "article",
-  },
+    path: "/about",
+type: "article"
+  }),
 };
 
 export default function AboutPage() {
