@@ -5,7 +5,6 @@ import OriginStory from "@/components/sections/about/OriginStory";
 import Timeline from "@/components/sections/about/Timeline";
 import QuoteBand from "@/components/sections/about/QuoteBand";
 import Leadership from "@/components/sections/about/Leadership";
-import ArchiveLinks from "@/components/sections/about/ArchiveLinks";
 import CtaBand from "@/components/sections/CtaBand";
 
 export const metadata: Metadata = {
@@ -29,10 +28,10 @@ export default function AboutPage() {
           own words, then the year-by-year and the archive. */}
       <AboutHero />
       <OriginStory />
+      {/* the history belongs with the story, not after the team */}
+      <Timeline />
       <Leadership />
       <QuoteBand />
-      <Timeline />
-      <ArchiveLinks />
       <CtaBand id="trial" />
     </main>
   );

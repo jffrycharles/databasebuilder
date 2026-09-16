@@ -59,11 +59,17 @@ export default function Timeline() {
     });
   }, root);
 
+  /* overflow-x-clip: the entrance starts each card 40px off to its own side,
+     and until it scrolls into view that offset pushed the right-hand cards past
+     the viewport and produced a horizontal scrollbar at ~1024px. */
   return (
-    <section id="history" ref={root} className="db-page-band db-section db-section--airy relative">
+    <section
+      id="history"
+      ref={root}
+      className="bg-page db-section db-section--airy relative overflow-x-clip"
+    >
       <div className="db-shell relative z-[2]">
         <SectionHeading
-          tone="dark"
           align="center"
           display
           label="History"
@@ -91,7 +97,7 @@ export default function Timeline() {
                     <span className="font-display text-[clamp(24px,2.1vw,36px)] leading-none tracking-[.01em] text-white">
                       {m.year}
                     </span>
-                    <span className="db-chip bg-white/8 text-[#8fb6ff]">
+                    <span className="db-chip bg-white/10 text-db-red-hot">
                       <i />
                       {m.tag}
                     </span>
@@ -109,8 +115,8 @@ export default function Timeline() {
           </ol>
         </div>
 
-        <Reveal className="mt-[clamp(48px,6vw,104px)] border-t border-white/10 pt-[clamp(30px,3.4vw,56px)]">
-          <p className="font-display text-center text-[clamp(19px,1.9vw,30px)] leading-snug text-white uppercase">
+        <Reveal className="border-line mt-[clamp(48px,6vw,104px)] border-t pt-[clamp(30px,3.4vw,56px)]">
+          <p className="font-display text-ink text-center text-[clamp(19px,1.9vw,30px)] leading-snug">
             Salespeople close deals,<span className="text-db-red-hot"> not software.</span>
           </p>
         </Reveal>

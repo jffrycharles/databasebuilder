@@ -1,8 +1,6 @@
 import Hero from "@/components/sections/Hero";
 import WhySection from "@/components/sections/WhySection";
 import FeaturesSection from "@/components/sections/FeaturesSection";
-import BuiltForSection from "@/components/sections/BuiltForSection";
-import PricingTeaser from "@/components/sections/PricingTeaser";
 import HomeFaq from "@/components/sections/HomeFaq";
 import CtaBand from "@/components/sections/CtaBand";
 
@@ -14,10 +12,8 @@ export default function Page() {
       <Hero />
       <WhySection />
       <FeaturesSection />
-      <BuiltForSection />
-      <PricingTeaser />
       <HomeFaq />
-      <CtaBand showTrialLength showSignOff sentenceCase />
+      <CtaBand showTrialLength showSignOff />
     </main>
   );
 }

@@ -36,6 +36,17 @@ const roboto = localFont({
   display: "swap",
 });
 
+/* Raleway is what databasebuilder.com itself runs on. Carried here for the
+   small stuff — eyebrows, metric labels, captions — so the site shares a
+   detail with the product's own pages without restyling the headlines. */
+const raleway = localFont({
+  src: "./fonts/raleway-var.woff2",
+  weight: "300 700",
+  style: "normal",
+  variable: "--font-raleway",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
@@ -83,7 +94,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${anton.variable} ${oswald.variable} ${roboto.variable}`}>
+    <html lang="en" className={`${anton.variable} ${oswald.variable} ${roboto.variable} ${raleway.variable}`}>
       <body>
         {/* With scripting off the loader can never be dismissed, so hide it. */}
         <noscript>
@@ -106,7 +117,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   url: SITE.url,
                   logo: `${SITE.url}/og.png`,
                   description: SITE.description,
-                  telephone: CONTACT.phone.label,
                   email: CONTACT.email,
                   address: {
                     "@type": "PostalAddress",

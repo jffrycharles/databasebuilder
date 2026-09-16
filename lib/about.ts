@@ -147,23 +147,3 @@ export const LEADERS: Leader[] = [
   },
 ];
 
-export const ARCHIVE_LINKS: { label: string; note: string; href: string; icon: IconName }[] = [
-  {
-    label: "Our Team",
-    note: "Full leadership profiles and direct lines",
-    href: "https://databasebuilder.com/our-team/",
-    icon: "user",
-  },
-  {
-    label: "History",
-    note: "Year by year, from first record to first release",
-    href: "https://databasebuilder.com/history/",
-    icon: "clock",
-  },
-  {
-    label: "Letter from the CEO",
-    note: "Adam Berman on why we built it (PDF)",
-    href: "https://databasebuilder.com/wp-content/uploads/2022/05/about-us.pdf",
-    icon: "mail",
-  },
-];

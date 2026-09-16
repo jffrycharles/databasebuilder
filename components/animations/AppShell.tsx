@@ -13,7 +13,11 @@ import { prefersReducedMotion } from "@/lib/gsap";
 const ReadyContext = createContext(false);
 export const useAppReady = () => useContext(ReadyContext);
 
-const MIN_MS = 1150; // let the loader breathe even on a warm cache
+const MIN_MS = 2060; // Floor: hold the loader at least this long, so the whole
+                     // sequence lands at ~3.2s — 2060 + 620ms globe flight +
+                     // 520ms fade-out. If fonts/assets take longer than the
+                     // floor, the loader runs until they finish instead, capped
+                     // by MAX_MS.
 const MAX_MS = 3600; // never hold the page hostage
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
@@ -123,7 +127,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               <Globe className="db-boot__sphere" rings={15} density={25} spin={11} />
             </div>
             <div className="db-boot__brand font-display text-[clamp(26px,3vw,42px)] leading-none text-white italic">
-              Database<em className="text-db-red italic">Builder</em>
+              <em className="italic">Database</em>
+              <em className="text-db-red italic">Builder</em>
             </div>
             <div className="db-boot__brand font-ui mt-3 pl-[.52em] text-[clamp(9px,1vw,13px)] font-medium tracking-[.52em] text-white/60">
               SALES SOLUTION

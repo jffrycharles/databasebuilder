@@ -2,10 +2,12 @@ import Reveal from "@/components/animations/Reveal";
 import Label from "@/components/ui/Label";
 import { Icon } from "@/components/ui/Icon";
 
-/** The founder's line, in the homepage's own dark band. */
+/* The founder's line. The section runs black so it joins the leadership band
+   above it and the timeline below into one dark stretch — a pale strip between
+   two dark sections read as a seam rather than a division. */
 export default function QuoteBand() {
   return (
-    <section className="bg-page pb-[clamp(62px,7vw,128px)]">
+    <section className="bg-db-black pb-[clamp(62px,7vw,128px)]">
       <div className="db-shell">
         <Reveal>
           <figure className="db-cta-band m-0 grid items-center gap-[clamp(28px,3.4vw,64px)] rounded-[20px] px-[clamp(24px,3.8vw,68px)] py-[clamp(38px,4.8vw,76px)] lg:grid-cols-[1.25fr_0.75fr]">

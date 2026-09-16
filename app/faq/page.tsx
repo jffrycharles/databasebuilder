@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import PageHero from "@/components/ui/PageHero";
-import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/animations/Reveal";
 import Accordion from "@/components/ui/Accordion";
 import FaqDeepLink from "@/components/ui/FaqDeepLink";
 import CtaBand from "@/components/sections/CtaBand";
-import CtaButton from "@/components/ui/CtaButton";
-import SmartLink from "@/components/ui/SmartLink";
-import { Icon } from "@/components/ui/Icon";
 import { FAQ_ITEMS, FAQ_CATEGORIES } from "@/lib/faq";
 import { SITE } from "@/lib/data";
-import { CONTACT } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "FAQ",
@@ -80,100 +75,39 @@ export default function FaqPage() {
           </>
         }
         lede="Everything customers ask before they start, in plain language. If yours is not here, a person will answer it."
-        aside={
-          <div className="rounded-[16px] border border-white/12 bg-white/[0.035] p-[clamp(18px,1.8vw,26px)]">
-            <p className="font-ui text-[11.5px] tracking-[.16em] text-white/40 uppercase">
-              Rather just ask
-            </p>
-            <a
-              href={CONTACT.phone.href}
-              className="font-body mt-2 block text-[clamp(19px,1.6vw,26px)] font-bold text-white transition-opacity hover:opacity-80"
-            >
-              {CONTACT.phone.label}
-            </a>
-            <a
-              href={`mailto:${CONTACT.email}`}
-              className="text-db-cyan mt-2 inline-flex items-center gap-2 text-[14.5px] font-semibold"
-            >
-              <Icon name="mail" className="h-4 w-4" />
-              {CONTACT.email}
-            </a>
-          </div>
-        }
       />
 
       <section className="db-section db-section--airy bg-page">
         <div className="db-shell">
-          <div className="grid gap-[clamp(34px,4.4vw,84px)] lg:grid-cols-[0.72fr_1.28fr]">
-            {/* left rail: orientation and a way out. It stays put while the
-                list scrolls, which is the whole point of having it. */}
-            <div className="db-faq-rail">
-              <SectionHeading
-                display
-                label={`${shown.length} questions`}
-                title={
-                  <>
-                    Grouped so you can find <span className="text-db-red">yours</span>
-                  </>
-                }
-                lede={`${groups.length} groups, from what happens to your data through to what support looks like once you are running.`}
-              />
-
-              <Reveal delay={90}>
-                <nav className="mt-[clamp(26px,2.6vw,40px)] grid gap-2.5" aria-label="FAQ sections">
-                  {groups.map((c) => (
-                    <a
-                      key={c.title}
-                      href={`#${c.anchor}`}
-                      className="db-card-flat db-faq-railrow text-ink hover:border-brand/40 group flex items-center gap-3 px-[clamp(16px,1.3vw,20px)] py-[clamp(13px,1.15vw,17px)] transition-colors"
-                    >
-                      {c.title}
-                      <span className="text-ink-3 ml-auto text-[13px] font-normal">
-                        {c.items.length}
-                        <span className="sr-only"> questions</span>
+          {/* Built on the FAQ the client already runs: the group heading sits to
+              one side as a two-line lockup — the group name in brand red over a
+              lighter "Related Questions" — with the questions themselves beside
+              it. No grouping rail; you land straight on the answers. */}
+          <div className="grid gap-[clamp(52px,6vw,110px)]">
+            {groups.map((cat, i) => (
+              <Reveal key={cat.title} delay={i * 60}>
+                <div
+                  id={cat.anchor}
+                  className="db-faq-group grid items-start gap-[clamp(20px,3vw,64px)] lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]"
+                >
+                  <div>
+                    <h2 className="m-0 leading-[1.04]">
+                      <span className="font-display text-db-red block text-[clamp(28px,3vw,48px)] tracking-[.015em]">
+                        {cat.title}
                       </span>
-                      <svg viewBox="0 0 24 24" className="text-brand h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true">
-                        <path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </a>
-                  ))}
-                </nav>
-              </Reveal>
-
-              <Reveal delay={150}>
-                <div className="bg-navy mt-[clamp(22px,2.2vw,34px)] rounded-[16px] p-[clamp(22px,2.2vw,34px)] text-white">
-                  <h3 className="font-display m-0 text-[clamp(19px,1.5vw,26px)] leading-none tracking-[.01em] uppercase">
-                    Still not sure it fits?
-                  </h3>
-                  <p className="mt-2.5 text-[14.5px] leading-[1.6] text-white/70">
-                    Take the 7-day trial, or talk it through with someone who uses the product daily.
-                  </p>
-                  <div className="mt-5 flex flex-wrap items-center gap-3">
-                    <CtaButton className="text-[15px]">Start Free Trial</CtaButton>
-                    <SmartLink href="/contact" className="text-db-cyan text-[14.5px] font-semibold">
-                      Contact us
-                    </SmartLink>
+                      <span className="font-display text-ink/55 block text-[clamp(26px,2.8vw,45px)] tracking-[.015em]">
+                        Related Questions
+                      </span>
+                    </h2>
+                    <p className="text-ink-2 mt-4 max-w-[38ch] text-[clamp(14.5px,0.92vw,16.5px)] leading-[1.6]">
+                      {cat.blurb}
+                    </p>
                   </div>
+
+                  <Accordion items={cat.items} openFirst={i === 0} />
                 </div>
               </Reveal>
-            </div>
-
-            {/* right: every question, grouped */}
-            <div className="grid gap-[clamp(44px,4.8vw,86px)]">
-              {groups.map((cat, i) => (
-                <Reveal key={cat.title} delay={i * 60}>
-                  {/* the rail links here, so the group's own title and blurb
-                      are what you land on */}
-                  <div id={cat.anchor} className="db-faq-group mb-[clamp(16px,1.7vw,28px)]">
-                    <h2 className="font-display text-ink m-0 text-[clamp(18px,1.45vw,25px)] leading-none tracking-[.01em] uppercase">
-                      {cat.title}
-                    </h2>
-                    <p className="text-ink-2 mt-2 text-[clamp(14px,0.88vw,15.5px)]">{cat.blurb}</p>
-                  </div>
-                  <Accordion items={cat.items} openFirst={i === 0} />
-                </Reveal>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </section>

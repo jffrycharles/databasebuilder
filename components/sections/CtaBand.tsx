@@ -10,9 +10,6 @@ type Props = {
   showTrialLength?: boolean;
   /** Adam's closing line from the outline — the homepage signs off with it */
   showSignOff?: boolean;
-  /** The homepage sets its headings in sentence case; every other page keeps
-      the display face in caps. This band appears on both. */
-  sentenceCase?: boolean;
 };
 
 /**
@@ -34,7 +31,6 @@ export default function CtaBand({
   id = "contact",
   showTrialLength = false,
   showSignOff = false,
-  sentenceCase = false,
 }: Props) {
   return (
     <section id={id} className="db-section bg-page">
@@ -56,11 +52,7 @@ export default function CtaBand({
               />
 
               <div className="order-2 lg:order-1">
-                <h2
-                  className={`font-display m-0 max-w-[27ch] text-[clamp(24px,3vw,48px)] ${
-                    sentenceCase ? "leading-[1.08]" : "leading-[1.03] tracking-[.005em] uppercase"
-                  }`}
-                >
+                <h2 className="font-display m-0 max-w-[27ch] text-[clamp(24px,3vw,48px)] leading-[1.08] tracking-[.015em]">
                   A productive CRM shouldn&apos;t cost a <span className="text-db-red-hot">fortune.</span>
                 </h2>
                 <p className="mt-[clamp(12px,1.15vw,19px)] mb-0 max-w-[44ch] text-[clamp(15px,1vw,18.5px)] leading-[1.6] text-white/70">
@@ -79,7 +71,7 @@ export default function CtaBand({
                 still deliberate rather than a hole. */}
             <div className="mt-[clamp(28px,3vw,48px)] flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t border-white/10 pt-[clamp(16px,1.5vw,24px)]">
               {showSignOff && (
-                <p className="font-display m-0 text-[clamp(14px,1.22vw,20px)] leading-none tracking-[.045em] text-white/85 uppercase">
+                <p className="font-display m-0 text-[clamp(14px,1.22vw,20px)] leading-none tracking-[.045em] text-white/85">
                   Salespeople close deals,
                   <span className="text-db-red-hot"> not software.</span>
                 </p>

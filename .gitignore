@@ -7,3 +7,7 @@ out
 *.tsbuildinfo
 next-env.d.ts
 .vercel
+
+# Brand deliverables (18MB incl. an 8.7MB zip). These are hand-off assets,
+# not site code — keeping them out of git history.
+brand/

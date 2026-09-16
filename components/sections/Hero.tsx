@@ -85,11 +85,11 @@ export default function Hero() {
         <div>
           <h1
             data-hero-reveal
-            className="font-display mb-[clamp(22px,3vw,40px)] text-[clamp(32px,3.62vw,62px)] leading-[1.05] tracking-[.005em] text-white uppercase"
+            className="font-display mb-[clamp(22px,3vw,40px)] text-[clamp(32px,3.62vw,62px)] leading-[1.05] tracking-[.005em] text-white"
           >
-            A Simple Alternative
+            A Productive CRM Doesn&apos;t
             <br />
-            to Your Overpriced CRM
+            Need to Cost a Fortune
           </h1>
           <p
             data-hero-reveal
@@ -133,7 +133,8 @@ export default function Hero() {
               data-hero-reveal
               className="font-display -mt-1.5 text-[clamp(28px,4.3vw,70px)] leading-none tracking-[-.005em] whitespace-nowrap text-white italic"
             >
-              Database<em className="text-db-red italic">Builder</em>
+              <em className="italic">Database</em>
+              <em className="text-db-red italic">Builder</em>
             </div>
             <div
               data-hero-reveal

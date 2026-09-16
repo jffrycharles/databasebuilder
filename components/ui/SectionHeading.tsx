@@ -39,7 +39,7 @@ export default function SectionHeading({
       <h2
         className={`m-0 ${
           display
-            ? "font-display text-[clamp(25px,2.45vw,40px)] leading-[1.04] font-normal tracking-[.005em] text-balance uppercase"
+            ? "font-display text-[clamp(25px,2.45vw,40px)] leading-[1.04] font-normal tracking-[.02em] text-balance"
             : "font-body text-[clamp(26px,2.4vw,40px)] leading-[1.1] font-bold tracking-[-.02em]"
         } ${tone === "dark" ? "text-white" : "text-ink"}`}
       >

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: "Pricing",
   description:
     "One all-in-one CRM package for up to three users, with additional users available. No setup fees, no tiers, live human support and a 7-day free trial.",
-  alternates: { canonical: "/pricing" },
+  alternates: { canonical: "/pricing" }, 
   ...pageMeta({
     title: "Pricing — DatabaseBuilder CRM",
     description:
@@ -56,24 +56,6 @@ export default function PricingPage() {
           </>
         }
         lede="A simple CRM at a reasonable all-in-one price — designed to be understood in a minute, not decoded from a comparison table."
-        aside={
-          <ul className="m-0 grid list-none gap-2.5 p-0">
-            {[
-              "7-day free trial",
-              `Up to ${PRICING.includedUsers} users included`,
-              "Additional user licences available",
-              "30-day cancellation, billed monthly",
-            ].map((item) => (
-              <li
-                key={item}
-                className="flex items-center gap-3 rounded-[12px] border border-white/12 bg-white/[0.035] px-4 py-3"
-              >
-                <Icon name="check" className="text-db-cyan h-[17px] w-[17px] shrink-0" />
-                <span className="text-[clamp(14px,0.92vw,16px)] text-white/85">{item}</span>
-              </li>
-            ))}
-          </ul>
-        }
       />
 
       {/* ---- the offer, asymmetric: reasoning left, the card right ---- */}
@@ -124,7 +106,7 @@ export default function PricingPage() {
                     </p>
                   </>
                 ) : (
-                  <p className="font-display text-ink m-0 text-[clamp(23px,2.1vw,34px)] leading-[1.05] tracking-[.01em] text-balance uppercase">
+                  <p className="font-display text-ink m-0 text-[clamp(23px,2.1vw,34px)] leading-[1.05] tracking-[.01em] text-balance">
                     Contact us for current pricing
                   </p>
                 )}
@@ -195,7 +177,7 @@ export default function PricingPage() {
             {/* fills the grid and gives the section somewhere to go */}
             <Reveal delay={FEATURE_GROUPS.length * 70}>
               <div className="bg-navy flex h-full flex-col justify-center rounded-[14px] p-[clamp(18px,1.8vw,28px)] text-white">
-                <h3 className="font-display m-0 text-[clamp(18px,1.4vw,24px)] leading-none tracking-[.01em] uppercase">
+                <h3 className="font-display m-0 text-[clamp(18px,1.4vw,24px)] leading-none tracking-[.01em]">
                   Not sure which of these you need?
                 </h3>
                 <p className="mt-2.5 text-[clamp(14px,0.88vw,15.5px)] leading-[1.6] text-white/70">
@@ -223,7 +205,7 @@ export default function PricingPage() {
           <Reveal>
             <div className="bg-navy rounded-[18px] p-[clamp(24px,3vw,48px)] text-white">
               <div className="max-w-[52ch]">
-                <h2 className="font-display m-0 text-[clamp(21px,1.95vw,32px)] leading-none tracking-[.01em] uppercase">
+                <h2 className="font-display m-0 text-[clamp(21px,1.95vw,32px)] leading-none tracking-[.01em]">
                   What is billed separately
                 </h2>
                 <p className="mt-3.5 max-w-[38ch] text-[clamp(14.5px,0.92vw,16.5px)] leading-[1.62] text-white/70">

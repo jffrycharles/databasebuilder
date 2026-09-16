@@ -8,7 +8,7 @@ import CtaBand from "@/components/sections/CtaBand";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Your ideas, our solution. Call +1 773 273 7310, email info@databasebuilder.com, or write to us at 3312 W Peterson Ave, Chicago, IL 60659.",
+    "Your ideas, our solution. Email info@databasebuilder.com, or write to us at 3312 W Peterson Ave, Chicago, IL 60659.",
   alternates: { canonical: "/contact" },
   ...pageMeta({
     title: "Contact — DatabaseBuilder",

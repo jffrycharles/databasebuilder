@@ -47,7 +47,7 @@ export default function NotFound() {
             </div>
           </div>
 
-          <h1 className="font-display m-0 max-w-[16ch] text-[clamp(28px,3.4vw,54px)] leading-[1.02] tracking-[.005em] text-balance text-white uppercase">
+          <h1 className="font-display m-0 max-w-[16ch] text-[clamp(28px,3.4vw,54px)] leading-[1.02] tracking-[.005em] text-balance text-white">
             That page is <span className="text-db-red-hot">not here.</span>
           </h1>
 
@@ -61,7 +61,7 @@ export default function NotFound() {
               <SmartLink
                 key={l.href}
                 href={l.href}
-                className="db-channel font-ui rounded-[11px] border border-white/14 bg-white/[0.04] px-[clamp(14px,1.2vw,20px)] py-[clamp(10px,0.9vw,14px)] text-[clamp(13.5px,0.92vw,15.5px)] font-medium tracking-[.055em] text-white uppercase"
+                className="db-channel font-ui rounded-[11px] border border-white/14 bg-white/[0.04] px-[clamp(14px,1.2vw,20px)] py-[clamp(10px,0.9vw,14px)] text-[clamp(13.5px,0.92vw,15.5px)] font-medium tracking-[.055em] text-white"
               >
                 {l.label}
               </SmartLink>
@@ -69,10 +69,7 @@ export default function NotFound() {
           </nav>
 
           <p className="m-0 text-[13.5px] leading-relaxed text-white/45">
-            Still stuck? Call{" "}
-            <a href={CONTACT.phone.href} className="text-db-cyan font-semibold">
-              {CONTACT.phone.label}
-            </a>{" "}
+            Still stuck? Call{" "}{" "}
             or email{" "}
             <a href={`mailto:${CONTACT.email}`} className="text-db-cyan font-semibold">
               {CONTACT.email}

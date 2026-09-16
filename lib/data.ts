@@ -12,13 +12,27 @@ export const SITE = {
   login: "https://app.databasebuilder.com:446/Account/Login",
 } as const;
 
-export const NAV_LINKS = [
+export type NavLink = {
+  label: string;
+  href: string;
+  /** a submenu opens from this item instead of it being a plain link */
+  children?: { label: string; href: string }[];
+};
+
+export const NAV_LINKS: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "Our Story", href: "/about" },
+  {
+    label: "About Us",
+    href: "/about",
+    children: [
+      { label: "Our Story", href: "/about" },
+      { label: "Our Team", href: "/about#leadership" },
+    ],
+  },
   { label: "Pricing", href: "/pricing" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact Us", href: "/contact" },
-] as const;
+];
 
 /* ---- hero -------------------------------------------------------------- */
 export type HeroCard = {
@@ -30,27 +44,10 @@ export type HeroCard = {
 };
 
 export const HERO_CARDS: HeroCard[] = [
-  {
-    title: "Advanced features, included",
-    description: "All the essentials. No extra feature fees.",
-    art: "checklist",
-  },
-  {
-    title: "Click to dial",
-    description: "Automatic call recording included.",
-    art: "dialer",
-  },
-  {
-    title: "Email & two-way SMS",
-    description: "Build your own email and text campaigns.",
-    art: "messaging",
-  },
-  {
-    title: "Live support",
-    description: "Real human support, not AI.",
-    art: "support",
-    tone: "red",
-  },
+  { title: "All-In-One Pricing", description: "INCLUDED", art: "checklist" },
+  { title: "Advanced Features", description: "INCLUDED", art: "messaging" },
+  { title: "Click to Dial w/Call Recording", description: "INCLUDED", art: "dialer" },
+  { title: "Live Support", description: "INCLUDED", art: "support", tone: "red" },
 ];
 
 /* ---- why --------------------------------------------------------------- */

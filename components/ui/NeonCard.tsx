@@ -92,8 +92,10 @@ export default function NeonCard({ card }: { card: HeroCard }) {
   const label =
     "font-ui text-center text-[clamp(20px,2.6vw,22px)] leading-[1.18] font-medium tracking-[.01em] text-white sm:text-[clamp(20px,1.55vw,26px)]";
   return (
+    /* No rounded-[14px] here: the corner now lives in .db-neon-card, and an
+       unlayered rule in globals.css beats a utility for the same property. */
     <div
-      className={`db-neon-card flex flex-col items-center rounded-[14px] px-[clamp(10px,1vw,18px)] pt-[clamp(12px,1.6vw,26px)] pb-[clamp(14px,1.8vw,28px)] ${
+      className={`db-neon-card flex flex-col items-center px-[clamp(10px,1vw,18px)] pt-[clamp(12px,1.6vw,26px)] pb-[clamp(14px,1.8vw,28px)] ${
         card.tone === "red" ? "db-neon-card--red" : ""
       }`}
     >
@@ -103,7 +105,7 @@ export default function NeonCard({ card }: { card: HeroCard }) {
       <div className="my-[clamp(12px,1.7vw,24px)] flex h-[clamp(50px,6.8vw,112px)] items-center justify-center [&>svg]:h-full [&>svg]:w-auto">
         <CardArt art={card.art} />
       </div>
-      <p className="font-body m-0 mt-auto min-h-[2.9em] max-w-[24ch] text-center text-[clamp(16px,1.05vw,18px)] leading-[1.45] text-balance text-white/80">
+      <p className="font-ui m-0 mt-auto flex min-h-[2.9em] items-center justify-center text-center text-[clamp(13px,0.95vw,16px)] font-semibold tracking-[.2em] text-white/85 uppercase">
         {card.description}
       </p>
     </div>

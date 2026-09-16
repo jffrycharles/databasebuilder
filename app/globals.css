@@ -8,6 +8,11 @@
 @theme {
   --color-db-black: #010409;
   --color-db-red: #e23324;
+  /* The wordmark blue from the client's own logo artwork. Kept as its own
+     token, separate from --color-brand, so the logo can be tuned without
+     moving link and focus colours with it. */
+  --color-db-blue: #2b5fd9;
+  --color-db-blue-hot: #4f86ff;
   --color-db-red-hot: #ff5947;
   --color-db-cyan: #34e0d4;
   --color-db-card-1: #192242;
@@ -26,6 +31,9 @@
   --font-display: var(--font-anton), "Oswald", Impact, sans-serif;
   --font-ui: var(--font-oswald), "Arial Narrow", sans-serif;
   --font-body: var(--font-roboto), system-ui, -apple-system, sans-serif;
+  /* databasebuilder.com's own face — used for small text only: eyebrows,
+     metric labels, captions. */
+  --font-brand: var(--font-raleway), "Raleway", system-ui, sans-serif;
 
   --ease-db: cubic-bezier(0.22, 0.68, 0.16, 1);
 }
@@ -323,6 +331,11 @@ html::-webkit-scrollbar-corner {
 /* =========================================================================
    Neon cards
    ========================================================================= */
+/* The four "included" cards under the hero.
+
+   Same dark card as before — only the shape changed: a much rounder corner and
+   a taller box, per the sketch. The outer glow is gone (the client asked for
+   the neon removed everywhere); the border alone now carries the edge. */
 .db-neon-card {
   background: linear-gradient(
     170deg,
@@ -331,39 +344,22 @@ html::-webkit-scrollbar-corner {
     var(--color-db-card-3) 100%
   );
   border: 2px solid #3355f7;
-  box-shadow:
-    0 0 0 1px #dcebff57,
-    0 0 20px #1226f0bf,
-    0 0 56px #1226f06b,
-    inset 0 0 34px #0e1e966b;
+  border-radius: 26px;
   transition:
     transform 0.35s var(--ease-db),
-    box-shadow 0.35s ease;
+    border-color 0.35s ease;
 }
+/* the last card carries the brand red instead of the blue */
 .db-neon-card--red {
   background: linear-gradient(170deg, #3a1116 0%, #1e0509 45%, #080104 100%);
   border-color: #f0453a;
-  box-shadow:
-    0 0 0 1px #ffe2dc52,
-    0 0 20px #e23324b8,
-    0 0 56px #e2332466,
-    inset 0 0 34px #9619126b;
 }
 @media (hover: hover) {
   .db-neon-card:hover {
-    transform: translateY(-4px);
-    box-shadow:
-      0 0 0 1px #eaf2ff80,
-      0 0 30px #2e52ffd9,
-      0 0 78px #1226f08f,
-      inset 0 0 42px #12309e85;
+    border-color: #6b86ff;
   }
   .db-neon-card--red:hover {
-    box-shadow:
-      0 0 0 1px #ffe9e480,
-      0 0 30px #ff5947d9,
-      0 0 78px #e2332485,
-      inset 0 0 42px #a01f1a85;
+    border-color: #ff7a6b;
   }
 }
 
@@ -371,41 +367,20 @@ html::-webkit-scrollbar-corner {
    Buttons
    ========================================================================= */
 .db-cta-btn {
+  /* Solid, not a gradient; no glow. Hover darkens rather than lighting up. */
   position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background: linear-gradient(#f5382a 0%, #d8281b 55%, #b01d13 100%);
-  box-shadow:
-    0 0 34px #e2332473,
-    inset 0 1px #ffffff38;
+  background: var(--color-db-red);
   transition:
-    transform 0.18s,
-    box-shadow 0.18s,
-    filter 0.18s;
+    background 0.18s ease,
+    transform 0.18s;
 }
 .db-cta-btn:hover {
-  filter: brightness(1.07);
-  transform: translateY(-2px);
-  box-shadow:
-    0 0 48px #e233249e,
-    inset 0 1px #ffffff47;
+  background: #c62c1e;
+  transform: translateY(-1px);
 }
 .db-cta-btn:focus-visible {
   outline: 3px solid #fff;
   outline-offset: 4px;
-}
-.db-cta-btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(105deg, #fff0 38%, #ffffff5c 50%, #fff0 62%);
-  transform: translateX(-120%);
-  transition: transform 0.65s var(--ease-db);
-}
-.db-cta-btn:hover::after {
-  transform: translateX(120%);
 }
 
 /* =========================================================================
@@ -563,9 +538,6 @@ html::-webkit-scrollbar-corner {
   border-radius: 999px;
   background: linear-gradient(90deg, var(--color-brand) 0%, #6d8cf4 46%, var(--color-db-red) 100%);
 }
-.db-rule--sm {
-  width: 58px;
-}
 
 /* Overline above a heading. */
 .db-kicker {
@@ -602,22 +574,6 @@ html::-webkit-scrollbar-corner {
   border-radius: 0;
 }
 
-/* Cards that lift on hover: leadership, archive links. */
-.db-leader {
-  transition:
-    transform 0.38s var(--ease-db),
-    border-color 0.38s ease,
-    box-shadow 0.38s ease;
-}
-@media (hover: hover) {
-  .db-leader:hover {
-    transform: translateY(-4px);
-    border-color: #cbd9ea;
-    box-shadow:
-      0 2px 4px #0d15260f,
-      0 20px 46px #0d152626;
-  }
-}
 
 /* =========================================================================
    Our Story — the opening chapter
@@ -695,11 +651,14 @@ html::-webkit-scrollbar-corner {
    exactly where the globe sits — so the whole left half of the band read as a
    blue pool. What is left is a neutral lift in the same place, just enough to
    separate the mark from the panel. */
+/* The founder quote sits on a black section now, so the panel can no longer
+   be dark-on-pale — it would vanish. It takes the same faint lift and hairline
+   border as the leadership cards above it instead, which is also what ties the
+   two sections together as one system. */
 .db-cta-band {
-  background:
-    radial-gradient(760px 380px at 14% 52%, #232a3a57, #0000 68%),
-    linear-gradient(135deg, #0b0e16 0%, #06080f 56%, #04060c 100%);
-  box-shadow: 0 24px 60px #00000066;
+  border: 1px solid #ffffff12;
+  background: linear-gradient(180deg, #ffffff0a 0%, #ffffff03 100%);
+  box-shadow: 0 24px 60px #00000059;
 }
 
 /* The trial band's own surface. Split off from .db-cta-band — which the founder
@@ -734,6 +693,178 @@ html::-webkit-scrollbar-corner {
 /* the globe is a per-frame rAF SVG, so it gets one cheap glow and nothing else */
 .db-trial-band__globe {
   filter: drop-shadow(0 0 26px #ffffff2e);
+}
+
+
+/* The centred eyebrow on the story hero — a rule running out from both sides,
+   the way the reference sets its section labels. */
+.db-eyebrow-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 1.2vw, 20px);
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: clamp(11px, 0.78vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #ffffffa6;
+}
+.db-eyebrow-rule > span {
+  display: block;
+  width: clamp(38px, 6vw, 96px);
+  height: 1px;
+}
+.db-eyebrow-rule > span:first-child {
+  background: linear-gradient(90deg, #0000, var(--color-db-red));
+}
+.db-eyebrow-rule > span:last-child {
+  background: linear-gradient(90deg, var(--color-db-red), #0000);
+}
+
+
+/* ---------------------------------------------------------------------------
+   SaaS card system — one radius, one border, one shadow, used by every module
+   in the origin section so the page reads as modules rather than paragraphs.
+   --------------------------------------------------------------------------- */
+.db-saas-card {
+  position: relative;
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px #0d15260a,
+    0 10px 28px #0d152610;
+  transition:
+    transform 0.34s var(--ease-db),
+    box-shadow 0.34s ease,
+    border-color 0.34s ease;
+}
+@media (hover: hover) {
+  .db-saas-card--lift:hover {
+    transform: translateY(-3px);
+    border-color: #cfd9e6;
+    box-shadow:
+      0 2px 4px #0d15260f,
+      0 18px 40px #0d15261f;
+  }
+}
+/* the lit bar across the top of a metric card */
+.db-saas-card--bar::before {
+  content: "";
+  position: absolute;
+  left: clamp(20px, 2.2vw, 34px);
+  top: -1px;
+  width: 42px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: linear-gradient(90deg, var(--color-db-red), var(--color-db-red-hot));
+}
+/* the tinted square an icon sits in */
+.db-saas-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #e233241a;
+  color: var(--color-db-red);
+  flex: none;
+}
+.db-saas-icon--dark {
+  background: #ffffff12;
+  color: var(--color-db-red-hot);
+}
+/* small uppercase pill used as a section eyebrow */
+.db-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 5px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 2px #0d15260a;
+  font-family: var(--font-brand);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+}
+.db-pill i {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-db-red);
+}
+
+
+
+/* On the story hero the lockup carries text under the globe, so the arcs have
+   to pass below it rather than through it. */
+#top .db-stage .db-floor {
+  bottom: -14%;
+}
+@media (max-width: 767px) {
+  /* the lockup is proportionally taller on a phone, so the arcs need to drop
+     further to clear YEARS and the drag hint */
+  #top .db-stage .db-floor {
+    bottom: -40%;
+  }
+  /* 11vw never beats the 86px floor at phone widths, so the globe was pinned at
+     its minimum inside a 288px ring. Drive it from vw here instead. */
+  #top .db-stage {
+    --globe: clamp(104px, 27vw, 150px);
+  }
+}
+
+/* the About Us submenu in the header */
+.db-nav-menu {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 10px);
+  z-index: 40;
+  display: grid;
+  min-width: 180px;
+  padding: 7px;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  background: #080b12f2;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 44px #00000073;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s var(--ease-db),
+    visibility 0.22s;
+}
+.db-nav-group:hover .db-nav-menu,
+.db-nav-group:focus-within .db-nav-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.db-nav-menu__item {
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: #ffffffbf;
+  white-space: nowrap;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+.db-nav-menu__item:hover,
+.db-nav-menu__item:focus-visible {
+  background: #ffffff0f;
+  color: #fff;
 }
 
 /* the clickable colour bars that expand a dashboard */
@@ -1120,11 +1251,9 @@ html::-webkit-scrollbar-corner {
   }
   /* nothing scrubs the spine or lights the nodes, so they start finished */
   .db-tl__node {
-    border-color: #fff;
-    background: #0c1430;
-    box-shadow:
-      0 0 0 5px #2e52ff26,
-      0 0 18px #2e52ffb0;
+    border-color: var(--color-db-red);
+    background: var(--color-db-red);
+    box-shadow: 0 0 0 4px #e2332421;
   }
   .db-hero-hold [data-hero-reveal],
   .db-hero-hold .db-globe-el {
@@ -1208,7 +1337,7 @@ html::-webkit-scrollbar-corner {
   left: 7px;
   width: 2px;
   border-radius: 2px;
-  background: #ffffff1c;
+  background: var(--color-line);
   overflow: hidden;
 }
 .db-tl__spine i {
@@ -1217,7 +1346,7 @@ html::-webkit-scrollbar-corner {
   display: block;
   height: 100%;
   transform-origin: 50% 0;
-  background: linear-gradient(var(--color-brand), #8fa8ff 52%, var(--color-db-red));
+  background: linear-gradient(180deg, var(--color-db-red), var(--color-db-red-hot));
 }
 .db-tl__list {
   margin: 0;
@@ -1240,28 +1369,30 @@ html::-webkit-scrollbar-corner {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid #5b6f9c;
-  background: #04070f;
+  border: 2px solid var(--color-line);
+  background: #fff;
   transition:
     border-color 0.4s ease,
     background-color 0.4s ease,
     box-shadow 0.4s ease;
 }
+/* No glow: the ring alone marks the node once its card has arrived. */
 .db-tl__node.is-lit {
-  border-color: #fff;
-  background: #0c1430;
-  box-shadow:
-    0 0 0 5px #2e52ff26,
-    0 0 18px #2e52ffb0;
+  border-color: var(--color-db-red);
+  background: var(--color-db-red);
+  box-shadow: 0 0 0 4px #e2332421;
 }
 .db-tl__card {
   position: relative;
   grid-column: 2;
-  border-radius: 18px;
-  border: 1px solid #ffffff1c;
-  background: linear-gradient(162deg, #ffffff12 0%, #ffffff07 52%, #ffffff03 100%);
-  padding: clamp(22px, 2.4vw, 40px);
-  box-shadow: 0 18px 44px #00000047;
+  border-radius: 16px;
+  border: 1px solid #ffffff14;
+  /* navy, not black — it should read as the brand's dark, not a hole */
+  background: linear-gradient(168deg, #1f2b4c 0%, #182341 55%, #131d36 100%);
+  padding: clamp(20px, 2.2vw, 34px);
+  box-shadow:
+    0 2px 6px #0d152621,
+    0 18px 44px #0d152633;
   transition:
     transform 0.4s var(--ease-db),
     border-color 0.4s ease,
@@ -1269,9 +1400,11 @@ html::-webkit-scrollbar-corner {
 }
 @media (hover: hover) {
   .db-tl__card:hover {
-    transform: translateY(-4px);
-    border-color: #ffffff33;
-    box-shadow: 0 26px 60px #00000066;
+    transform: translateY(-3px);
+    border-color: #ffffff2e;
+    box-shadow:
+      0 4px 10px #0d152629,
+      0 26px 56px #0d152640;
   }
 }
 
@@ -1324,60 +1457,36 @@ html::-webkit-scrollbar-corner {
 }
 
 /* contact form fields */
+/* ---------------------------------------------------------------------------
+   Contact form — dark.
+
+   Filled fields on a black panel, label above each one, no leading icon. The
+   icon-in-every-field pattern is the tell of a generated form, and it competed
+   with the text at every size. Focus is a cyan ring; invalid is red. Both are
+   two-signal (border + ring) so neither depends on colour alone.
+   --------------------------------------------------------------------------- */
 .db-field {
   width: 100%;
-  border: 1px solid var(--color-line);
+  border: 1px solid #ffffff1a;
   border-radius: 10px;
-  background: #fff;
+  background: #ffffff08;
+  /* left room for the leading icon; --plain reclaims it */
   padding: 13px 14px 13px 42px;
   font-family: var(--font-body);
   font-size: 15px;
-  color: var(--color-ink);
+  color: #fff;
   transition:
     border-color 0.2s ease,
+    background 0.2s ease,
     box-shadow 0.2s ease;
 }
 .db-field--plain {
   padding-left: 14px;
 }
 
-/* The subject dropdown was rendering as the raw OS control — a macOS
-   double-chevron sitting in a form where every other field is custom-drawn,
-   and 3px shorter than the inputs beside it because the native widget brings
-   its own line box. Draw our own chevron and pin the line-height so the two
-   line up exactly. */
-.db-field--select {
-  appearance: none;
-  -webkit-appearance: none;
-  line-height: 23px;
-  padding-right: 46px;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d6fe8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9.5l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 16px center;
-  background-size: 15px 15px;
-}
-/* the arrow leans into the field as it opens, like the accordion's plus */
-.db-field--select:hover {
-  background-position: right 16px 60%;
-}
-.db-field--select::-ms-expand {
-  display: none;
-}
-.db-field::placeholder {
-  color: #9aa7ba;
-}
-.db-field:hover {
-  border-color: #c2cddd;
-}
-.db-field:focus {
-  outline: none;
-  border-color: var(--color-brand);
-  box-shadow: 0 0 0 3px #1d6fe82e;
-}
-.db-field[aria-invalid="true"] {
-  border-color: var(--color-db-red);
-  box-shadow: 0 0 0 3px #e2332426;
+/* the leading icon inside a field */
+.db-field-wrap {
+  position: relative;
 }
 .db-field-icon {
   position: absolute;
@@ -1385,23 +1494,67 @@ html::-webkit-scrollbar-corner {
   top: 14px;
   width: 17px;
   height: 17px;
-  color: #93a1b5;
+  color: #ffffff59;
   pointer-events: none;
   transition: color 0.2s ease;
 }
 .db-field-wrap:focus-within .db-field-icon {
-  color: var(--color-brand);
+  color: #fff;
 }
 
-/* the record card the form lives in */
-.db-record {
-  border: 1px solid var(--color-line);
-  border-radius: 14px;
-  background: #fff;
-  box-shadow:
-    0 1px 2px #0d15260f,
-    0 12px 32px #0d152614;
+/* The subject dropdown rendered as the raw OS control — a macOS double-chevron
+   in a form where every other field is custom-drawn, and 3px shorter than its
+   neighbours because the native widget brings its own line box. Draw our own
+   chevron and pin the line-height so they line up exactly. */
+.db-field--select {
+  appearance: none;
+  -webkit-appearance: none;
+  line-height: 23px;
+  padding-right: 46px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9.5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 15px 15px;
 }
+.db-field--select:hover {
+  background-position: right 16px 60%;
+}
+.db-field--select::-ms-expand {
+  display: none;
+}
+.db-field--select option {
+  background: #0c1018;
+  color: #fff;
+}
+.db-field::placeholder {
+  color: #ffffff4d;
+}
+.db-field:hover {
+  border-color: #ffffff2e;
+}
+/* Focus is white, invalid is red — two different signals on purpose, so a field
+   you have just clicked into never reads as an error. */
+.db-field:focus {
+  outline: none;
+  border-color: #ffffffb3;
+  background: #ffffff12;
+  box-shadow: 0 0 0 3px #ffffff26;
+}
+.db-field[aria-invalid="true"] {
+  border-color: var(--color-db-red-hot);
+  box-shadow: 0 0 0 3px #e2332433;
+}
+
+/* The panel the form sits in — pure black, so it reads as a solid card cut out
+   of the band behind it rather than a slightly lighter tint of it. */
+.db-record {
+  border: 1px solid #ffffff17;
+  border-radius: 18px;
+  background: #000;
+  box-shadow: 0 28px 70px #00000073;
+}
+
 .db-chip {
   display: inline-flex;
   align-items: center;
@@ -1642,51 +1795,115 @@ html::-webkit-scrollbar-corner {
   background: #05070dd9;
 }
 
-/* leadership portraits — one fixed frame so a row of cards always aligns */
-.db-portrait {
+/* ---------------------------------------------------------------------------
+   Leadership — a dark band, dark cards, circular portraits.
+
+   The circle is the point, not decoration. These four photographs were shot on
+   four different pale backdrops; cropped square onto a dark card each one
+   became a bright rectangle with a hard seam along its edge. A circle has no
+   edge to catch, so the pale backdrop reads as a soft disc and the four sit
+   together as a set.
+   --------------------------------------------------------------------------- */
+.db-team-card {
   position: relative;
-  width: 100%;
+  border: 1px solid #ffffff12;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ffffff0a 0%, #ffffff03 100%);
+  transition:
+    transform 0.38s var(--ease-db),
+    border-color 0.38s ease,
+    box-shadow 0.38s ease;
+}
+@media (hover: hover) {
+  .db-team-card:hover {
+    transform: translateY(-5px);
+    border-color: #ffffff2b;
+    box-shadow: 0 22px 52px #00000066;
+  }
+}
+
+.db-team-card__avatar {
+  position: relative;
+  width: clamp(104px, 9.6vw, 136px);
   aspect-ratio: 1 / 1;
+  margin-inline: auto;
   overflow: hidden;
+  border: 3px solid #ffffff14;
+  border-radius: 999px;
   background: linear-gradient(160deg, #16264f 0%, #0b1330 55%, #060b1b 100%);
+  transition: border-color 0.38s ease;
 }
-/* Four backdrops, four colour temperatures. Easing the saturation and lifting
-   contrast slightly lets them sit together as a set without touching skin
-   tones the way a colour overlay would. */
-.db-portrait img {
-  filter: saturate(0.88) contrast(1.05);
+.db-team-card:hover .db-team-card__avatar {
+  border-color: #ffffff2e;
 }
-/* How long they have been here, over the foot of the portrait. Solid rather
-   than a backdrop-filter — four blurred layers on one row is real cost for a
-   panel that never moves. */
-.db-leader__since {
-  position: absolute;
-  left: 12px;
-  bottom: 12px;
-  z-index: 2;
+/* Black and white, colour on hover — the treatment the current
+   databasebuilder.com uses. It also evens out four portraits shot on four
+   different backdrops, which is why they read as a set at rest. */
+.db-team-card__avatar img {
+  /* All four were shot on a pale grey backdrop, so at full brightness each one
+     reads as a white disc glowing off a near-black card. Knocking the
+     brightness back sits the circle INTO the card; hover restores it fully. */
+  filter: grayscale(1) brightness(0.62) contrast(1.18);
+  transition: filter 0.45s ease;
+}
+@media (hover: hover) {
+  .db-team-card:hover .db-team-card__avatar img,
+  .db-team-card:focus-within .db-team-card__avatar img {
+    filter: grayscale(0) brightness(1) saturate(1.02) contrast(1.02);
+  }
+}
+/* a touch device has no hover — show them in colour rather than leave every
+   portrait permanently grey */
+@media (hover: none) {
+  .db-team-card__avatar img {
+    filter: none;
+  }
+}
+
+/* how long they have been here */
+.db-team-card__since {
   display: inline-flex;
   align-items: center;
-  padding: 5px 11px 4px;
+  padding: 4px 10px 3px;
+  border: 1px solid #ffffff1c;
   border-radius: 999px;
-  background: #0b1730e6;
-  box-shadow: 0 2px 10px #0b173047;
-  color: #fff;
+  background: #ffffff0a;
+  color: #ffffff8f;
   font-family: var(--font-ui);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 500;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-/* a hairline under the photo so it meets the card body cleanly */
-.db-portrait::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0;
-  height: 1px;
-  background: #0d152614;
+/* the round contact buttons that close each card */
+.db-team-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ffffff1a;
+  border-radius: 999px;
+  background: #ffffff0d;
+  color: #fff;
+  transition:
+    background 0.26s ease,
+    border-color 0.26s ease,
+    transform 0.26s var(--ease-db);
 }
+@media (hover: hover) {
+  .db-team-btn:hover {
+    transform: translateY(-2px);
+    border-color: #0000;
+    background: var(--color-db-red);
+  }
+}
+.db-team-btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
 .db-more summary::-webkit-details-marker {
   display: none;
 }
@@ -1861,7 +2078,9 @@ html::-webkit-scrollbar-corner {
   display: inline-block;
   overflow: hidden;
   vertical-align: bottom;
-  margin-right: 0.26em;
+  /* Anton is ultra-condensed: at display size the words need a wider gap than a
+     normal space, or the line reads as one long run-on. */
+  margin-right: 0.3em;
   padding-block: 0.12em;
   margin-block: -0.12em;
 }

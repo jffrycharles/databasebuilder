@@ -9,7 +9,7 @@ export default function FeatureGroup({ group }: { group: Group }) {
         <span className="bg-brand/10 text-brand grid h-10 w-10 shrink-0 place-items-center rounded-[10px]">
           <Icon name={group.icon} className="h-[18px] w-[18px]" />
         </span>
-        <h3 className="font-display text-ink m-0 text-[clamp(17px,1.35vw,23px)] leading-none tracking-[.01em] uppercase">
+        <h3 className="font-display text-ink m-0 text-[clamp(17px,1.35vw,23px)] leading-none tracking-[.01em]">
           {group.title}
         </h3>
       </div>

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { gsap, prefersReducedMotion, useGsap } from "@/lib/gsap";
-import { ASSURANCES, CONTACT, SUBJECTS } from "@/lib/contact";
+import { CHANNELS, CONTACT, SUBJECTS } from "@/lib/contact";
 
 /* ---------------------------------------------------------------------------
    Submitting posts to /api/contact, which forwards to whatever
@@ -193,262 +193,239 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="db-section db-section--airy bg-page">
-      <div className="db-shell">
-        <div ref={root} className="db-record overflow-hidden">
-          {/* record header */}
-          <div className="border-line flex flex-wrap items-center gap-3.5 border-b px-[clamp(22px,2.8vw,46px)] py-[clamp(16px,1.5vw,22px)]">
-            <span className="db-chip bg-brand/10 text-brand">
-              <i />
-              New enquiry
-            </span>
-            <h2 className="font-display text-ink m-0 text-[clamp(18px,1.5vw,26px)] leading-none tracking-[.01em] uppercase">
-              Get in touch
-            </h2>
-            <span className="text-ink-3 ml-auto hidden text-[13px] sm:block">
-              Usually answered within one business day
-            </span>
-          </div>
+    <section className="db-page-band db-section db-section--airy">
+      <div className="db-shell relative z-[2]">
+        <div className="grid items-start gap-[clamp(28px,3.4vw,64px)] lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.5fr)]">
+          {/* ---- how to reach us, on the left ---- */}
+          <aside>
+            <p className="font-ui text-[11.5px] tracking-[.18em] text-white/40 uppercase">
+              Reach us directly
+            </p>
+            <ul className="m-0 mt-6 grid list-none gap-5 p-0">
+              {CHANNELS.map((c) => (
+                <li key={c.title}>
+                  <a
+                    href={c.href}
+                    target={c.icon === "pin" ? "_blank" : undefined}
+                    rel={c.icon === "pin" ? "noreferrer" : undefined}
+                    className="group flex items-start gap-4"
+                  >
+                    <span className="text-db-red-hot mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-[11px] border border-white/10 bg-white/[0.05] transition-colors group-hover:border-white/25">
+                      <Icon name={c.icon} className="h-[18px] w-[18px]" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="font-ui block text-[11px] tracking-[.16em] text-white/40 uppercase">
+                        {c.title}
+                      </span>
+                      <span className="font-body mt-1 block text-[clamp(15px,1.05vw,18px)] leading-snug font-bold text-white">
+                        {c.lines[0]}
+                      </span>
+                      <span className="mt-1 block text-[13px] leading-snug text-white/45">
+                        {c.lines[1]}
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
 
-          <div className="grid gap-0 lg:grid-cols-[1.35fr_0.65fr]">
-            {/* ---- the form ---- */}
-            <div className="relative p-[clamp(22px,2.8vw,46px)]">
-              {sent ? (
-                <div ref={panel} role="status" aria-live="polite" tabIndex={-1}>
-                  <div className="bg-green/10 text-green mb-5 inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-[14px] font-semibold">
-                    <Icon name="check" className="h-4 w-4" />
-                    {outcome === "delivered" ? "Message sent" : "Draft ready in your email app"}
-                  </div>
-                  <h3 className="font-display text-ink m-0 text-[clamp(19px,1.55vw,25px)] leading-none tracking-[.01em] uppercase">
-                    Thanks, {sent.name.split(" ")[0]}.
-                  </h3>
-                  <p className="text-ink-2 mt-2.5 max-w-[52ch] text-[15px] leading-[1.6]">
-                    {outcome === "delivered" ? (
-                      <>
-                        We have it — nothing else to do. A person will reply to{" "}
-                        <span className="text-ink font-semibold">{sent.email}</span>, usually within
-                        one business day.
-                      </>
-                    ) : (
-                      <>
-                        Your message has been handed to your email client, addressed to{" "}
-                        <a className="text-brand font-semibold" href={`mailto:${CONTACT.email}`}>
-                          {CONTACT.email}
-                        </a>
-                        .{" "}
-                        <span className="text-ink font-semibold">
-                          It is not sent until you send it from there.
-                        </span>{" "}
-                        If nothing opened, copy the details below and email them to us.
-                      </>
-                    )}
-                  </p>
+          </aside>
 
-                  <dl className="border-line mt-6 grid gap-0 rounded-[12px] border">
-                    {[
-                      ["Name", sent.name],
-                      ["Company", sent.company || "—"],
-                      ["Email", sent.email],
-                      ["Phone", sent.phone || "—"],
-                      ["Subject", sent.subject],
-                      ["Message", sent.message],
-                    ].map(([k, v], i) => (
-                      <div
-                        key={k}
-                        className={`grid grid-cols-[minmax(80px,26%)_minmax(0,1fr)] gap-3 px-4 py-3 ${
-                          i === 0 ? "" : "border-line border-t"
-                        }`}
-                      >
-                        <dt className="font-ui text-ink-3 text-[11.5px] tracking-[.14em] uppercase">
-                          {k}
-                        </dt>
-                        <dd className="text-ink m-0 text-[14.5px] leading-snug break-words">{v}</dd>
-                      </div>
-                    ))}
-                  </dl>
+          {/* ---- the form ---- */}
+          <div ref={root} className="db-record p-[clamp(22px,2.8vw,44px)]">
+            <div className="mb-[clamp(22px,2.4vw,34px)] flex flex-wrap items-baseline gap-x-4 gap-y-2">
+              <h2 className="font-display m-0 text-[clamp(22px,2vw,34px)] leading-none tracking-[.01em] text-white">
+                Get in touch
+              </h2>
+              <span className="ml-auto text-[13px] text-white/40">
+                Usually answered within one business day
+              </span>
+            </div>
 
-                  <div className="mt-6 flex flex-wrap items-center gap-3">
-                    {outcome === "handoff" && (
-                      <button type="button" onClick={handoff} className="db-cta-btn font-ui rounded-[9px] px-5 py-3 text-[15px] font-semibold tracking-[.03em] text-white uppercase">
-                        Open email again
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      onClick={copy}
-                      className="border-line text-ink-2 hover:text-brand inline-flex items-center gap-2 rounded-[9px] border bg-white px-5 py-3 text-[15px] font-semibold transition-colors"
-                    >
-                      <Icon name={copied ? "check" : "clip"} className="h-4 w-4" />
-                      {copied ? "Copied" : "Copy message"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSent(null);
-                        setValues(EMPTY);
-                        setWebsite("");
-                        setCopied(false);
-                      }}
-                      className="border-line text-ink-2 hover:text-brand rounded-[9px] border bg-white px-5 py-3 text-[15px] font-semibold transition-colors"
-                    >
-                      Write another
-                    </button>
-                  </div>
+            {sent ? (
+              <div ref={panel} role="status" aria-live="polite" tabIndex={-1}>
+                <div className="text-db-red-hot mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.05] px-4 py-2 text-[14px] font-semibold">
+                  <Icon name="check" className="h-4 w-4" />
+                  {outcome === "delivered" ? "Message sent" : "Draft ready in your email app"}
                 </div>
-              ) : (
-                <form onSubmit={submit} noValidate>
-                  {/* Not display:none — some bots skip those. Off-screen and
-                      out of the tab order, so nobody real ever meets it. */}
-                  <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
-                    <label htmlFor="f-website">Leave this field empty</label>
-                    <input
-                      id="f-website"
-                      name="website"
-                      type="text"
-                      tabIndex={-1}
-                      autoComplete="off"
-                      value={website}
-                      onChange={(e) => setWebsite(e.target.value)}
-                    />
-                  </div>
+                <h3 className="font-display m-0 text-[clamp(19px,1.55vw,25px)] leading-none tracking-[.01em] text-white">
+                  Thanks, {sent.name.split(" ")[0]}.
+                </h3>
+                <p className="mt-3 max-w-[52ch] text-[15px] leading-[1.6] text-white/65">
+                  {outcome === "delivered" ? (
+                    <>
+                      We have it — nothing else to do. A person will reply to{" "}
+                      <span className="font-semibold text-white">{sent.email}</span>, usually within
+                      one business day.
+                    </>
+                  ) : (
+                    <>
+                      Your message has been handed to your email client, addressed to{" "}
+                      <a className="text-db-red-hot font-semibold" href={`mailto:${CONTACT.email}`}>
+                        {CONTACT.email}
+                      </a>
+                      .{" "}
+                      <span className="font-semibold text-white">
+                        It is not sent until you send it from there.
+                      </span>{" "}
+                      If nothing opened, copy the details below and email them to us.
+                    </>
+                  )}
+                </p>
 
-                  <div className="grid gap-[clamp(18px,1.7vw,26px)] sm:grid-cols-2">
-                    {FIELDS.map((f) => (
-                      <div key={f.name} data-row className={f.half ? "" : "sm:col-span-2"}>
-                        <label
-                          htmlFor={`f-${f.name}`}
-                          className="text-ink mb-1.5 block text-[13.5px] font-semibold"
-                        >
-                          {f.label}
-                          {!f.required && <span className="text-ink-3 font-normal"> (optional)</span>}
-                        </label>
-                        <div className="db-field-wrap relative">
-                          <Icon name={f.icon} className="db-field-icon" />
-                          <input
-                            id={`f-${f.name}`}
-                            name={f.name}
-                            type={f.type}
-                            autoComplete={f.autoComplete}
-                            className="db-field"
-                            placeholder={f.placeholder}
-                            value={values[f.name]}
-                            onChange={(e) => set(f.name, e.target.value)}
-                            aria-required={f.required || undefined}
-                            aria-invalid={errors[f.name] ? "true" : undefined}
-                            aria-describedby={errors[f.name] ? `e-${f.name}` : undefined}
-                          />
-                        </div>
-                        {errors[f.name] && (
-                          <p
-                            id={`e-${f.name}`}
-                            role="alert"
-                            className="text-db-red mt-1.5 text-[12.5px] font-semibold"
-                          >
-                            {errors[f.name]}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-
-                    <div data-row className="sm:col-span-2">
-                      <label htmlFor="f-subject" className="text-ink mb-1.5 block text-[13.5px] font-semibold">
-                        What is it about?
-                      </label>
-                      <div className="db-field-wrap relative">
-                        <Icon name="tag" className="db-field-icon" />
-                        <select
-                          id="f-subject"
-                          name="subject"
-                          className="db-field db-field--select"
-                          value={values.subject}
-                          onChange={(e) => set("subject", e.target.value)}
-                        >
-                          {SUBJECTS.map((s) => (
-                            <option key={s}>{s}</option>
-                          ))}
-                        </select>
-                      </div>
+                <dl className="mt-6 grid gap-0 rounded-[12px] border border-white/10">
+                  {[
+                    ["Name", sent.name],
+                    ["Company", sent.company || "—"],
+                    ["Email", sent.email],
+                    ["Phone", sent.phone || "—"],
+                    ["Subject", sent.subject],
+                    ["Message", sent.message],
+                  ].map(([k, v], i) => (
+                    <div
+                      key={k}
+                      className={`grid grid-cols-[minmax(80px,26%)_minmax(0,1fr)] gap-3 px-4 py-3 ${
+                        i === 0 ? "" : "border-t border-white/10"
+                      }`}
+                    >
+                      <dt className="font-ui text-[11.5px] tracking-[.14em] text-white/40 uppercase">
+                        {k}
+                      </dt>
+                      <dd className="m-0 text-[14.5px] leading-snug break-words text-white/85">{v}</dd>
                     </div>
+                  ))}
+                </dl>
 
-                    <div data-row className="sm:col-span-2">
-                      <label htmlFor="f-message" className="text-ink mb-1.5 block text-[13.5px] font-semibold">
-                        Message
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  {outcome === "handoff" && (
+                    <button type="button" onClick={handoff} className="db-cta-btn font-ui rounded-[9px] px-5 py-3 text-[15px] font-semibold tracking-[.03em] text-white uppercase">
+                      Open email again
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={copy}
+                    className="font-ui inline-flex items-center gap-2 rounded-[9px] border border-white/15 bg-white/[0.05] px-5 py-3 text-[14px] font-medium tracking-[.06em] text-white/75 uppercase transition-colors hover:text-white"
+                  >
+                    <Icon name={copied ? "check" : "clip"} className="h-4 w-4" />
+                    {copied ? "Copied" : "Copy message"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSent(null);
+                      setValues(EMPTY);
+                      setWebsite("");
+                      setCopied(false);
+                    }}
+                    className="font-ui rounded-[9px] border border-white/15 bg-white/[0.05] px-5 py-3 text-[14px] font-medium tracking-[.06em] text-white/75 uppercase transition-colors hover:text-white"
+                  >
+                    Write another
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={submit} noValidate>
+                {/* Not display:none — some bots skip those. Off-screen and out of
+                    the tab order, so nobody real ever meets it. */}
+                <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
+                  <label htmlFor="f-website">Leave this field empty</label>
+                  <input
+                    id="f-website"
+                    name="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                  />
+                </div>
+
+                <div className="grid gap-[clamp(16px,1.6vw,22px)] sm:grid-cols-2">
+                  {FIELDS.map((f) => (
+                    <div key={f.name} data-row className={f.half ? "" : "sm:col-span-2"}>
+                      <label htmlFor={`f-${f.name}`} className="font-ui mb-2 block text-[11.5px] tracking-[.14em] text-white/55 uppercase">
+                        {f.label}
+                        {!f.required && <span className="text-white/30"> (optional)</span>}
                       </label>
-                      <textarea
-                        id="f-message"
-                        name="message"
-                        rows={5}
-                        aria-required
-                        className="db-field db-field--plain resize-y"
-                        placeholder="Tell us what you are trying to do and we will point you at the right part of the product."
-                        value={values.message}
-                        onChange={(e) => set("message", e.target.value)}
-                        aria-invalid={errors.message ? "true" : undefined}
-                        aria-describedby={errors.message ? "e-message" : undefined}
+                      <input
+                        id={`f-${f.name}`}
+                        name={f.name}
+                        type={f.type}
+                        autoComplete={f.autoComplete}
+                        className="db-field db-field--plain"
+                        placeholder={f.placeholder}
+                        value={values[f.name]}
+                        onChange={(e) => set(f.name, e.target.value)}
+                        aria-required={f.required || undefined}
+                        aria-invalid={errors[f.name] ? "true" : undefined}
+                        aria-describedby={errors[f.name] ? `e-${f.name}` : undefined}
                       />
-                      {errors.message && (
-                        <p id="e-message" role="alert" className="text-db-red mt-1.5 text-[12.5px] font-semibold">
-                          {errors.message}
+                      {errors[f.name] && (
+                        <p id={`e-${f.name}`} role="alert" className="text-db-red-hot mt-1.5 text-[12.5px] font-semibold">
+                          {errors[f.name]}
                         </p>
                       )}
                     </div>
-                  </div>
+                  ))}
 
-                  <div data-row className="mt-[clamp(26px,2.6vw,40px)] flex flex-wrap items-center gap-x-6 gap-y-4">
-                    <button
-                      type="submit"
-                      disabled={busy}
-                      aria-busy={busy}
-                      className="db-cta-btn font-ui rounded-[9px] px-6 py-3.5 text-[clamp(15px,1.05vw,17px)] font-semibold tracking-[.03em] text-white uppercase disabled:cursor-wait disabled:opacity-70"
+                  <div data-row className="sm:col-span-2">
+                    <label htmlFor="f-subject" className="font-ui mb-2 block text-[11.5px] tracking-[.14em] text-white/55 uppercase">
+                      What is it about?
+                    </label>
+                    <select
+                      id="f-subject"
+                      name="subject"
+                      className="db-field db-field--select db-field--plain"
+                      value={values.subject}
+                      onChange={(e) => set("subject", e.target.value)}
                     >
-                      {busy ? "Sending…" : "Send message"}
-                    </button>
-                    <p className="text-ink-3 m-0 max-w-[46ch] text-[13px] leading-relaxed">
-                      Goes straight to {CONTACT.email}. If we cannot deliver it, your email app
-                      opens with the message ready instead.
-                    </p>
+                      {SUBJECTS.map((s) => (
+                        <option key={s}>{s}</option>
+                      ))}
+                    </select>
                   </div>
-                </form>
-              )}
-            </div>
 
-            {/* ---- side rail ---- */}
-            <aside className="border-line bg-page border-t p-[clamp(22px,2.6vw,40px)] lg:border-t-0 lg:border-l">
-              <p className="db-kicker text-ink-3 mb-4">Why it is worth writing</p>
-              <ul className="m-0 grid list-none gap-[clamp(20px,2vw,28px)] p-0">
-                {ASSURANCES.map((a) => (
-                  <li key={a.title} className="flex items-start gap-3">
-                    <span className="bg-brand/10 text-brand mt-px grid h-8 w-8 shrink-0 place-items-center rounded-[9px]">
-                      <Icon name={a.icon} className="h-4 w-4" />
-                    </span>
-                    <span>
-                      <span className="text-ink block text-[14.5px] font-bold">{a.title}</span>
-                      <span className="text-ink-2 mt-1 block text-[13.5px] leading-snug">{a.body}</span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                  <div data-row className="sm:col-span-2">
+                    <label htmlFor="f-message" className="font-ui mb-2 block text-[11.5px] tracking-[.14em] text-white/55 uppercase">
+                      Message
+                    </label>
+                    <textarea
+                      id="f-message"
+                      name="message"
+                      rows={6}
+                      aria-required
+                      className="db-field db-field--plain resize-y"
+                      placeholder="Tell us what you are trying to do and we will point you at the right part of the product."
+                      value={values.message}
+                      onChange={(e) => set("message", e.target.value)}
+                      aria-invalid={errors.message ? "true" : undefined}
+                      aria-describedby={errors.message ? "e-message" : undefined}
+                    />
+                    {errors.message && (
+                      <p id="e-message" role="alert" className="text-db-red-hot mt-1.5 text-[12.5px] font-semibold">
+                        {errors.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
 
-              <div className="border-line mt-7 border-t pt-6">
-                <p className="db-kicker text-ink-3 mb-3">Rather talk now?</p>
-                <a
-                  href={CONTACT.phone.href}
-                  className="font-body text-ink hover:text-brand block text-[clamp(19px,1.5vw,24px)] font-bold tracking-[-.01em] transition-colors"
-                >
-                  {CONTACT.phone.label}
-                </a>
-                <a
-                  href={CONTACT.maps}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-ink-2 hover:text-brand mt-3 block text-[14px] leading-snug transition-colors"
-                >
-                  {CONTACT.address.line1}
-                  <br />
-                  {CONTACT.address.line2}
-                </a>
-              </div>
-            </aside>
+                <div data-row className="mt-[clamp(24px,2.4vw,36px)] flex flex-wrap items-center gap-x-6 gap-y-4">
+                  <button
+                    type="submit"
+                    disabled={busy}
+                    aria-busy={busy}
+                    className="db-cta-btn font-ui rounded-[9px] px-6 py-3.5 text-[clamp(13.5px,0.95vw,15.5px)] font-medium tracking-[.1em] text-white uppercase disabled:cursor-wait disabled:opacity-70"
+                  >
+                    {busy ? "Sending…" : "Send message"}
+                  </button>
+                  <p className="m-0 max-w-[44ch] text-[13px] leading-relaxed text-white/40">
+                    Goes straight to {CONTACT.email}. If we cannot deliver it, your email app
+                    opens with the message ready instead.
+                  </p>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>

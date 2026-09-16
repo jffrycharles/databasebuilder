@@ -27,13 +27,6 @@ export type Channel = {
 
 export const CHANNELS: Channel[] = [
   {
-    icon: "phone",
-    title: "Call us",
-    lines: ["+1 773 273 7310", "Monday to Friday, business hours CT"],
-    href: "tel:+17732737310",
-    action: "Start a call",
-  },
-  {
     icon: "mail",
     title: "Email",
     lines: ["info@databasebuilder.com", "A person reads it — not a chatbot"],
@@ -57,21 +50,3 @@ export const SUBJECTS = [
   "A suggestion for the product",
   "Something else",
 ] as const;
-
-export const ASSURANCES: { icon: IconName; title: string; body: string }[] = [
-  {
-    icon: "user",
-    title: "A real person answers",
-    body: "Support is staffed by people who use the CRM every day. No ticket-bot round trips.",
-  },
-  {
-    icon: "clock",
-    title: "No long-term commitment",
-    body: "Billed monthly with 30-day cancellation, so a conversation is not a contract.",
-  },
-  {
-    icon: "shield",
-    title: "Your data stays yours",
-    body: "Import and export whenever you like. Administrators keep full control of the account.",
-  },
-];

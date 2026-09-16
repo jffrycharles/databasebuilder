@@ -114,16 +114,40 @@ export default function Header() {
         </SmartLink>
 
         <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-[clamp(16px,1.6vw,38px)] xl:flex">
-          {NAV_LINKS.map((l) => (
-            <SmartLink
-              key={l.label}
-              href={l.href}
-              aria-current={l.href === pathname ? "page" : undefined}
-              className={`${navLink} ${l.href === pathname ? "text-db-red-hot" : ""}`}
-            >
-              {l.label}
-            </SmartLink>
-          ))}
+          {NAV_LINKS.map((l) =>
+            l.children ? (
+              /* Hover opens it on a pointer; focus-within opens it from the
+                 keyboard, so it is reachable without a mouse. */
+              <div key={l.label} className="db-nav-group relative">
+                <SmartLink
+                  href={l.href}
+                  aria-current={l.href === pathname ? "page" : undefined}
+                  className={`${navLink} inline-flex items-center gap-1.5 ${l.href === pathname ? "text-db-red-hot" : ""}`}
+                >
+                  {l.label}
+                  <svg viewBox="0 0 24 24" className="h-3 w-3" aria-hidden="true">
+                    <path d="M6 9.5l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+                  </svg>
+                </SmartLink>
+                <div className="db-nav-menu">
+                  {l.children.map((c) => (
+                    <SmartLink key={c.label} href={c.href} className="db-nav-menu__item">
+                      {c.label}
+                    </SmartLink>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <SmartLink
+                key={l.label}
+                href={l.href}
+                aria-current={l.href === pathname ? "page" : undefined}
+                className={`${navLink} ${l.href === pathname ? "text-db-red-hot" : ""}`}
+              >
+                {l.label}
+              </SmartLink>
+            ),
+          )}
         </nav>
 
         <button
@@ -160,14 +184,25 @@ export default function Header() {
       <nav id="db-mobile-nav" className="db-mobile-nav" aria-hidden={!open}>
         <div className="mx-auto flex w-full max-w-[1640px] flex-col gap-1 px-4 pt-3 pb-5 sm:px-10">
           {NAV_LINKS.map((l) => (
-            <SmartLink
-              key={l.label}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="font-ui py-2 text-[19px] tracking-[.055em] text-white uppercase"
-            >
-              {l.label}
-            </SmartLink>
+            <div key={l.label}>
+              <SmartLink
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="font-ui block py-2 text-[19px] tracking-[.055em] text-white uppercase"
+              >
+                {l.label}
+              </SmartLink>
+              {l.children?.map((c) => (
+                <SmartLink
+                  key={c.label}
+                  href={c.href}
+                  onClick={() => setOpen(false)}
+                  className="font-ui block py-1.5 pl-5 text-[16px] tracking-[.055em] text-white/65 uppercase"
+                >
+                  {c.label}
+                </SmartLink>
+              ))}
+            </div>
           ))}
           <a
             href={SITE.login}

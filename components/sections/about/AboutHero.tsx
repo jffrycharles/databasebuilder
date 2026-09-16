@@ -1,13 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import Globe from "@/components/ui/Globe";
-import Label from "@/components/ui/Label";
-import { OrbitRings, WaveDivider } from "@/components/sections/HeroArt";
+import { FloorRibbons, OrbitRings, WaveDivider } from "@/components/sections/HeroArt";
 import HeroAtmosphere from "@/components/ui/HeroAtmosphere";
 import { useAppReady } from "@/components/animations/AppShell";
 import { gsap, prefersReducedMotion, useIsoLayoutEffect } from "@/lib/gsap";
-import { ABOUT } from "@/lib/about";
 import { SITE } from "@/lib/data";
 
 /* Split so each word can rise out of a mask of its own. The last one carries
@@ -28,7 +26,6 @@ const HEADLINE = ["Sales", "software,", "designed", "by", "salespeople"];
 export default function AboutHero() {
   const ready = useAppReady();
   const root = useRef<HTMLElement>(null);
-  const num = useRef<HTMLSpanElement>(null);
   const hintRef = useRef<HTMLSpanElement>(null);
 
   /* Hold the hero only while the loader is still on screen. */
@@ -69,28 +66,9 @@ export default function AboutHero() {
           { yPercent: 0, duration: 0.9, stagger: 0.075, ease: "power4.out" },
           0.35,
         )
-        .fromTo("[data-story-lede]", { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.75 }, 0.72)
         .fromTo("[data-story-mark]", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7 }, 0.85)
         .fromTo(".db-story-cue", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7 }, 1.3);
 
-      const counter = num.current;
-      if (counter) {
-        // the mark is still faded out here, so this never reads as a flicker
-        counter.textContent = "0";
-        const obj = { v: 0 };
-        tl.to(
-          obj,
-          {
-            v: 45,
-            duration: 1.6,
-            ease: "power2.inOut",
-            onUpdate: () => {
-              counter.textContent = String(Math.round(obj.v));
-            },
-          },
-          0.9,
-        );
-      }
 
       // show the drag affordance once, then leave it to hover
       const hint = hintRef.current;
@@ -111,6 +89,7 @@ export default function AboutHero() {
       const scrub = gsap.timeline({
         scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 0.45 },
       });
+
       scrub.to(".db-story-copy", { yPercent: -7, opacity: 0.25, ease: "none" }, 0);
       scrub.to(".db-story-cue-wrap", { opacity: 0, ease: "none" }, 0);
 
@@ -120,7 +99,6 @@ export default function AboutHero() {
       window.clearTimeout(safety);
       ctx.revert();
       show(); // reverting inline styles must not re-hide the hero
-      if (num.current) num.current.textContent = "45";
     };
   }, [ready]);
 
@@ -133,34 +111,38 @@ export default function AboutHero() {
     >
       <HeroAtmosphere />
 
-      <div className="db-story-copy db-shell relative z-[2] grid flex-1 content-center items-center gap-[clamp(28px,3.4vw,56px)] pt-[clamp(40px,5vw,72px)] pb-[clamp(56px,6vw,96px)] lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1fr)]">
-        <div>
-          <div data-story-label>
-            <Label tone="dark" className="mb-5">
-              Our Story
-            </Label>
-          </div>
+      <div className="db-story-copy db-shell relative z-[2] flex flex-1 flex-col items-center justify-center pt-[clamp(20px,2.6vw,40px)] pb-[clamp(36px,4vw,64px)] text-center">
+        <p data-story-label className="db-eyebrow-rule">
+          <span aria-hidden="true" />
+          About us
+          <span aria-hidden="true" />
+        </p>
 
-          <h1 className="font-display m-0 max-w-[16ch] text-[clamp(32px,3.95vw,62px)] leading-[1.0] tracking-[.005em] text-white uppercase">
-            {HEADLINE.map((word, i) => (
-              <span key={word} className="db-word">
+        <h1 className="font-display m-0 mt-[clamp(12px,1.4vw,22px)] max-w-[26ch] text-[clamp(34px,4.6vw,66px)] leading-[1.02] tracking-[.03em] text-white">
+          {HEADLINE.map((word, i) => (
+            <Fragment key={word}>
+              <span className="db-word">
                 <span className={i === HEADLINE.length - 1 ? "text-db-red-hot" : undefined}>
                   {word}
                 </span>
               </span>
-            ))}
-          </h1>
+              {/* break at the comma: letting it wrap naturally split
+                  "designed / by", which reads worse than a clean clause break */}
+              {word.endsWith(",") && <br />}
+            </Fragment>
+          ))}
+        </h1>
 
-          <p
-            data-story-lede
-            className="mt-5 max-w-[58ch] text-[clamp(15.5px,1.05vw,19px)] leading-[1.65] text-white/70"
-          >
-            {ABOUT.standfirst}
-          </p>
-        </div>
-
-        {/* The homepage's lockup, with the years in place of the wordmark. */}
-        <div className="db-story-stage">
+        {/* The homepage's own lockup — globe inside its orbit, wordmark beneath —
+            so the two heroes are recognisably the same place. The four feature
+            cards that sit under it on the homepage are not part of this page. */}
+        {/* The stage needs an explicit width: --orbit is min(96%, …) of it, and in
+            this centred column the stage is shrink-to-fit, which collapsed the ring
+            to barely wider than the globe. */}
+        <div
+          className="db-stage mt-9 w-full max-w-[clamp(300px,34vw,470px)] md:mt-[clamp(10px,1.2vw,22px)]"
+          data-spin-scope
+        >
           <div className="db-orbit">
             <OrbitRings />
           </div>
@@ -176,10 +158,20 @@ export default function AboutHero() {
               spin={22}
               label={`${SITE.name} globe. Drag to spin it, press Enter for a pulse.`}
             />
-            <p data-story-mark className="db-years__figure">
-              <span ref={num}>45</span>
-              <em>yrs</em>
-            </p>
+            {/* The years, not the wordmark — the header already carries the
+                logo, and on this page the figure is the point. */}
+            <div
+              data-story-mark
+              className="font-display mt-1 text-[clamp(40px,5.4vw,92px)] leading-[0.88] tracking-[.01em] whitespace-nowrap text-white"
+            >
+              45<span className="text-db-red-hot">+</span>
+            </div>
+            <div
+              data-story-mark
+              className="font-ui mt-1 block pl-[.52em] text-[clamp(10px,1.2vw,19px)] font-medium tracking-[.52em] text-white/85"
+            >
+              YEARS
+            </div>
             <span ref={hintRef} className="db-globe-hint" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M7 9L4 12l3 3M17 9l3 3-3 3M10.5 5.5 12 4l1.5 1.5M10.5 18.5 12 20l1.5-1.5" />
@@ -189,14 +181,12 @@ export default function AboutHero() {
             </span>
           </div>
 
-          <p data-story-mark className="db-years__label">
-            of selling behind the product — most of it before CRMs existed
-          </p>
+          {/* the sweeping arcs under the lockup — they brighten with the globe's
+              spin speed, which it publishes on [data-spin-scope] above */}
+          <FloorRibbons />
         </div>
       </div>
 
-      {/* Reaches the light page below, which is where the story actually
-          starts — and gives the bottom of the hero something to do. */}
       <div className="db-story-cue-wrap">
         <div className="db-shell">
           <a href="#origin" className="db-story-cue">
