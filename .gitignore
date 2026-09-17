@@ -11,3 +11,6 @@ next-env.d.ts
 # Brand deliverables (18MB incl. an 8.7MB zip). These are hand-off assets,
 # not site code — keeping them out of git history.
 brand/
+
+# build artefact from scripts/build-staging.sh — never committed
+staging-bundle.tgz
