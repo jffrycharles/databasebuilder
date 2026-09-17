@@ -49,4 +49,4 @@ done
 
 tar czf "$OUT" -C .next/standalone .
 echo "==> $OUT  $(du -h "$OUT" | cut -f1)"
-echo "    scp $OUT jcharles@129.121.85.164:~/"
+echo "    scp $OUT <user>@<server>:~/"
