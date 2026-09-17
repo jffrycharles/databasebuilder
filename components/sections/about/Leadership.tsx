@@ -30,7 +30,10 @@ export default function Leadership() {
           display
           title={
             <>
-              The people behind <span className="text-db-red">DatabaseBuilder</span>
+              {/* White/Red: the wordmark rule on this dark band. It used to run
+                  the whole word red, which is the one thing the rule does not
+                  do — "Database" carries the surface, "Builder" is the red. */}
+              The people behind Database<span className="text-db-red">Builder</span>
             </>
           }
           lede="Between them, decades on the phone and in the data."

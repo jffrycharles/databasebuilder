@@ -22,10 +22,9 @@ export default function WhySection() {
               <h2 className="font-display text-[clamp(25px,2.45vw,40px)] leading-[1.08] text-balance text-ink mb-5">
                 Why
                 <br />
-                {/* Adam's red/blue test: the wordmark in the heading picks up the
-                    logo's own two colours instead of running black on red. */}
-                <span className="text-db-blue">Database</span>
-                <span className="text-db-red">Builder</span>?
+                {/* Black/Red: the wordmark rule on a light section. "Database"
+                    takes the heading's own ink, "Builder" is always red. */}
+                Database<span className="text-db-red">Builder</span>?
               </h2>
               <div className="text-ink-2 max-w-[54ch] space-y-3.5 text-[clamp(15px,0.9vw,17.5px)] leading-[1.62]">
                 {WHY_PARAGRAPHS.map((p) => (

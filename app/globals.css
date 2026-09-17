@@ -8,11 +8,6 @@
 @theme {
   --color-db-black: #010409;
   --color-db-red: #e23324;
-  /* The wordmark blue from the client's own logo artwork. Kept as its own
-     token, separate from --color-brand, so the logo can be tuned without
-     moving link and focus colours with it. */
-  --color-db-blue: #2b5fd9;
-  --color-db-blue-hot: #4f86ff;
   --color-db-red-hot: #ff5947;
   --color-db-cyan: #34e0d4;
   --color-db-card-1: #192242;
@@ -698,11 +693,13 @@ html::-webkit-scrollbar-corner {
   text-align: center;
   text-wrap: balance;
 }
+/* Ours is the black pill, theirs the grey one. The wordmark's own rule —
+   White/Red on dark — does the rest. */
 .db-compare__pill--db {
-  background: linear-gradient(180deg, #2f7ef0, var(--color-brand));
+  background: linear-gradient(180deg, #16203a, #070b16);
 }
 .db-compare__pill--other {
-  background: linear-gradient(180deg, #525f70, #3b4757);
+  background: linear-gradient(180deg, #74808f, #5b6675);
 }
 
 /* a heavy rule where Adam's artwork puts a black bar */

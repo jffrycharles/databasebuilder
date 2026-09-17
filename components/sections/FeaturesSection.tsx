@@ -23,8 +23,7 @@ export default function FeaturesSection() {
       <div className="db-shell">
         <Reveal className="mx-auto mb-[clamp(22px,2.4vw,38px)] max-w-[760px] text-center">
           <h2 className="font-display text-ink text-[clamp(25px,2.45vw,40px)] leading-[1.08] text-balance">
-            <span className="text-db-blue">Database</span>
-            <span className="text-db-red">Builder</span>{" "}
+            Database<span className="text-db-red">Builder</span>{" "}
             <span className="text-ink-3">vs Other CRMs</span>
           </h2>
           <p className="text-ink-2 mt-3 text-[clamp(15px,0.9vw,17.5px)] leading-[1.55]">
@@ -49,7 +48,10 @@ export default function FeaturesSection() {
                     Features
                   </th>
                   <th scope="col">
-                    <span className="db-compare__pill db-compare__pill--db">DatabaseBuilder</span>
+                    {/* White/Red on a dark pill — the wordmark rule again. */}
+                    <span className="db-compare__pill db-compare__pill--db">
+                      Database<span className="text-db-red">Builder</span>
+                    </span>
                   </th>
                   <th scope="col">
                     <span className="db-compare__pill db-compare__pill--other">Other CRMs</span>
