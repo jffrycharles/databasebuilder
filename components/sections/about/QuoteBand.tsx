@@ -17,7 +17,7 @@ export default function QuoteBand() {
               </Label>
               <p className="font-body m-0 max-w-[30ch] text-[clamp(20px,2.1vw,34px)] leading-[1.24] font-bold tracking-[-.015em] text-white">
                 Selling hasn&apos;t changed very much over the years.
-                <span className="text-db-red-hot"> Only the technology around it has.</span>
+                <span className="text-db-red"> Only the technology around it has.</span>
               </p>
               <p className="mt-4 max-w-[46ch] text-[clamp(14.5px,0.95vw,16.5px)] leading-[1.6] text-white/65">
                 You present a product, give a price, and close the deal. It&apos;s not complicated, so

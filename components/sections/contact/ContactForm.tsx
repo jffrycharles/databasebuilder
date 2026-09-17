@@ -193,12 +193,12 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="db-page-band db-section db-section--airy">
-      <div className="db-shell relative z-[2]">
+    <section className="bg-page db-section db-section--airy">
+      <div className="db-shell">
         <div className="grid items-start gap-[clamp(28px,3.4vw,64px)] lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.5fr)]">
           {/* ---- how to reach us, on the left ---- */}
           <aside>
-            <p className="font-ui text-[11.5px] tracking-[.18em] text-white/40 uppercase">
+            <p className="font-ui text-ink-3 text-[11.5px] tracking-[.18em] uppercase">
               Reach us directly
             </p>
             <ul className="m-0 mt-6 grid list-none gap-5 p-0">
@@ -210,17 +210,17 @@ export default function ContactForm() {
                     rel={c.icon === "pin" ? "noreferrer" : undefined}
                     className="group flex items-start gap-4"
                   >
-                    <span className="text-db-red-hot mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-[11px] border border-white/10 bg-white/[0.05] transition-colors group-hover:border-white/25">
+                    <span className="text-db-red border-line mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-[11px] border bg-white transition-colors group-hover:border-db-red/40">
                       <Icon name={c.icon} className="h-[18px] w-[18px]" />
                     </span>
                     <span className="min-w-0">
-                      <span className="font-ui block text-[11px] tracking-[.16em] text-white/40 uppercase">
+                      <span className="font-ui text-ink-3 block text-[11px] tracking-[.16em] uppercase">
                         {c.title}
                       </span>
-                      <span className="font-body mt-1 block text-[clamp(15px,1.05vw,18px)] leading-snug font-bold text-white">
+                      <span className="font-body text-ink mt-1 block text-[clamp(15px,1.05vw,18px)] leading-snug font-bold">
                         {c.lines[0]}
                       </span>
-                      <span className="mt-1 block text-[13px] leading-snug text-white/45">
+                      <span className="text-ink-3 mt-1 block text-[13px] leading-snug">
                         {c.lines[1]}
                       </span>
                     </span>
@@ -234,38 +234,38 @@ export default function ContactForm() {
           {/* ---- the form ---- */}
           <div ref={root} className="db-record p-[clamp(22px,2.8vw,44px)]">
             <div className="mb-[clamp(22px,2.4vw,34px)] flex flex-wrap items-baseline gap-x-4 gap-y-2">
-              <h2 className="font-display m-0 text-[clamp(22px,2vw,34px)] leading-none tracking-[.01em] text-white">
+              <h2 className="font-display m-0 text-[clamp(22px,2vw,34px)] text-ink leading-none tracking-[.01em]">
                 Get in touch
               </h2>
-              <span className="ml-auto text-[13px] text-white/40">
+              <span className="text-ink-3 ml-auto text-[13px]">
                 Usually answered within one business day
               </span>
             </div>
 
             {sent ? (
               <div ref={panel} role="status" aria-live="polite" tabIndex={-1}>
-                <div className="text-db-red-hot mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.05] px-4 py-2 text-[14px] font-semibold">
+                <div className="text-db-red border-line mb-5 inline-flex items-center gap-2.5 rounded-full border bg-white px-4 py-2 text-[14px] font-semibold">
                   <Icon name="check" className="h-4 w-4" />
                   {outcome === "delivered" ? "Message sent" : "Draft ready in your email app"}
                 </div>
-                <h3 className="font-display m-0 text-[clamp(19px,1.55vw,25px)] leading-none tracking-[.01em] text-white">
+                <h3 className="font-display m-0 text-[clamp(19px,1.55vw,25px)] text-ink leading-none tracking-[.01em]">
                   Thanks, {sent.name.split(" ")[0]}.
                 </h3>
-                <p className="mt-3 max-w-[52ch] text-[15px] leading-[1.6] text-white/65">
+                <p className="text-ink-2 mt-3 max-w-[52ch] text-[15px] leading-[1.6]">
                   {outcome === "delivered" ? (
                     <>
                       We have it — nothing else to do. A person will reply to{" "}
-                      <span className="font-semibold text-white">{sent.email}</span>, usually within
+                      <span className="text-ink font-semibold">{sent.email}</span>, usually within
                       one business day.
                     </>
                   ) : (
                     <>
                       Your message has been handed to your email client, addressed to{" "}
-                      <a className="text-db-red-hot font-semibold" href={`mailto:${CONTACT.email}`}>
+                      <a className="text-db-red font-semibold" href={`mailto:${CONTACT.email}`}>
                         {CONTACT.email}
                       </a>
                       .{" "}
-                      <span className="font-semibold text-white">
+                      <span className="text-ink font-semibold">
                         It is not sent until you send it from there.
                       </span>{" "}
                       If nothing opened, copy the details below and email them to us.
@@ -273,7 +273,7 @@ export default function ContactForm() {
                   )}
                 </p>
 
-                <dl className="mt-6 grid gap-0 rounded-[12px] border border-white/10">
+                <dl className="border-line mt-6 grid gap-0 rounded-[12px] border">
                   {[
                     ["Name", sent.name],
                     ["Company", sent.company || "—"],
@@ -285,13 +285,13 @@ export default function ContactForm() {
                     <div
                       key={k}
                       className={`grid grid-cols-[minmax(80px,26%)_minmax(0,1fr)] gap-3 px-4 py-3 ${
-                        i === 0 ? "" : "border-t border-white/10"
+                        i === 0 ? "" : "border-line border-t"
                       }`}
                     >
-                      <dt className="font-ui text-[11.5px] tracking-[.14em] text-white/40 uppercase">
+                      <dt className="font-ui text-ink-3 text-[11.5px] tracking-[.14em] uppercase">
                         {k}
                       </dt>
-                      <dd className="m-0 text-[14.5px] leading-snug break-words text-white/85">{v}</dd>
+                      <dd className="text-ink m-0 text-[14.5px] leading-snug break-words">{v}</dd>
                     </div>
                   ))}
                 </dl>
@@ -305,7 +305,7 @@ export default function ContactForm() {
                   <button
                     type="button"
                     onClick={copy}
-                    className="font-ui inline-flex items-center gap-2 rounded-[9px] border border-white/15 bg-white/[0.05] px-5 py-3 text-[14px] font-medium tracking-[.06em] text-white/75 uppercase transition-colors hover:text-white"
+                    className="font-ui inline-flex items-center gap-2 border-line hover:text-brand rounded-[9px] border bg-white px-5 py-3 text-[14px] font-medium tracking-[.06em] text-ink-2 uppercase transition-colors"
                   >
                     <Icon name={copied ? "check" : "clip"} className="h-4 w-4" />
                     {copied ? "Copied" : "Copy message"}
@@ -318,7 +318,7 @@ export default function ContactForm() {
                       setWebsite("");
                       setCopied(false);
                     }}
-                    className="font-ui rounded-[9px] border border-white/15 bg-white/[0.05] px-5 py-3 text-[14px] font-medium tracking-[.06em] text-white/75 uppercase transition-colors hover:text-white"
+                    className="font-ui border-line hover:text-brand rounded-[9px] border bg-white px-5 py-3 text-[14px] font-medium tracking-[.06em] text-ink-2 uppercase transition-colors"
                   >
                     Write another
                   </button>
@@ -344,9 +344,9 @@ export default function ContactForm() {
                 <div className="grid gap-[clamp(16px,1.6vw,22px)] sm:grid-cols-2">
                   {FIELDS.map((f) => (
                     <div key={f.name} data-row className={f.half ? "" : "sm:col-span-2"}>
-                      <label htmlFor={`f-${f.name}`} className="font-ui mb-2 block text-[11.5px] tracking-[.14em] text-white/55 uppercase">
+                      <label htmlFor={`f-${f.name}`} className="font-ui text-ink-2 mb-2 block text-[11.5px] tracking-[.14em] uppercase">
                         {f.label}
-                        {!f.required && <span className="text-white/30"> (optional)</span>}
+                        {!f.required && <span className="text-ink-3"> (optional)</span>}
                       </label>
                       <input
                         id={`f-${f.name}`}
@@ -362,7 +362,7 @@ export default function ContactForm() {
                         aria-describedby={errors[f.name] ? `e-${f.name}` : undefined}
                       />
                       {errors[f.name] && (
-                        <p id={`e-${f.name}`} role="alert" className="text-db-red-hot mt-1.5 text-[12.5px] font-semibold">
+                        <p id={`e-${f.name}`} role="alert" className="text-db-red mt-1.5 text-[12.5px] font-semibold">
                           {errors[f.name]}
                         </p>
                       )}
@@ -370,7 +370,7 @@ export default function ContactForm() {
                   ))}
 
                   <div data-row className="sm:col-span-2">
-                    <label htmlFor="f-subject" className="font-ui mb-2 block text-[11.5px] tracking-[.14em] text-white/55 uppercase">
+                    <label htmlFor="f-subject" className="font-ui text-ink-2 mb-2 block text-[11.5px] tracking-[.14em] uppercase">
                       What is it about?
                     </label>
                     <select
@@ -387,7 +387,7 @@ export default function ContactForm() {
                   </div>
 
                   <div data-row className="sm:col-span-2">
-                    <label htmlFor="f-message" className="font-ui mb-2 block text-[11.5px] tracking-[.14em] text-white/55 uppercase">
+                    <label htmlFor="f-message" className="font-ui text-ink-2 mb-2 block text-[11.5px] tracking-[.14em] uppercase">
                       Message
                     </label>
                     <textarea
@@ -403,7 +403,7 @@ export default function ContactForm() {
                       aria-describedby={errors.message ? "e-message" : undefined}
                     />
                     {errors.message && (
-                      <p id="e-message" role="alert" className="text-db-red-hot mt-1.5 text-[12.5px] font-semibold">
+                      <p id="e-message" role="alert" className="text-db-red mt-1.5 text-[12.5px] font-semibold">
                         {errors.message}
                       </p>
                     )}
@@ -419,7 +419,7 @@ export default function ContactForm() {
                   >
                     {busy ? "Sending…" : "Send message"}
                   </button>
-                  <p className="m-0 max-w-[44ch] text-[13px] leading-relaxed text-white/40">
+                  <p className="text-ink-3 m-0 max-w-[44ch] text-[13px] leading-relaxed">
                     Goes straight to {CONTACT.email}. If we cannot deliver it, your email app
                     opens with the message ready instead.
                   </p>

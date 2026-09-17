@@ -4,7 +4,18 @@ import type { FaqItem } from "@/lib/faq";
 /** Native <details> so it works without JavaScript, is keyboard accessible by
     default and cannot desync from React state. The open/close is a CSS grid
     transition, so there is no layout jump. */
-export default function Accordion({ items, openFirst = false }: { items: FaqItem[]; openFirst?: boolean }) {
+export default function Accordion({
+  items,
+  openFirst = false,
+  /** Start every row open. Used on the homepage, where the answers have to be
+      readable without interaction so a crawler — or an AI summarising the page
+      — sees them. They still collapse if someone clicks. */
+  openAll = false,
+}: {
+  items: FaqItem[];
+  openFirst?: boolean;
+  openAll?: boolean;
+}) {
   return (
     <div className="db-card-flat overflow-hidden">
       {items.map((item, i) => (
@@ -12,7 +23,7 @@ export default function Accordion({ items, openFirst = false }: { items: FaqItem
           key={item.id}
           id={item.id}
           className="db-faq group border-line px-[clamp(18px,2vw,34px)] [&:not(:first-child)]:border-t"
-          open={openFirst && i === 0}
+          open={openAll || (openFirst && i === 0)}
         >
           <summary className="db-faq__q text-ink flex cursor-pointer list-none items-start gap-5 py-[clamp(19px,1.85vw,30px)]">
             <h3 className="m-0 text-[length:inherit] leading-[inherit] font-[inherit]">

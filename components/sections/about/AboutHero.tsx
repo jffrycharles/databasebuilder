@@ -122,7 +122,7 @@ export default function AboutHero() {
           {HEADLINE.map((word, i) => (
             <Fragment key={word}>
               <span className="db-word">
-                <span className={i === HEADLINE.length - 1 ? "text-db-red-hot" : undefined}>
+                <span className={i === HEADLINE.length - 1 ? "text-db-red" : undefined}>
                   {word}
                 </span>
               </span>
@@ -164,7 +164,7 @@ export default function AboutHero() {
               data-story-mark
               className="font-display mt-1 text-[clamp(40px,5.4vw,92px)] leading-[0.88] tracking-[.01em] whitespace-nowrap text-white"
             >
-              45<span className="text-db-red-hot">+</span>
+              45<span className="text-db-red">+</span>
             </div>
             <div
               data-story-mark

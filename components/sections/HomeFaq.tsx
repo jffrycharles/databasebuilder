@@ -1,5 +1,6 @@
 import Reveal from "@/components/animations/Reveal";
 import SmartLink from "@/components/ui/SmartLink";
+import Accordion from "@/components/ui/Accordion";
 import { FAQ_ITEMS } from "@/lib/faq";
 import { SITE } from "@/lib/data";
 
@@ -36,41 +37,33 @@ export default function HomeFaq() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
       <div className="db-shell">
-        <Reveal className="mx-auto mb-[clamp(32px,4vw,64px)] max-w-[760px] text-center">
-          <h2 className="font-display text-ink text-[clamp(28px,3vw,48px)] leading-[1.06] tracking-[.015em] text-balance">
-            Most Commonly Asked <span className="text-db-red">Questions</span>
-          </h2>
-          <div className="mt-6 flex flex-wrap justify-center gap-x-8 gap-y-3">
-            <SmartLink
-              href="/faq"
-              className="text-brand text-[clamp(16px,1.15vw,20px)] font-semibold underline underline-offset-4"
-            >
-              Read all {FAQ_ITEMS.length} questions
-            </SmartLink>
-            <SmartLink
-              href="/contact"
-              className="text-ink-2 hover:text-brand text-[clamp(16px,1.15vw,20px)] font-semibold underline underline-offset-4 transition-colors"
-            >
-              Ask us directly
-            </SmartLink>
-          </div>
-        </Reveal>
+        <div className="grid items-start gap-[clamp(28px,3.4vw,72px)] lg:grid-cols-[0.78fr_1.22fr]">
+          <Reveal>
+            <h2 className="font-display text-ink text-[clamp(28px,3vw,48px)] leading-[1.06] tracking-[.015em] text-balance">
+              Most Commonly Asked <span className="text-db-red">Questions</span>
+            </h2>
+            <div className="mt-5 flex flex-wrap gap-x-7 gap-y-2.5">
+              <SmartLink
+                href="/faq"
+                className="text-brand text-[clamp(14.5px,0.95vw,16.5px)] font-semibold underline underline-offset-4"
+              >
+                Read all {FAQ_ITEMS.length} questions
+              </SmartLink>
+              <SmartLink
+                href="/contact"
+                className="text-ink-2 hover:text-brand text-[clamp(14.5px,0.95vw,16.5px)] font-semibold underline underline-offset-4 transition-colors"
+              >
+                Ask us directly
+              </SmartLink>
+            </div>
+          </Reveal>
 
-        <div className="mx-auto grid max-w-[900px] gap-[clamp(26px,3vw,46px)]">
-          {items.map((f, i) => (
-            <Reveal key={f.id} delay={i * 70}>
-              <div className="border-line border-t pt-[clamp(20px,2.2vw,34px)]">
-                <h3 className="db-faq__q text-ink m-0">{f.question}</h3>
-                <div className="text-ink-2 mt-3 grid max-w-[74ch] gap-3 text-[clamp(15px,0.95vw,17.5px)] leading-[1.7]">
-                  {f.answer.map((para) => (
-                    <p key={para} className="m-0">
-                      {para}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-          ))}
+          {/* The same card the FAQ page uses, with every row open — it looks
+              like the rest of the site while the answers stay readable without
+              interaction, which is the point of the change. */}
+          <Reveal delay={90}>
+            <Accordion items={items} openAll />
+          </Reveal>
         </div>
       </div>
     </section>

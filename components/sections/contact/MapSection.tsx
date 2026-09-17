@@ -19,7 +19,7 @@ export default function MapSection() {
               label="The office"
               title={
                 <>
-                  Chicago, <span className="text-db-red-hot">since day one.</span>
+                  Chicago, <span className="text-db-red">since day one.</span>
                 </>
               }
               lede="On Peterson Avenue, with the sales floor the CRM was built for sitting in the same building."

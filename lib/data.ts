@@ -58,31 +58,69 @@ export const WHY_PARAGRAPHS = [
   "Give DatabaseBuilder.com a try and start a free trial today.",
 ];
 
-/* ---- feature checklist -------------------------------------------------- */
-export type ChecklistItem = { icon: IconName; label: string; featured?: boolean };
+/* ---- Adam's "DatabaseBuilder vs Other CRMs" comparison chart -------------
+   Transcribed from the client's own artwork. The five blocks are his, and so
+   is their order: what everybody has, what the others bill as an add-on, the
+   training and team block, what the others simply do not do, and the handful
+   of things that are metered on both sides.
 
-export const CHECKLIST: ChecklistItem[] = [
-  { icon: "phone", label: "Click to dial calling - included", featured: true },
-  { icon: "rec", label: "Automatic call recording - included", featured: true },
-  { icon: "user", label: "Simple lead management with customizable data fields", featured: true },
-  { icon: "swap", label: "Import/Export functionality for all your data", featured: true },
-  { icon: "video", label: "Integrated video conferencing email invitations", featured: true },
-  { icon: "voicemail", label: "Auto voicemail library", featured: true },
-  { icon: "shield", label: "Safe and secure platform" },
-  { icon: "share", label: "Shareable data for your team" },
-  { icon: "mail", label: "Email and two-way SMS included" },
-  { icon: "chat", label: "Talking Points functionality" },
-  { icon: "chart", label: "Customizable KPI dashboard" },
-  { icon: "api", label: "Custom integration with API access" },
-  { icon: "pin", label: "Local Presence calling" },
-  { icon: "headset", label: "Whisper coaching", featured: true },
-  { icon: "monitor", label: "Real-time call monitoring", featured: true },
-  { icon: "bell", label: "Real-time agent call transfer with popup notification", featured: true },
-  { icon: "user", label: "Customer profile popup when transferred", featured: true },
-  { icon: "headset", label: "Live customer support when you need it" },
-  { icon: "tag", label: "No long-term contract or commitment" },
-  { icon: "clock", label: "Pay as you go with 30-day cancellation" },
-  { icon: "share", label: "Scalable for most size businesses" },
+   One word is changed: his chart reads "Wisper Coaching". It is "Whisper"
+   here — a typo is not data, and this table is going on the homepage. */
+export type CompareMark = "yes" | "no" | "addon" | "extra";
+export type CompareRow = { label: string; db: CompareMark; other: CompareMark; featured?: boolean };
+
+export const COMPARISON_LEDE =
+  "More advanced features included at no additional charge compared to most other CRM companies.";
+
+export const COMPARISON_GROUPS: CompareRow[][] = [
+  [
+    { label: "Click to Dial Calling", db: "yes", other: "yes" },
+    { label: "Customizable Data Fields & Dashboard", db: "yes", other: "yes" },
+    { label: "Sales Pipeline Management", db: "yes", other: "yes" },
+    { label: "Call History & Activity Tracking", db: "yes", other: "yes" },
+    { label: "Workflow Management", db: "yes", other: "yes" },
+    { label: "Built-in Email, Templates, & Account Sync", db: "yes", other: "yes" },
+    { label: "Data Import Module", db: "yes", other: "yes" },
+    { label: "Scalable as Needed", db: "yes", other: "yes" },
+    { label: "Safe & Secure Platform", db: "yes", other: "yes" },
+    { label: "User Permissions Levels", db: "yes", other: "yes" },
+    { label: "Calendar & Lead Management", db: "yes", other: "yes" },
+  ],
+  [
+    { label: "Automatic Call Recording", db: "yes", other: "addon" },
+    { label: "Auto Voicemail Library", db: "yes", other: "addon" },
+    { label: "Built-in SMS Text Campaigns", db: "yes", other: "addon" },
+    { label: "Local Presence", db: "yes", other: "addon" },
+    { label: "Integrated Video Conferencing", db: "yes", other: "addon" },
+    { label: "Data Export Module", db: "yes", other: "addon" },
+  ],
+  [
+    { label: "Sales & Admin Training", db: "yes", other: "addon", featured: true },
+    { label: "Team Account & Lead Management", db: "yes", other: "addon" },
+    { label: "Company Data Share", db: "yes", other: "addon" },
+    { label: "Team Performance Tracking & Monitoring", db: "yes", other: "addon" },
+    { label: "Call Monitoring", db: "yes", other: "addon" },
+    { label: "Whisper Coaching", db: "yes", other: "addon" },
+    { label: "Live Call Transfer w/ Popup Notification", db: "yes", other: "addon" },
+    { label: "Customer Profile Popup on Transfer", db: "yes", other: "addon" },
+  ],
+  [
+    { label: "All-in-One Pricing", db: "yes", other: "no" },
+    { label: "Talking Points", db: "yes", other: "no" },
+    { label: "Integrated Google and Social Media Search", db: "yes", other: "no" },
+    { label: "Live Customer Support", db: "yes", other: "no" },
+    { label: "No Long-Term Contract", db: "yes", other: "no" },
+    { label: "30-Day Cancellation", db: "yes", other: "no" },
+    { label: "Not Overly Complicated", db: "yes", other: "no" },
+    { label: "Affordable Pricing", db: "yes", other: "no" },
+  ],
+  [
+    { label: "Custom API Integration", db: "extra", other: "extra" },
+    { label: "Dialer Minutes & SMS Messages", db: "extra", other: "extra" },
+    { label: "Additional Phone Numbers", db: "extra", other: "extra" },
+    { label: "Data Cloud Storage", db: "extra", other: "extra" },
+    { label: "Additional User Licenses", db: "extra", other: "extra" },
+  ],
 ];
 
 export type ValueCard = {
@@ -158,44 +196,6 @@ export const APP_SIDEBAR: NavItem[] = [
   { icon: "monitor", label: "Reports" },
   { icon: "gear", label: "Settings" },
 ];
-
-/* ---- product mock: inbox ------------------------------------------------ */
-export type Conversation = {
-  initials: string;
-  name: string;
-  meta: string;
-  tint: string;
-  active?: boolean;
-};
-
-export const CONVERSATIONS: Conversation[] = [
-  { initials: "BC", name: "BrightWave Co.", meta: "SMS · 10:30 AM", tint: "#1d6fe8", active: true },
-  { initials: "SR", name: "Summit Realty", meta: "Email · 9:20 AM", tint: "#7c3aed" },
-  { initials: "HG", name: "Harbor Group", meta: "Call · Yesterday", tint: "#0ea5e9" },
-  { initials: "AP", name: "Apex Partners", meta: "SMS · Yesterday", tint: "#f59e0b" },
-  { initials: "CD", name: "Coastal Designs", meta: "Email · May 20", tint: "#10b981" },
-  { initials: "VS", name: "Vertex Solutions", meta: "Call · May 20", tint: "#e23324" },
-  { initials: "PL", name: "Pioneer Labs", meta: "SMS · May 19", tint: "#64748b" },
-];
-
-export type Message = { from: "them" | "us"; text: string; time: string };
-
-export const THREAD: { name: string; phone: string; messages: Message[] } = {
-  name: "BrightWave Co.",
-  phone: "(806) 123-4567",
-  messages: [
-    { from: "them", text: "Hi, I'm interested in learning more about your solution.", time: "10:00 AM" },
-    {
-      from: "us",
-      text: "Great! Thanks for reaching out. When would be a good time to connect?",
-      time: "10:05 AM",
-    },
-    { from: "them", text: "How about tomorrow at 10am?", time: "10:30 AM" },
-    { from: "us", text: "Perfect, I'll send a calendar invite shortly.", time: "10:31 AM" },
-  ],
-};
-
-export const INBOX_TABS = ["All", "Unread", "Calls", "SMS", "Email"] as const;
 
 /* ---- product mock: dashboard -------------------------------------------- */
 export type Kpi = { label: string; value: number; delta: string };

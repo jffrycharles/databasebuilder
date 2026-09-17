@@ -7,11 +7,10 @@ export default function ContactHero() {
       label="Contact Us"
       title={
         <>
-          Your ideas, <span className="text-db-red-hot">our solution.</span>
+          Your ideas, <span className="text-db-red">our solution.</span>
         </>
       }
       lede={CONTACT.standfirst}
-      wave={false}
     />
   );
 }

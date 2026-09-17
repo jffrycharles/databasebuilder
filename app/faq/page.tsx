@@ -71,7 +71,7 @@ export default function FaqPage() {
         label="FAQ"
         title={
           <>
-            Your questions, <span className="text-db-red-hot">answered.</span>
+            Your questions, <span className="text-db-red">answered.</span>
           </>
         }
         lede="Everything customers ask before they start, in plain language. If yours is not here, a person will answer it."

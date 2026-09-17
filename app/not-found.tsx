@@ -48,7 +48,7 @@ export default function NotFound() {
           </div>
 
           <h1 className="font-display m-0 max-w-[16ch] text-[clamp(28px,3.4vw,54px)] leading-[1.02] tracking-[.005em] text-balance text-white">
-            That page is <span className="text-db-red-hot">not here.</span>
+            That page is <span className="text-db-red">not here.</span>
           </h1>
 
           <p className="m-0 max-w-[52ch] text-[clamp(15px,1vw,18px)] leading-[1.65] text-white/70">

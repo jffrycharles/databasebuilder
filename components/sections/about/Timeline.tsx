@@ -97,7 +97,7 @@ export default function Timeline() {
                     <span className="font-display text-[clamp(24px,2.1vw,36px)] leading-none tracking-[.01em] text-white">
                       {m.year}
                     </span>
-                    <span className="db-chip bg-white/10 text-db-red-hot">
+                    <span className="db-chip bg-white/10 text-db-red">
                       <i />
                       {m.tag}
                     </span>
@@ -117,7 +117,7 @@ export default function Timeline() {
 
         <Reveal className="border-line mt-[clamp(48px,6vw,104px)] border-t pt-[clamp(30px,3.4vw,56px)]">
           <p className="font-display text-ink text-center text-[clamp(19px,1.9vw,30px)] leading-snug">
-            Salespeople close deals,<span className="text-db-red-hot"> not software.</span>
+            Salespeople close deals,<span className="text-db-red"> not software.</span>
           </p>
         </Reveal>
       </div>

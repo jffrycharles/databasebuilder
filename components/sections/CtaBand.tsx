@@ -53,7 +53,7 @@ export default function CtaBand({
 
               <div className="order-2 lg:order-1">
                 <h2 className="font-display m-0 max-w-[27ch] text-[clamp(24px,3vw,48px)] leading-[1.08] tracking-[.015em]">
-                  A productive CRM shouldn&apos;t cost a <span className="text-db-red-hot">fortune.</span>
+                  A productive CRM shouldn&apos;t cost a <span className="text-db-red">fortune.</span>
                 </h2>
                 <p className="mt-[clamp(12px,1.15vw,19px)] mb-0 max-w-[44ch] text-[clamp(15px,1vw,18.5px)] leading-[1.6] text-white/70">
                   {showTrialLength
@@ -73,7 +73,7 @@ export default function CtaBand({
               {showSignOff && (
                 <p className="font-display m-0 text-[clamp(14px,1.22vw,20px)] leading-none tracking-[.045em] text-white/85">
                   Salespeople close deals,
-                  <span className="text-db-red-hot"> not software.</span>
+                  <span className="text-db-red"> not software.</span>
                 </p>
               )}
               <p className="text-db-cyan m-0 flex items-center gap-2 text-[13.5px] font-semibold">

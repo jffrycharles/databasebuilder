@@ -93,7 +93,7 @@ export default function Header() {
   }, [open]);
 
   const navLink =
-    "font-ui text-[clamp(15px,1.1vw,19px)] whitespace-nowrap text-white uppercase tracking-[.055em] transition-colors hover:text-db-red-hot";
+    "font-ui text-[clamp(15px,1.1vw,19px)] whitespace-nowrap text-white uppercase tracking-[.055em] transition-colors hover:text-db-red";
 
   return (
     <header
@@ -122,7 +122,7 @@ export default function Header() {
                 <SmartLink
                   href={l.href}
                   aria-current={l.href === pathname ? "page" : undefined}
-                  className={`${navLink} inline-flex items-center gap-1.5 ${l.href === pathname ? "text-db-red-hot" : ""}`}
+                  className={`${navLink} inline-flex items-center gap-1.5 ${l.href === pathname ? "text-db-red" : ""}`}
                 >
                   {l.label}
                   <svg viewBox="0 0 24 24" className="h-3 w-3" aria-hidden="true">
@@ -142,7 +142,7 @@ export default function Header() {
                 key={l.label}
                 href={l.href}
                 aria-current={l.href === pathname ? "page" : undefined}
-                className={`${navLink} ${l.href === pathname ? "text-db-red-hot" : ""}`}
+                className={`${navLink} ${l.href === pathname ? "text-db-red" : ""}`}
               >
                 {l.label}
               </SmartLink>

@@ -30,7 +30,7 @@ export default function Leadership() {
           display
           title={
             <>
-              The people behind <span className="text-db-red-hot">DatabaseBuilder</span>
+              The people behind <span className="text-db-red">DatabaseBuilder</span>
             </>
           }
           lede="Between them, decades on the phone and in the data."

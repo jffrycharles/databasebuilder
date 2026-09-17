@@ -52,7 +52,7 @@ export default function PricingPage() {
         label="Pricing"
         title={
           <>
-            One package. <span className="text-db-red-hot">All the essentials.</span>
+            One package. <span className="text-db-red">All the essentials.</span>
           </>
         }
         lede="A simple CRM at a reasonable all-in-one price — designed to be understood in a minute, not decoded from a comparison table."

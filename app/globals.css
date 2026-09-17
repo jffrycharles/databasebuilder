@@ -647,6 +647,136 @@ html::-webkit-scrollbar-corner {
     0 22px 54px #1d6fe838;
 }
 
+/* =========================================================================
+   Adam's DatabaseBuilder vs Other CRMs table
+   ========================================================================= */
+.db-compare {
+  /* Adam's artwork is roughly square. Left to fill a 1560px shell the feature
+     column stretches to 1100px and the two answers drift to the far edge,
+     which is the one thing a comparison must not do. */
+  max-width: 1020px;
+  margin-inline: auto;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow:
+    0 2px 4px #0d15260f,
+    0 16px 40px #0d152614;
+}
+.db-compare table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.db-compare__col {
+  width: 26%;
+}
+.db-compare thead th {
+  padding: clamp(7px, 0.7vw, 11px) clamp(6px, 0.6vw, 10px);
+  vertical-align: middle;
+  text-align: center;
+}
+.db-compare__head {
+  font-family: var(--font-display);
+  font-size: clamp(15px, 1.1vw, 20px);
+  letter-spacing: 0.01em;
+  color: var(--color-ink);
+  text-align: left !important;
+  padding-left: clamp(12px, 1.4vw, 24px) !important;
+}
+.db-compare__pill {
+  display: block;
+  padding: clamp(5px, 0.48vw, 8px) clamp(6px, 0.6vw, 11px);
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: clamp(11px, 0.82vw, 14.5px);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  color: #fff;
+  text-align: center;
+  text-wrap: balance;
+}
+.db-compare__pill--db {
+  background: linear-gradient(180deg, #2f7ef0, var(--color-brand));
+}
+.db-compare__pill--other {
+  background: linear-gradient(180deg, #525f70, #3b4757);
+}
+
+/* a heavy rule where Adam's artwork puts a black bar */
+.db-compare__group {
+  border-top: 2px solid var(--color-ink);
+}
+.db-compare tbody tr + tr {
+  border-top: 1px solid #eef2f7;
+}
+.db-compare tbody tr:nth-child(even) {
+  background: #f7f9fc;
+}
+.db-compare tbody td {
+  padding: clamp(4px, 0.34vw, 6px) clamp(6px, 0.6vw, 10px);
+  text-align: center;
+  vertical-align: middle;
+}
+.db-compare__row {
+  padding: clamp(4px, 0.34vw, 6px) clamp(11px, 1vw, 18px);
+  font-family: var(--font-body);
+  font-size: clamp(12px, 0.78vw, 14.5px);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+.db-compare__row.is-featured {
+  font-weight: 700;
+}
+
+.db-mark {
+  display: grid;
+  place-items: center;
+  width: clamp(15px, 1.1vw, 18px);
+  height: clamp(15px, 1.1vw, 18px);
+  margin-inline: auto;
+  border-radius: 50%;
+  color: #fff;
+}
+.db-mark svg {
+  width: 62%;
+  height: 62%;
+}
+.db-mark--yes {
+  background: var(--color-green);
+}
+.db-mark--no {
+  background: var(--color-db-red);
+}
+.db-mark__text {
+  font-family: var(--font-body);
+  font-size: clamp(11px, 0.72vw, 13.5px);
+  color: var(--color-ink-2);
+}
+
+/* The framed product screenshot. A plain border let the capture's own white
+   chrome run straight into the page, so the frame is a white mat with the
+   hairline on the outside of it — the screenshot reads as a printed screen
+   rather than as part of the page. */
+.db-shot {
+  padding: clamp(5px, 0.55vw, 9px);
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow:
+    0 2px 4px #0d15260f,
+    0 18px 44px #0d15261f;
+}
+.db-shot__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 9px;
+}
+
 /* Black, not blue. The old recipe put a 700px blue radial at 14% across —
    exactly where the globe sits — so the whole left half of the band read as a
    blue pool. What is left is a neutral lift in the same place, just enough to
@@ -914,8 +1044,12 @@ html::-webkit-scrollbar-corner {
   font-weight: 500;
   color: var(--color-brand);
   white-space: nowrap;
-  opacity: 0;
-  transform: translateX(-8px);
+  /* Visible at rest. It used to reveal on hover, which was fine while the
+     panel held a rebuilt UI you could read at section size — now it holds a
+     1550px screenshot that is only legible expanded, and on a phone there is
+     no hover to reveal it with at all. */
+  opacity: 1;
+  transform: none;
   transition:
     opacity 0.32s,
     transform 0.42s var(--ease-db);
@@ -1458,23 +1592,21 @@ html::-webkit-scrollbar-corner {
 
 /* contact form fields */
 /* ---------------------------------------------------------------------------
-   Contact form — dark.
+   Contact form — light.
 
-   Filled fields on a black panel, label above each one, no leading icon. The
-   icon-in-every-field pattern is the tell of a generated form, and it competed
-   with the text at every size. Focus is a cyan ring; invalid is red. Both are
-   two-signal (border + ring) so neither depends on colour alone.
+   Filled fields on a white panel, label above each one. Focus and invalid are
+   both two-signal (border + ring) so neither depends on colour alone.
    --------------------------------------------------------------------------- */
 .db-field {
   width: 100%;
-  border: 1px solid #ffffff1a;
+  border: 1px solid var(--color-line);
   border-radius: 10px;
-  background: #ffffff08;
+  background: #fff;
   /* left room for the leading icon; --plain reclaims it */
   padding: 13px 14px 13px 42px;
   font-family: var(--font-body);
   font-size: 15px;
-  color: #fff;
+  color: var(--color-ink);
   transition:
     border-color 0.2s ease,
     background 0.2s ease,
@@ -1494,12 +1626,12 @@ html::-webkit-scrollbar-corner {
   top: 14px;
   width: 17px;
   height: 17px;
-  color: #ffffff59;
+  color: #93a1b5;
   pointer-events: none;
   transition: color 0.2s ease;
 }
 .db-field-wrap:focus-within .db-field-icon {
-  color: #fff;
+  color: var(--color-brand);
 }
 
 /* The subject dropdown rendered as the raw OS control — a macOS double-chevron
@@ -1512,7 +1644,7 @@ html::-webkit-scrollbar-corner {
   line-height: 23px;
   padding-right: 46px;
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9.5l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d6fe8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9.5l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 16px center;
   background-size: 15px 15px;
@@ -1523,36 +1655,32 @@ html::-webkit-scrollbar-corner {
 .db-field--select::-ms-expand {
   display: none;
 }
-.db-field--select option {
-  background: #0c1018;
-  color: #fff;
-}
 .db-field::placeholder {
-  color: #ffffff4d;
+  color: #9aa7ba;
 }
 .db-field:hover {
-  border-color: #ffffff2e;
+  border-color: #c2cddd;
 }
-/* Focus is white, invalid is red — two different signals on purpose, so a field
-   you have just clicked into never reads as an error. */
+/* Focus is the brand blue, invalid is red — two different colours on purpose,
+   so a field you have just clicked into never reads as an error. */
 .db-field:focus {
   outline: none;
-  border-color: #ffffffb3;
-  background: #ffffff12;
-  box-shadow: 0 0 0 3px #ffffff26;
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 3px #1d6fe82e;
 }
 .db-field[aria-invalid="true"] {
-  border-color: var(--color-db-red-hot);
-  box-shadow: 0 0 0 3px #e2332433;
+  border-color: var(--color-db-red);
+  box-shadow: 0 0 0 3px #e2332426;
 }
 
-/* The panel the form sits in — pure black, so it reads as a solid card cut out
-   of the band behind it rather than a slightly lighter tint of it. */
+/* the white card the form sits in */
 .db-record {
-  border: 1px solid #ffffff17;
+  border: 1px solid var(--color-line);
   border-radius: 18px;
-  background: #000;
-  box-shadow: 0 28px 70px #00000073;
+  background: #fff;
+  box-shadow:
+    0 1px 2px #0d15260f,
+    0 14px 38px #0d152614;
 }
 
 .db-chip {

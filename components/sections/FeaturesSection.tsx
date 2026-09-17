@@ -1,74 +1,125 @@
 import Reveal from "@/components/animations/Reveal";
-import { Icon } from "@/components/ui/Icon";
-import { CHECKLIST } from "@/lib/data";
 import SmartLink from "@/components/ui/SmartLink";
+import { COMPARISON_GROUPS, COMPARISON_LEDE, type CompareMark } from "@/lib/data";
 
-function Column({ items, from }: { items: typeof CHECKLIST; from: number }) {
-  return (
-    /* h-full keeps the two panels level — 21 items split 11/10, so one column
-       always carries an extra row.
-
-       The padding is on the card, not the rows: the rows keep their original
-       rhythm and the list simply stops sitting flush against the card's edges. */
-    <div className="db-card-flat h-full px-[clamp(10px,1vw,18px)] py-[clamp(14px,1.3vw,24px)]">
-      <ol start={from} className="m-0 list-none p-0">
-        {items.map((item, i) => (
-          <li
-            key={item.label}
-            className={`grid grid-cols-[26px_26px_minmax(0,1fr)_26px] items-center gap-2 px-3 py-[.72em] text-[clamp(13.5px,0.85vw,16px)] leading-snug sm:gap-3 sm:px-4 ${
-              i === 0 ? "" : "border-t border-[#f1f4f8]"
-            }`}
-          >
-            <span className="text-brand">
-              <Icon name={item.icon} className="h-[1.25em] w-[1.25em]" />
-            </span>
-            <span className="text-ink-3 text-right text-[clamp(13px,0.8vw,15px)] font-semibold">
-              {from + i}.
-            </span>
-            <span>{item.featured ? <strong className="font-semibold">{item.label}</strong> : item.label}</span>
-            <span className="text-green justify-self-end">
-              <Icon name="check" className="h-4 w-4" />
-            </span>
-          </li>
-        ))}
-      </ol>
-    </div>
-  );
-}
-
+/**
+ * Adam's "DatabaseBuilder vs Other CRMs" chart, rebuilt as a real table.
+ *
+ * It replaces the old one-column features checklist, which only ever said
+ * "we have this" twenty-one times. The whole argument of the chart is the
+ * second column: the same list, priced as add-ons everywhere else.
+ *
+ * It is a `<table>` rather than a grid of divs on purpose. The row headers and
+ * column headers are what make it legible to a screen reader, and they are
+ * also what lets a search engine or an answer engine quote a single row of it
+ * — which, for a page whose entire job is the comparison, is the point.
+ *
+ * The five blocks are his, kept in his order and separated the way his artwork
+ * separates them, with a heavy rule instead of a black bar.
+ */
 export default function FeaturesSection() {
-  const half = Math.ceil(CHECKLIST.length / 2);
-
   return (
     <section id="features" className="db-section bg-page">
       <div className="db-shell">
-        <Reveal className="mx-auto mb-10 max-w-[640px] text-center">
-          <h2 className="font-display text-[clamp(25px,2.45vw,40px)] leading-[1.08] text-balance text-ink">
-            Product Features <span className="text-db-red">Checklist</span>
+        <Reveal className="mx-auto mb-[clamp(22px,2.4vw,38px)] max-w-[760px] text-center">
+          <h2 className="font-display text-ink text-[clamp(25px,2.45vw,40px)] leading-[1.08] text-balance">
+            <span className="text-db-blue">Database</span>
+            <span className="text-db-red">Builder</span>{" "}
+            <span className="text-ink-3">vs Other CRMs</span>
           </h2>
-          <p className="text-ink-2 mt-3 text-[clamp(15px,0.9vw,17.5px)]">
-            Everything your sales team needs to close more deals.
+          <p className="text-ink-2 mt-3 text-[clamp(15px,0.9vw,17.5px)] leading-[1.55]">
+            {COMPARISON_LEDE}
           </p>
         </Reveal>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <Reveal>
-            <Column items={CHECKLIST.slice(0, half)} from={1} />
-          </Reveal>
-          <Reveal delay={120}>
-            <Column items={CHECKLIST.slice(half)} from={half + 1} />
-          </Reveal>
-        </div>
+        <Reveal>
+          <div className="db-compare">
+            <table>
+              <caption className="sr-only">
+                Feature comparison between DatabaseBuilder and other CRM companies
+              </caption>
+              <colgroup>
+                <col />
+                <col className="db-compare__col" />
+                <col className="db-compare__col" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th scope="col" className="db-compare__head">
+                    Features
+                  </th>
+                  <th scope="col">
+                    <span className="db-compare__pill db-compare__pill--db">DatabaseBuilder</span>
+                  </th>
+                  <th scope="col">
+                    <span className="db-compare__pill db-compare__pill--other">Other CRMs</span>
+                  </th>
+                </tr>
+              </thead>
+
+              {COMPARISON_GROUPS.map((group, gi) => (
+                <tbody key={group[0].label} className={gi > 0 ? "db-compare__group" : undefined}>
+                  {group.map((row) => (
+                    <tr key={row.label}>
+                      <th scope="row" className={row.featured ? "db-compare__row is-featured" : "db-compare__row"}>
+                        {row.label}
+                      </th>
+                      <td>
+                        <Mark value={row.db} />
+                      </td>
+                      <td>
+                        <Mark value={row.other} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              ))}
+            </table>
+          </div>
+        </Reveal>
 
         <p className="text-ink-2 mt-5 text-center text-[13.5px] leading-relaxed">
-          Features are included in the subscription. Dialer minutes, SMS usage, additional phone numbers
-          and custom programming are charged separately.{" "}
+          Everything marked included is in the subscription. Dialer minutes, SMS usage, additional
+          phone numbers and custom programming are charged separately.{" "}
           <SmartLink href="/pricing#usage" className="text-brand font-semibold underline underline-offset-4">
             View pricing details
           </SmartLink>
         </p>
-
       </div>
     </section>
   );
+}
+
+/* The four states of a cell. Each carries its own text for assistive tech and
+   for anything reading the page without the styling — a bare tick is only a
+   tick to someone who can see the column it sits under. */
+function Mark({ value }: { value: CompareMark }) {
+  if (value === "yes") {
+    return (
+      <span className="db-mark db-mark--yes">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M5.5 12.5l4.4 4.4L18.6 7.8"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <span className="sr-only">Included</span>
+      </span>
+    );
+  }
+  if (value === "no") {
+    return (
+      <span className="db-mark db-mark--no">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7.5 7.5l9 9M16.5 7.5l-9 9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+        </svg>
+        <span className="sr-only">Not available</span>
+      </span>
+    );
+  }
+  return <span className="db-mark__text">{value === "addon" ? "Add-On" : "Additional"}</span>;
 }
