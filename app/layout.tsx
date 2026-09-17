@@ -9,7 +9,7 @@ import Footer from "@/components/layout/Footer";
 import { IconSprite } from "@/components/ui/Icon";
 import { SITE } from "@/lib/data";
 import { CONTACT } from "@/lib/contact";
-import { OG_IMAGE } from "@/lib/seo";
+import { OG_IMAGE, IS_INDEXABLE } from "@/lib/seo";
 
 /* Self-hosted and subset: no third-party request, no layout shift. */
 const anton = localFont({
@@ -80,7 +80,10 @@ export const metadata: Metadata = {
     description: "Sales software, designed by salespeople. No long-term commitment required.",
     images: [OG_IMAGE.url],
   },
-  robots: { index: true, follow: true },
+  /* Flipped by NEXT_PUBLIC_NOINDEX. robots.txt alone only stops a crawl —
+     an inbound link can still put a staging URL in the index, and only the
+     meta tag keeps it out. */
+  robots: IS_INDEXABLE ? { index: true, follow: true } : { index: false, follow: false },
   alternates: { canonical: "/" },
   icons: { icon: "/favicon.svg", apple: "/favicon.svg" },
 };

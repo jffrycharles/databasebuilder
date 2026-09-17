@@ -6,7 +6,11 @@ export const SITE = {
   title: "DatabaseBuilder — A Simple Alternative to Your Overpriced CRM",
   description:
     "Sales software designed by salespeople. Advanced features, call recording, email and two-way SMS, and live human support. Start a 7-day free trial.",
-  url: "https://www.databasebuilder.com",
+  /* Staging and the live site are the same code on two hostnames. Everything
+     canonical hangs off this — metadataBase, the sitemap, robots — so it has
+     to follow the host it is actually served from, or staging publishes
+     canonicals pointing at production and sitemaps nobody can verify. */
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.databasebuilder.com",
   register:
     "https://app.databasebuilder.com:446/Account/Register?id=9edcb5d7-b24a-44cc-80be-58cb47a7a2fc",
   login: "https://app.databasebuilder.com:446/Account/Login",

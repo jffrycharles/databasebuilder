@@ -1,5 +1,18 @@
 import { SITE } from "@/lib/data";
 
+/**
+ * Whether this deploy is allowed into a search index.
+ *
+ * A staging copy of a marketing site is the classic way to end up competing
+ * with yourself in Google: same copy, same headings, a second hostname. Set
+ * NEXT_PUBLIC_NOINDEX=1 on anything that is not the live site. Vercel preview
+ * and branch deploys are caught automatically; a plain Node host has no
+ * VERCEL_ENV, so it defaults to indexable and the flag is what turns it off.
+ */
+export const IS_INDEXABLE =
+  process.env.NEXT_PUBLIC_NOINDEX !== "1" &&
+  (process.env.VERCEL_ENV ?? "production") === "production";
+
 /* The card every share of this site renders.
  *
  * `summary_large_image` promises a picture; without one, X, LinkedIn, Facebook
