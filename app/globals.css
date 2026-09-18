@@ -530,12 +530,15 @@ html::-webkit-scrollbar-corner {
   }
 }
 
-/* The small brand rule that sits under a kicker or a heading. */
+/* The small brand rule that sits under a kicker or a heading. Red, not
+   blue-into-red: the wordmark rule the client settled is White/Red on dark and
+   Black/Red on light, and a blue-tipped rule was the last blue left in the
+   furniture. Deep to bright so it still reads as lit rather than as a dash. */
 .db-rule {
   width: 92px;
   height: 3px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--color-brand) 0%, #6d8cf4 46%, var(--color-db-red) 100%);
+  background: linear-gradient(90deg, #8f1a12 0%, var(--color-db-red) 58%, #ff5947 100%);
 }
 
 /* Overline above a heading. */
@@ -644,6 +647,71 @@ html::-webkit-scrollbar-corner {
   box-shadow:
     0 2px 4px #0d15260f,
     0 22px 54px #1d6fe838;
+}
+
+/* The origin section: three rows on one grid, divided by a rule rather than
+   by a hundred pixels of air. Each row is the same split, so the eye runs down
+   one seam instead of re-finding the left margin on every block. */
+.db-origin__row {
+  display: grid;
+  gap: clamp(22px, 2.6vw, 48px);
+  padding-block: clamp(30px, 3.4vw, 56px);
+}
+.db-origin__row:first-child {
+  padding-top: 0;
+}
+.db-origin__row:last-child {
+  padding-bottom: 0;
+}
+.db-origin__row + .db-origin__row {
+  border-top: 1px solid var(--color-line);
+}
+@media (min-width: 1024px) {
+  .db-origin__row {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(36px, 4.2vw, 82px);
+  }
+}
+
+/* The metrics, as a list on a hairline rather than three cards. Three cards
+   beside a statement made two competing card systems in one row. */
+.db-origin__stat {
+  display: flex;
+  /* centred, not baseline: a two-line label baselined against a 40px numeral
+     hangs off its bottom-right corner and reads as an afterthought. */
+  align-items: center;
+  gap: clamp(14px, 1.4vw, 24px);
+  padding-block: clamp(13px, 1.3vw, 19px);
+}
+.db-origin__stat dt {
+  min-width: 4.4em;
+}
+.db-origin__stat dd {
+  flex: 1;
+}
+.db-origin__stat + .db-origin__stat,
+.db-origin .db-anim + .db-anim .db-origin__stat {
+  border-top: 1px solid var(--color-line);
+}
+
+
+/* Reveal wraps each point in a .db-anim, so the rules key off those wrappers
+   rather than the list items themselves. */
+.db-origin__point {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(11px, 1vw, 15px);
+  padding-block: clamp(13px, 1.3vw, 18px);
+  border-top: 1px solid var(--color-line);
+}
+.db-origin__points > .db-anim:first-child .db-origin__point {
+  border-top: 0;
+}
+@media (min-width: 640px) {
+  /* two columns, so the whole first ROW sits above the first rule */
+  .db-origin__points > .db-anim:nth-child(-n + 2) .db-origin__point {
+    border-top: 0;
+  }
 }
 
 /* The two routes out of the FAQ. */
@@ -1629,17 +1697,17 @@ html::-webkit-scrollbar-corner {
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-/* one rule, not three dashes — the same blue-to-red as .db-rule */
+/* one rule, not three dashes — the same red as .db-rule */
 .db-label__bar {
   display: block;
   width: 32px;
   height: 3px;
   flex: none;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--color-brand) 0%, #6d8cf4 48%, var(--color-db-red) 100%);
+  background: linear-gradient(90deg, #8f1a12 0%, var(--color-db-red) 58%, #ff5947 100%);
 }
 .db-label--on-dark .db-label__bar {
-  background: linear-gradient(90deg, #4f7bff 0%, #9db3ff 48%, var(--color-db-red-hot) 100%);
+  background: linear-gradient(90deg, #b3261b 0%, var(--color-db-red) 52%, var(--color-db-red-hot) 100%);
 }
 
 /* =========================================================================
