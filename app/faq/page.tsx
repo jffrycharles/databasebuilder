@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import PageHero from "@/components/ui/PageHero";
-import Reveal from "@/components/animations/Reveal";
 import Accordion from "@/components/ui/Accordion";
 import FaqDeepLink from "@/components/ui/FaqDeepLink";
 import FaqFallback from "@/components/sections/FaqFallback";
@@ -107,15 +106,14 @@ export default function FaqPage() {
               700px tall, so most of a 300px column was empty on every group. */}
           <div className="grid gap-[clamp(52px,6vw,110px)]">
             {groups.map((cat, i) => (
-              <Reveal key={cat.title} delay={i * 60}>
+              <div key={cat.title}>
                 <div
                   id={cat.anchor}
                   className="db-faq-group grid items-start gap-[clamp(20px,3vw,64px)] lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]"
                 >
                   <div className="lg:sticky lg:top-[calc(var(--db-header-h)+40px)]">
-                    <h2 className="font-display text-ink m-0 text-[clamp(28px,3vw,48px)] leading-[1.04] tracking-[.015em]">
+                    <h2 className="font-display text-db-red m-0 text-[clamp(28px,3vw,48px)] leading-[1.04] tracking-[.015em]">
                       {cat.title}
-                      <span className="text-db-red">.</span>
                     </h2>
                     <p className="text-ink-2 mt-3.5 max-w-[38ch] text-[clamp(14.5px,0.92vw,16.5px)] leading-[1.6]">
                       {cat.blurb}
@@ -127,7 +125,7 @@ export default function FaqPage() {
 
                   <Accordion items={cat.items} openFirst={i === 0} />
                 </div>
-              </Reveal>
+              </div>
             ))}
           </div>
         </div>

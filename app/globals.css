@@ -440,36 +440,53 @@ html::-webkit-scrollbar-corner {
   transform: scaleX(1);
 }
 
+/* Full screen, not a dropdown.
+   It used to open to its content height and stop — roughly 390px of menu with
+   the hero showing through underneath it, which read as a panel that had
+   failed to load rather than as a menu. It now covers everything below the
+   bar, scrolls if the list outgrows the screen, and the links get room. */
 .db-mobile-nav {
-  position: absolute;
-  top: 100%;
+  position: fixed;
+  top: var(--db-header-h);
   left: 0;
   right: 0;
+  /* NOT bottom: 0. .db-header sets will-change: transform, which makes it the
+     containing block for its fixed-position descendants — so bottom would
+     resolve against the 66px bar, not the viewport, and the panel computed to
+     zero height. An explicit height sidesteps it. */
+  height: calc(100svh - var(--db-header-h));
   z-index: 30;
-  display: grid;
-  grid-template-rows: 0fr;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--color-db-black);
   opacity: 0;
   visibility: hidden;
-  overflow: hidden;
-  background: var(--color-db-black);
-  border-bottom: 1px solid #ffffff17;
-  box-shadow: 0 26px 50px #0000008c;
+  transform: translateY(-8px);
   transition:
-    grid-template-rows 0.28s var(--ease-db),
-    opacity 0.2s ease,
+    opacity 0.24s ease,
+    transform 0.28s var(--ease-db),
     visibility 0s linear 0.28s;
 }
 .db-mobile-nav > div {
-  min-height: 0;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  /* padding-BLOCK only. The shorthand zeroed the inline padding, and unlayered
+     CSS beats the px-4/sm:px-10 utilities on the element, so every link sat
+     flush against the screen edge. */
+  padding-block: clamp(14px, 4vw, 26px) calc(env(safe-area-inset-bottom) + 28px);
 }
 [data-nav-open="true"] .db-mobile-nav {
-  grid-template-rows: 1fr;
   opacity: 1;
   visibility: visible;
+  transform: none;
   transition:
-    grid-template-rows 0.28s var(--ease-db),
-    opacity 0.2s ease;
+    opacity 0.24s ease,
+    transform 0.28s var(--ease-db);
+}
+/* the page must not scroll behind an open full-screen menu */
+[data-nav-open="true"] {
+  touch-action: none;
 }
 @media (min-width: 1280px) {
   .db-mobile-nav {
