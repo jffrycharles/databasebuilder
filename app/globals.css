@@ -715,12 +715,38 @@ html::-webkit-scrollbar-corner {
 /* A true neutral, not the blue-grey it was. Their column should read as
    muted, not as a second brand colour. */
 .db-compare__pill--other {
-  background: linear-gradient(180deg, #7c7f84, #5e6166);
+  background: #8b9099;
 }
 
 /* a heavy rule where Adam's artwork puts a black bar */
 .db-compare__group {
   border-top: 2px solid var(--color-ink);
+}
+
+/* What each block is actually saying. */
+.db-compare__caption th {
+  padding: clamp(11px, 1vw, 17px) clamp(11px, 1vw, 18px) clamp(7px, 0.6vw, 10px);
+  text-align: left;
+  font-family: var(--font-ui);
+  font-size: clamp(12px, 0.86vw, 15px);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+.db-compare__caption th span {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-body);
+  font-size: clamp(11.5px, 0.78vw, 13.5px);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-ink-2);
+}
+.db-compare__caption,
+.db-compare tbody tr.db-compare__caption:hover {
+  background: #0000;
 }
 .db-compare__group tr:first-child th,
 .db-compare__group tr:first-child td {
@@ -735,7 +761,7 @@ html::-webkit-scrollbar-corner {
 .db-compare tbody tr + tr {
   border-top: 1px solid #eef2f7;
 }
-.db-compare tbody tr:nth-child(even) {
+.db-compare tbody tr:nth-child(odd):not(.db-compare__caption) {
   background: #f7f9fc;
 }
 @media (hover: hover) {

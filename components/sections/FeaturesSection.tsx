@@ -63,8 +63,18 @@ export default function FeaturesSection() {
               </thead>
 
               {COMPARISON_GROUPS.map((group, gi) => (
-                <tbody key={group[0].label} className={gi > 0 ? "db-compare__group" : undefined}>
-                  {group.map((row) => (
+                <tbody key={group.label} className={gi > 0 ? "db-compare__group" : undefined}>
+                  {/* The caption sits in the feature column only, so the band
+                      down the DatabaseBuilder column is never interrupted. */}
+                  <tr className="db-compare__caption">
+                    <th scope="colgroup">
+                      {group.label}
+                      {group.note && <span>{group.note}</span>}
+                    </th>
+                    <td aria-hidden="true" />
+                    <td aria-hidden="true" />
+                  </tr>
+                  {group.rows.map((row) => (
                     <tr key={row.label}>
                       <th scope="row" className={row.featured ? "db-compare__row is-featured" : "db-compare__row"}>
                         {row.label}

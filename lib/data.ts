@@ -76,8 +76,20 @@ export type CompareRow = { label: string; db: CompareMark; other: CompareMark; f
 export const COMPARISON_LEDE =
   "More advanced features included at no additional charge compared to most other CRM companies.";
 
-export const COMPARISON_GROUPS: CompareRow[][] = [
-  [
+/* Each block gets a caption. Adam's artwork separates the five with black
+   bars and leaves the reader to infer why — but the whole argument of the
+   chart lives in that grouping: everyone has the first block, they bill for
+   the next two, they do not do the fourth at all. Unlabelled, the table opens
+   with eleven rows of "same, same, same".
+
+   NEW COPY — not from his artwork. Worth his sign-off. */
+export type CompareGroup = { label: string; note?: string; rows: CompareRow[] };
+
+export const COMPARISON_GROUPS: CompareGroup[] = [
+  {
+    label: "The basics",
+    note: "Any CRM worth buying does these",
+    rows: [
     { label: "Click to Dial Calling", db: "yes", other: "yes" },
     { label: "Customizable Data Fields & Dashboard", db: "yes", other: "yes" },
     { label: "Sales Pipeline Management", db: "yes", other: "yes" },
@@ -89,16 +101,24 @@ export const COMPARISON_GROUPS: CompareRow[][] = [
     { label: "Safe & Secure Platform", db: "yes", other: "yes" },
     { label: "User Permissions Levels", db: "yes", other: "yes" },
     { label: "Calendar & Lead Management", db: "yes", other: "yes" },
-  ],
-  [
+    ],
+  },
+  {
+    label: "Included here, an add-on elsewhere",
+    note: "Same features, already in the price",
+    rows: [
     { label: "Automatic Call Recording", db: "yes", other: "addon" },
     { label: "Auto Voicemail Library", db: "yes", other: "addon" },
     { label: "Built-in SMS Text Campaigns", db: "yes", other: "addon" },
     { label: "Local Presence", db: "yes", other: "addon" },
     { label: "Integrated Video Conferencing", db: "yes", other: "addon" },
     { label: "Data Export Module", db: "yes", other: "addon" },
-  ],
-  [
+    ],
+  },
+  {
+    label: "Team, training and coaching",
+    note: "Also included, also billed for elsewhere",
+    rows: [
     { label: "Sales & Admin Training", db: "yes", other: "addon", featured: true },
     { label: "Team Account & Lead Management", db: "yes", other: "addon" },
     { label: "Company Data Share", db: "yes", other: "addon" },
@@ -107,8 +127,12 @@ export const COMPARISON_GROUPS: CompareRow[][] = [
     { label: "Whisper Coaching", db: "yes", other: "addon" },
     { label: "Live Call Transfer w/ Popup Notification", db: "yes", other: "addon" },
     { label: "Customer Profile Popup on Transfer", db: "yes", other: "addon" },
-  ],
-  [
+    ],
+  },
+  {
+    label: "Where we differ",
+    note: "Not an upgrade elsewhere — simply not offered",
+    rows: [
     { label: "All-in-One Pricing", db: "yes", other: "no" },
     { label: "Talking Points", db: "yes", other: "no" },
     { label: "Integrated Google and Social Media Search", db: "yes", other: "no" },
@@ -117,14 +141,19 @@ export const COMPARISON_GROUPS: CompareRow[][] = [
     { label: "30-Day Cancellation", db: "yes", other: "no" },
     { label: "Not Overly Complicated", db: "yes", other: "no" },
     { label: "Affordable Pricing", db: "yes", other: "no" },
-  ],
-  [
+    ],
+  },
+  {
+    label: "Charged on usage",
+    note: "Metered on both sides",
+    rows: [
     { label: "Custom API Integration", db: "extra", other: "extra" },
     { label: "Dialer Minutes & SMS Messages", db: "extra", other: "extra" },
     { label: "Additional Phone Numbers", db: "extra", other: "extra" },
     { label: "Data Cloud Storage", db: "extra", other: "extra" },
     { label: "Additional User Licenses", db: "extra", other: "extra" },
-  ],
+    ],
+  },
 ];
 
 export type ValueCard = {
