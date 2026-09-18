@@ -40,7 +40,10 @@ export default function Leadership() {
           className="mb-[clamp(40px,4.6vw,76px)]"
         />
 
-        <div className="grid items-start gap-[clamp(16px,1.6vw,26px)] sm:grid-cols-2 xl:grid-cols-4">
+        {/* Capped well inside the shell. At the full 1560 the four cards run to
+            ~340px each and a 4:5 portrait becomes a 425px-tall photograph —
+            Adam's note was "they do not have to large images". */}
+        <div className="mx-auto grid max-w-[960px] items-start gap-[clamp(14px,1.3vw,22px)] sm:grid-cols-2 xl:grid-cols-4">
           {LEADERS.map((p, i) => (
             <Reveal key={p.name} delay={i * 70}>
               <article className="db-team-card h-full">
@@ -60,17 +63,17 @@ export default function Leadership() {
                   )}
                 </div>
 
-                <div className="flex flex-1 flex-col p-[clamp(15px,1.4vw,21px)]">
+                <div className="flex flex-1 flex-col p-[clamp(14px,1.2vw,18px)]">
                   <h3 className="font-body text-ink m-0 text-[clamp(17px,1.25vw,20px)] leading-tight font-bold tracking-[-.012em]">
                     {p.name}
                   </h3>
-                  <p className="text-ink-3 m-0 mt-1 min-h-[2.6em] text-[clamp(12.5px,0.84vw,14px)] leading-snug">
+                  <p className="text-ink-3 m-0 mt-1 text-[clamp(12.5px,0.84vw,14px)] leading-snug">
                     {p.role}
                   </p>
 
                   <span className="db-team-card__since mt-3 self-start">{p.since}</span>
 
-                  <p className="text-ink-2 mt-3.5 min-h-[5em] text-[clamp(13px,0.85vw,14.5px)] leading-[1.6]">
+                  <p className="text-ink-2 mt-3 min-h-[4.4em] text-[clamp(12.5px,0.82vw,14px)] leading-[1.6]">
                     {p.summary}
                   </p>
 
@@ -94,7 +97,7 @@ export default function Leadership() {
 
                   {/* email only — the client asked for phone numbers off the
                       site: listed numbers were being scraped and spam-called. */}
-                  <div className="mt-auto pt-[clamp(14px,1.4vw,20px)]">
+                  <div className="mt-auto pt-[clamp(12px,1.1vw,16px)]">
                     <a
                       href={`mailto:${p.email}`}
                       className="db-team-btn"
