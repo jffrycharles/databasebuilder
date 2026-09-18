@@ -750,39 +750,6 @@ html::-webkit-scrollbar-corner {
   }
 }
 
-/* The two routes out of the FAQ. */
-.db-route {
-  display: block;
-  padding: clamp(16px, 1.6vw, 24px);
-  border: 1px solid var(--color-line);
-  border-radius: 14px;
-  background: var(--color-page);
-  transition:
-    border-color 0.26s ease,
-    background 0.26s ease,
-    transform 0.26s var(--ease-db);
-}
-@media (hover: hover) {
-  .db-route:hover {
-    transform: translateY(-3px);
-    border-color: #c3d3ec;
-    background: #fff;
-  }
-}
-.db-route:focus-visible {
-  outline: 3px solid var(--color-brand);
-  outline-offset: 3px;
-}
-.db-route__icon {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: #e8f1fe;
-  color: var(--color-brand);
-}
-
 /* Numbered steps on a dark band. The numeral is an outline rather than a
    fill: four solid 44px numbers in brand red compete with the headline above
    them, and the step title is the thing to read. */
@@ -1420,6 +1387,20 @@ html::-webkit-scrollbar-corner {
   transition:
     opacity 0.75s ease,
     transform 0.85s var(--ease-db);
+}
+
+/* A page that opts out of all of it. /faq is a reference page — you scan it
+   looking for one answer, and a list that fades in a group at a time fights
+   that. The reveals stay in the components, because every other page still
+   wants them; the page turns them off for itself. */
+.db-still .db-anim,
+/* the footer is a sibling of <main>, so the scope has to reach out of it —
+   otherwise the last thing you hit scrolling down a still page is five
+   columns fading in one after another */
+body:has(.db-still) .db-anim {
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 /* =========================================================================
