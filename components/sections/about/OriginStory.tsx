@@ -1,127 +1,126 @@
 import Reveal from "@/components/animations/Reveal";
 import CountUp from "@/components/animations/CountUp";
 import { Icon } from "@/components/ui/Icon";
-import RevealText from "@/components/ui/RevealText";
+import DotArt from "./DotArt";
 import { ABOUT, ORIGIN, OWNERSHIP } from "@/lib/about";
 
-/* One section, three rows, hairlines between them.
+const STAT_ART = ["sphere", "rise", "ring"] as const;
+
+/**
+ * The origin section, built out of panels rather than paragraphs.
  *
- * It used to be four full-width blocks stacked — a centred standfirst, a row of
- * three stat cards, the letter, then a centred ownership header over a 2x2 —
- * each one centre-heading-then-grid, each one starting again from the left
- * margin. Four sections' worth of vertical, 1779px of it, for one section's
- * worth of argument.
+ * Two rounds of this were still "text on a flat background": first four
+ * stacked centred blocks, then the same content on hairlines. Hairlines are
+ * not a surface — the eye had nothing to land on, so nothing looked designed.
  *
- * Now every row is a 2-column split on the same 0.92/1.08 grid, divided by a
- * rule rather than by 110px of air: the claim carries the metrics beside it,
- * the origin label carries the letter beside it, the ownership header carries
- * its four points beside it. The eye runs down one seam instead of re-finding
- * the left margin four times, and the horizontal space does the work the
- * padding was doing.
+ * So: filled panels, a tonal break, and a mark on every metric. The marks are
+ * dot matrices, which is the one motif that can be borrowed from a reference
+ * without borrowing the reference — the wordmark's own globe is built out of
+ * dots, so a dot grid reads as DatabaseBuilder rather than as someone else.
  *
- * Nothing new is invented: --color-line for the rules, .db-saas-card for the
- * one surface that is still a card, .db-pill, .db-saas-icon, and the existing
- * type scale throughout.
+ * The pull quote is the tonal break. One near-black panel inside a light
+ * section does more for the page than any amount of extra spacing, and it puts
+ * the founder's line where the eye goes first.
+ *
+ * The scrubbed word-by-word brighten on the opening statement is gone. It drew
+ * attention to itself rather than to the sentence, and it was the only place
+ * on the page that animated type.
  */
 export default function OriginStory() {
   return (
     <section id="origin" className="bg-page db-section">
       <div className="db-shell">
-        <div className="db-origin">
-          {/* ---- the claim, with the numbers beside it ---- */}
-          <div className="db-origin__row">
-            <div>
-              <RevealText className="text-ink max-w-[26ch] text-[clamp(23px,2.35vw,40px)] leading-[1.22] font-normal tracking-[-.018em]">
-                {ABOUT.standfirst}
-              </RevealText>
-            </div>
+        {/* ---- the claim, and the three numbers as panels ---- */}
+        <div className="grid items-end gap-[clamp(26px,3vw,56px)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <Reveal>
+            <span className="db-rule mb-6 block" />
+            <p className="font-body text-ink m-0 max-w-[20ch] text-[clamp(26px,2.8vw,46px)] leading-[1.14] font-bold tracking-[-.026em]">
+              Most CRM companies answered complexity by adding{" "}
+              <span className="text-ink-3">more of it.</span>
+            </p>
+            <p className="text-ink-2 mt-5 max-w-[42ch] text-[clamp(14.5px,0.94vw,16.5px)] leading-[1.65]">
+              We went the other way: one simple system, one all-in-one price, built the way a
+              salesperson actually works.
+            </p>
+          </Reveal>
 
-            <dl className="m-0 self-center">
-              {ORIGIN.stats.map((s, i) => (
-                <Reveal key={s.label} delay={i * 70}>
-                  <div className="db-origin__stat">
-                    <dt className="font-display text-ink m-0 shrink-0 text-[clamp(28px,2.6vw,40px)] leading-none tracking-[.01em] tabular-nums">
-                      <CountUp value={s.value} />
-                      <span className="text-db-red">{s.suffix}</span>
-                    </dt>
-                    <dd className="font-brand text-ink-2 m-0 text-[clamp(13px,0.86vw,14.5px)] leading-[1.5] font-medium">
-                      {s.label}
-                    </dd>
-                  </div>
-                </Reveal>
-              ))}
-            </dl>
-          </div>
-
-          {/* ---- the letter ---- */}
-          <div className="db-origin__row">
-            <div className="lg:sticky lg:top-[calc(var(--db-header-h)+40px)] lg:self-start">
-              <Reveal>
-                <span className="db-pill">
-                  <i />
-                  Origin
-                </span>
-              </Reveal>
-              <Reveal delay={70}>
-                <h2 className="font-body text-ink m-0 mt-4 max-w-[11ch] text-[clamp(26px,2.7vw,40px)] leading-[1.06] font-bold tracking-[-.028em]">
-                  Where it <span className="text-db-red">started</span>
-                </h2>
-              </Reveal>
-              <Reveal delay={130}>
-                <p className="text-ink-2 mt-4 max-w-[38ch] text-[clamp(14px,0.92vw,16px)] leading-[1.65]">
-                  {ORIGIN.lead}
-                </p>
-              </Reveal>
-            </div>
-
-            <div>
-              <Reveal>
-                <div className="text-ink-2 space-y-4 text-[clamp(14.5px,0.94vw,16.5px)] leading-[1.72]">
-                  {ORIGIN.body.map((p) => (
-                    <p key={p}>{p}</p>
-                  ))}
+          <div className="grid gap-[clamp(10px,1vw,14px)] sm:grid-cols-3 lg:grid-cols-3">
+            {ORIGIN.stats.map((s, i) => (
+              <Reveal key={s.label} delay={i * 70}>
+                <div className="db-panel h-full">
+                  <DotArt shape={STAT_ART[i]} className="text-db-red h-[34px] w-[34px]" />
+                  <p className="font-display text-ink m-0 mt-auto pt-[clamp(24px,3vw,44px)] text-[clamp(28px,2.6vw,40px)] leading-none tracking-[.01em] tabular-nums">
+                    <CountUp value={s.value} />
+                    <span className="text-db-red">{s.suffix}</span>
+                  </p>
+                  <p className="font-brand text-ink-2 m-0 mt-2.5 text-[clamp(12.5px,0.82vw,14px)] leading-[1.45] font-medium">
+                    {s.label}
+                  </p>
                 </div>
               </Reveal>
-
-              <Reveal delay={120}>
-                <blockquote className="db-saas-card m-0 mt-[clamp(20px,2vw,32px)] overflow-hidden p-[clamp(20px,2vw,30px)]">
-                  <span aria-hidden="true" className="bg-db-red absolute inset-y-0 left-0 w-[3px]" />
-                  <p className="font-body text-ink m-0 max-w-[34ch] text-[clamp(17px,1.35vw,24px)] leading-[1.28] font-bold tracking-[-.022em]">
-                    {ORIGIN.pullQuote}
-                  </p>
-                  <cite className="font-brand text-ink-3 mt-3 block text-[12.5px] font-medium tracking-[.02em] not-italic">
-                    From the letter to our customers
-                  </cite>
-                </blockquote>
-              </Reveal>
-            </div>
+            ))}
           </div>
+        </div>
 
-          {/* ---- ownership: the header holds its own column ---- */}
-          <div className="db-origin__row">
-            <Reveal className="lg:self-start">
-              <h3 className="font-body text-ink m-0 max-w-[15ch] text-[clamp(23px,2.3vw,34px)] leading-[1.1] font-bold tracking-[-.026em]">
-                {OWNERSHIP.title}
+        {/* ---- the letter, with the quote as the tonal break ---- */}
+        <div className="mt-[clamp(30px,3.4vw,56px)] grid gap-[clamp(10px,1vw,14px)] lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)]">
+          <Reveal>
+            <div className="db-panel db-panel--flush h-full">
+              <span className="db-pill self-start">
+                <i />
+                Origin
+              </span>
+              <h2 className="font-body text-ink m-0 mt-4 max-w-[12ch] text-[clamp(24px,2.4vw,36px)] leading-[1.06] font-bold tracking-[-.028em]">
+                Where it <span className="text-db-red">started</span>
+              </h2>
+              <div className="text-ink-2 mt-4 space-y-3.5 text-[clamp(14px,0.92vw,16px)] leading-[1.68]">
+                <p>{ORIGIN.lead}</p>
+                {ORIGIN.body.map((p) => (
+                  <p key={p}>{p}</p>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={90}>
+            <blockquote className="db-panel db-panel--dark m-0 h-full justify-center">
+              <DotArt shape="grid" className="h-[34px] w-[34px] shrink-0 text-white/25" />
+              <p className="font-body m-0 mt-[clamp(20px,2.2vw,34px)] text-[clamp(20px,1.85vw,32px)] leading-[1.24] font-bold tracking-[-.022em] text-white">
+                {ORIGIN.pullQuote}
+              </p>
+              <cite className="font-brand mt-5 block text-[12.5px] font-medium tracking-[.02em] text-white/50 not-italic">
+                Adam Berman, from the letter to our customers
+              </cite>
+            </blockquote>
+          </Reveal>
+        </div>
+
+        {/* ---- ownership ---- */}
+        <div className="mt-[clamp(30px,3.4vw,56px)] grid gap-[clamp(10px,1vw,14px)] lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)]">
+          <Reveal>
+            <div className="db-panel db-panel--flush h-full">
+              <h3 className="font-body text-ink m-0 max-w-[13ch] text-[clamp(22px,2.2vw,32px)] leading-[1.1] font-bold tracking-[-.026em]">
+                Your data is never <span className="text-db-red">held hostage</span>
               </h3>
-              <p className="text-ink-2 mt-4 max-w-[42ch] text-[clamp(14px,0.92vw,16px)] leading-[1.65]">
+              <p className="text-ink-2 mt-4 text-[clamp(13.5px,0.9vw,15.5px)] leading-[1.65]">
                 {OWNERSHIP.body}
               </p>
-            </Reveal>
+            </div>
+          </Reveal>
 
-            <ul className="db-origin__points m-0 grid list-none gap-x-[clamp(16px,1.6vw,28px)] gap-y-0 p-0 sm:grid-cols-2">
-              {OWNERSHIP.points.map((p, i) => (
-                <Reveal key={p.text} delay={i * 60}>
-                  <li className="db-origin__point">
-                    <span className="db-saas-icon shrink-0">
-                      <Icon name={p.icon} className="h-[17px] w-[17px]" />
-                    </span>
-                    <span className="text-ink text-[clamp(13.5px,0.9vw,15.5px)] leading-[1.5] font-medium">
-                      {p.text}
-                    </span>
-                  </li>
-                </Reveal>
-              ))}
-            </ul>
+          <div className="grid gap-[clamp(10px,1vw,14px)] sm:grid-cols-2">
+            {OWNERSHIP.points.map((p, i) => (
+              <Reveal key={p.text} delay={i * 60}>
+                <div className="db-panel h-full">
+                  <span className="db-saas-icon">
+                    <Icon name={p.icon} className="h-[17px] w-[17px]" />
+                  </span>
+                  <p className="text-ink m-0 mt-auto pt-[clamp(18px,2vw,30px)] text-[clamp(13.5px,0.9vw,15.5px)] leading-[1.5] font-medium">
+                    {p.text}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </div>

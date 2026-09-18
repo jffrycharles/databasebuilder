@@ -649,68 +649,51 @@ html::-webkit-scrollbar-corner {
     0 22px 54px #1d6fe838;
 }
 
-/* The origin section: three rows on one grid, divided by a rule rather than
-   by a hundred pixels of air. Each row is the same split, so the eye runs down
-   one seam instead of re-finding the left margin on every block. */
-.db-origin__row {
-  display: grid;
-  gap: clamp(22px, 2.6vw, 48px);
-  padding-block: clamp(30px, 3.4vw, 56px);
+/* Origin panels.
+ *
+ * A filled surface, not a hairline and not a shadow-lifted card. The page
+ * already has .db-saas-card doing raised-white-on-grey; these are the opposite
+ * move — a tint DARKER than the page, flat, so a grid of them reads as one
+ * built object rather than as floating boxes. Flex-column with the body pushed
+ * to the bottom, so a mark sits top-left and the words sit on the floor of
+ * every panel at the same height. */
+.db-panel {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(18px, 1.8vw, 28px);
+  border: 1px solid #dbe2ec;
+  border-radius: 14px;
+  background: #e7ecf4;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
 }
-.db-origin__row:first-child {
-  padding-top: 0;
-}
-.db-origin__row:last-child {
-  padding-bottom: 0;
-}
-.db-origin__row + .db-origin__row {
-  border-top: 1px solid var(--color-line);
-}
-@media (min-width: 1024px) {
-  .db-origin__row {
-    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-    gap: clamp(36px, 4.2vw, 82px);
+@media (hover: hover) {
+  .db-panel:hover {
+    border-color: #c6d2e4;
+    background: #e1e8f2;
   }
 }
-
-/* The metrics, as a list on a hairline rather than three cards. Three cards
-   beside a statement made two competing card systems in one row. */
-.db-origin__stat {
-  display: flex;
-  /* centred, not baseline: a two-line label baselined against a 40px numeral
-     hangs off its bottom-right corner and reads as an afterthought. */
-  align-items: center;
-  gap: clamp(14px, 1.4vw, 24px);
-  padding-block: clamp(13px, 1.3vw, 19px);
+/* the reading panels carry prose, so they get a white ground instead */
+.db-panel--flush {
+  background: #fff;
+  border-color: var(--color-line);
 }
-.db-origin__stat dt {
-  min-width: 4.4em;
+@media (hover: hover) {
+  .db-panel--flush:hover {
+    background: #fff;
+    border-color: var(--color-line);
+  }
 }
-.db-origin__stat dd {
-  flex: 1;
+/* the one tonal break in the section */
+.db-panel--dark {
+  border-color: #0000;
+  background: linear-gradient(162deg, #16203a 0%, #0a1020 58%, #050810 100%);
 }
-.db-origin__stat + .db-origin__stat,
-.db-origin .db-anim + .db-anim .db-origin__stat {
-  border-top: 1px solid var(--color-line);
-}
-
-
-/* Reveal wraps each point in a .db-anim, so the rules key off those wrappers
-   rather than the list items themselves. */
-.db-origin__point {
-  display: flex;
-  align-items: flex-start;
-  gap: clamp(11px, 1vw, 15px);
-  padding-block: clamp(13px, 1.3vw, 18px);
-  border-top: 1px solid var(--color-line);
-}
-.db-origin__points > .db-anim:first-child .db-origin__point {
-  border-top: 0;
-}
-@media (min-width: 640px) {
-  /* two columns, so the whole first ROW sits above the first rule */
-  .db-origin__points > .db-anim:nth-child(-n + 2) .db-origin__point {
-    border-top: 0;
+@media (hover: hover) {
+  .db-panel--dark:hover {
+    border-color: #0000;
+    background: linear-gradient(162deg, #1b2743 0%, #0c1426 58%, #070b14 100%);
   }
 }
 
@@ -1686,28 +1669,36 @@ html::-webkit-scrollbar-corner {
     linear-gradient(#04060e 0%, #010409 62%, #000 100%);
 }
 
-/* Static version of the homepage's coloured-bar label. */
+/* The eyebrow. A rule either side of the word — the same treatment the page
+   openers use for "ABOUT US" — rather than a single bar on the left. */
 .db-label {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  gap: clamp(12px, 1.2vw, 20px);
+  font-family: var(--font-ui);
+  font-size: clamp(11px, 0.78vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
-/* one rule, not three dashes — the same red as .db-rule */
-.db-label__bar {
+.db-label__rule {
   display: block;
-  width: 32px;
-  height: 3px;
+  width: clamp(34px, 5vw, 80px);
+  height: 1px;
   flex: none;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #8f1a12 0%, var(--color-db-red) 58%, #ff5947 100%);
 }
-.db-label--on-dark .db-label__bar {
-  background: linear-gradient(90deg, #b3261b 0%, var(--color-db-red) 52%, var(--color-db-red-hot) 100%);
+.db-label__rule:first-child {
+  background: linear-gradient(90deg, #0000, var(--color-db-red));
+}
+.db-label__rule:last-child {
+  background: linear-gradient(90deg, var(--color-db-red), #0000);
+}
+.db-label--on-dark .db-label__rule:first-child {
+  background: linear-gradient(90deg, #0000, var(--color-db-red-hot));
+}
+.db-label--on-dark .db-label__rule:last-child {
+  background: linear-gradient(90deg, var(--color-db-red-hot), #0000);
 }
 
 /* =========================================================================
