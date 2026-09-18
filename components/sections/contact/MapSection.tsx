@@ -39,14 +39,14 @@ export default function MapSection() {
                 href={CONTACT.maps}
                 target="_blank"
                 rel="noreferrer"
-                className="font-ui inline-flex items-center gap-2 rounded-[9px] border border-white/25 px-4 py-2.5 text-[14px] font-semibold tracking-[.03em] text-white uppercase transition hover:border-white hover:bg-white/10"
+                className="font-ui border-line text-ink hover:border-db-red hover:bg-db-red inline-flex items-center gap-2 rounded-[9px] border bg-white px-4 py-2.5 text-[14px] font-semibold tracking-[.03em] uppercase transition-colors hover:text-white"
               >
                 <Icon name="pin" className="h-4 w-4" />
                 Get directions
               </a>
             </div>
 
-            <p className="mt-5 text-[12.5px] leading-snug text-white/35">
+            <p className="text-ink-3 mt-5 text-[12.5px] leading-snug">
               Basemap © OpenFreeMap, data © OpenStreetMap contributors.
             </p>
           </Reveal>

@@ -17,7 +17,11 @@
   --color-page: #f1f4f8;
   --color-ink: #0d1526;
   --color-ink-2: #3c4a61;
-  --color-ink-3: #6b7a90;
+  /* 4.83:1 on --color-page and 5.33:1 on white. It was #6b7a90, which is
+     3.96:1 — under AA — and it carries 11-13px labels site-wide: field hints,
+     eyebrows, table captions, the contact details. Still clearly lighter than
+     ink-2 (8.12:1), so muted still reads as muted. */
+  --color-ink-3: #5f6c80;
   --color-line: #e2e8f0;
   --color-brand: #1d6fe8;
   --color-navy: #0b1730;

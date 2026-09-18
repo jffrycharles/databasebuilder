@@ -79,10 +79,14 @@ export default function FaqPage() {
 
       <section className="db-section db-section--airy bg-page">
         <div className="db-shell">
-          {/* Built on the FAQ the client already runs: the group heading sits to
-              one side as a two-line lockup — the group name in brand red over a
-              lighter "Related Questions" — with the questions themselves beside
-              it. No grouping rail; you land straight on the answers. */}
+          {/* The group name sits to one side with the questions beside it. The
+              heading used to be a two-line lockup, the name over a greyed
+              "Related Questions" — the same two words under all four groups,
+              set at display size. It said nothing four times, so the lockup is
+              one line now and the column carries a count instead.
+
+              The column is sticky: it held three lines against a group up to
+              700px tall, so most of a 300px column was empty on every group. */}
           <div className="grid gap-[clamp(52px,6vw,110px)]">
             {groups.map((cat, i) => (
               <Reveal key={cat.title} delay={i * 60}>
@@ -90,17 +94,16 @@ export default function FaqPage() {
                   id={cat.anchor}
                   className="db-faq-group grid items-start gap-[clamp(20px,3vw,64px)] lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]"
                 >
-                  <div>
-                    <h2 className="m-0 leading-[1.04]">
-                      <span className="font-display text-db-red block text-[clamp(28px,3vw,48px)] tracking-[.015em]">
-                        {cat.title}
-                      </span>
-                      <span className="font-display text-ink/55 block text-[clamp(26px,2.8vw,45px)] tracking-[.015em]">
-                        Related Questions
-                      </span>
+                  <div className="lg:sticky lg:top-[calc(var(--db-header-h)+40px)]">
+                    <h2 className="font-display text-ink m-0 text-[clamp(28px,3vw,48px)] leading-[1.04] tracking-[.015em]">
+                      {cat.title}
+                      <span className="text-db-red">.</span>
                     </h2>
-                    <p className="text-ink-2 mt-4 max-w-[38ch] text-[clamp(14.5px,0.92vw,16.5px)] leading-[1.6]">
+                    <p className="text-ink-2 mt-3.5 max-w-[38ch] text-[clamp(14.5px,0.92vw,16.5px)] leading-[1.6]">
                       {cat.blurb}
+                    </p>
+                    <p className="text-ink-3 font-ui mt-5 text-[12.5px] font-semibold tracking-[.14em] uppercase">
+                      {cat.items.length} question{cat.items.length === 1 ? "" : "s"}
                     </p>
                   </div>
 
