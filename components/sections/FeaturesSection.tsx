@@ -1,99 +1,56 @@
+import Image from "next/image";
 import Reveal from "@/components/animations/Reveal";
 import SmartLink from "@/components/ui/SmartLink";
-import { COMPARISON_GROUPS, COMPARISON_LEDE, type CompareMark } from "@/lib/data";
 
 /**
- * Adam's "DatabaseBuilder vs Other CRMs" chart, rebuilt as a real table.
+ * Adam's comparison chart, as his own artwork.
  *
- * It replaces the old one-column features checklist, which only ever said
- * "we have this" twenty-one times. The whole argument of the chart is the
- * second column: the same list, priced as add-ons everywhere else.
+ * This was rebuilt as an HTML table for a while — the argument being that a
+ * table can be read by a screen reader and quoted by a search engine, and an
+ * image cannot. Adam saw the rebuild and wanted his PNG back, including the
+ * headings I had added to caption each block. His chart, his call.
  *
- * It is a `<table>` rather than a grid of divs on purpose. The row headers and
- * column headers are what make it legible to a screen reader, and they are
- * also what lets a search engine or an answer engine quote a single row of it
- * — which, for a page whose entire job is the comparison, is the point.
- *
- * The five blocks are his, kept in his order and separated the way his artwork
- * separates them, with a heavy rule instead of a black bar.
+ * The one thing an image cannot do is carry its own text, so the alt text does
+ * it instead: the whole comparison, in reading order, for anyone on a screen
+ * reader and for anything crawling the page.
  */
+const ALT =
+  "DatabaseBuilder vs Other CRMs. Included with both: click to dial calling, " +
+  "customizable data fields and dashboard, sales pipeline management, call history " +
+  "and activity tracking, workflow management, built-in email, templates and account " +
+  "sync, data import module, scalable as needed, safe and secure platform, user " +
+  "permissions levels, calendar and lead management. " +
+  "Included with DatabaseBuilder but an add-on elsewhere: automatic call recording, " +
+  "auto voicemail library, built-in SMS text campaigns, local presence, integrated " +
+  "video conferencing, data export module, sales and admin training, team account and " +
+  "lead management, company data share, team performance tracking and monitoring, call " +
+  "monitoring, whisper coaching, live call transfer with popup notification, customer " +
+  "profile popup on transfer. " +
+  "Offered by DatabaseBuilder and not by other CRMs: all-in-one pricing, talking points, " +
+  "integrated Google and social media search, live customer support, no long-term " +
+  "contract, 30-day cancellation, not overly complicated, affordable pricing. " +
+  "Charged separately by both: custom API integration, dialer minutes and SMS messages, " +
+  "additional phone numbers, data cloud storage, additional user licenses.";
+
 export default function FeaturesSection() {
   return (
     <section id="features" className="db-section bg-page">
       <div className="db-shell">
-        <Reveal className="mx-auto mb-[clamp(22px,2.4vw,38px)] max-w-[760px] text-center">
-          <h2 className="font-display text-ink text-[clamp(25px,2.45vw,40px)] leading-[1.08] text-balance">
-            Database<span className="text-db-red">Builder</span>{" "}
-            {/* Black/Red only. --color-ink-3 is #6b7a90, a blue-grey, so the
-                line ran black, red, then blue — the exact cast the wordmark
-                rule just dropped. */}
-            <span className="text-ink">vs Other CRMs</span>
-          </h2>
-          <p className="text-ink-2 mt-3 text-[clamp(15px,0.9vw,17.5px)] leading-[1.55]">
-            {COMPARISON_LEDE}
-          </p>
-        </Reveal>
-
         <Reveal>
-          <div className="db-compare">
-            <table>
-              <caption className="sr-only">
-                Feature comparison between DatabaseBuilder and other CRM companies
-              </caption>
-              <colgroup>
-                <col />
-                <col className="db-compare__col" />
-                <col className="db-compare__col" />
-              </colgroup>
-              <thead>
-                <tr>
-                  <th scope="col" className="db-compare__head">
-                    Features
-                  </th>
-                  <th scope="col">
-                    {/* White/Red on a dark pill — the wordmark rule again. */}
-                    <span className="db-compare__pill db-compare__pill--db">
-                      Database<span className="text-db-red">Builder</span>
-                    </span>
-                  </th>
-                  <th scope="col">
-                    <span className="db-compare__pill db-compare__pill--other">Other CRMs</span>
-                  </th>
-                </tr>
-              </thead>
-
-              {COMPARISON_GROUPS.map((group, gi) => (
-                <tbody key={group.label} className={gi > 0 ? "db-compare__group" : undefined}>
-                  {/* The caption sits in the feature column only, so the band
-                      down the DatabaseBuilder column is never interrupted. */}
-                  <tr className="db-compare__caption">
-                    <th scope="colgroup">
-                      {group.label}
-                      {group.note && <span>{group.note}</span>}
-                    </th>
-                    <td aria-hidden="true" />
-                    <td aria-hidden="true" />
-                  </tr>
-                  {group.rows.map((row) => (
-                    <tr key={row.label}>
-                      <th scope="row" className={row.featured ? "db-compare__row is-featured" : "db-compare__row"}>
-                        {row.label}
-                      </th>
-                      <td>
-                        <Mark value={row.db} />
-                      </td>
-                      <td>
-                        <Mark value={row.other} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              ))}
-            </table>
-          </div>
+          <figure className="mx-auto m-0 max-w-[1020px]">
+            <Image
+              src="/comparison.webp"
+              alt={ALT}
+              width={1189}
+              height={1323}
+              sizes="(max-width: 1080px) 92vw, 1020px"
+              quality={92}
+              className="block h-auto w-full rounded-[14px]"
+            />
+          </figure>
         </Reveal>
 
-        <p className="text-ink-2 mt-5 text-center text-[13.5px] leading-relaxed">
+        <p className="text-ink-2 mt-6 text-center text-[13.5px] leading-relaxed">
           Everything marked included is in the subscription. Dialer minutes, SMS usage, additional
           phone numbers and custom programming are charged separately.{" "}
           <SmartLink href="/pricing#usage" className="text-brand font-semibold underline underline-offset-4">
@@ -103,38 +60,4 @@ export default function FeaturesSection() {
       </div>
     </section>
   );
-}
-
-/* The four states of a cell. Each carries its own text for assistive tech and
-   for anything reading the page without the styling — a bare tick is only a
-   tick to someone who can see the column it sits under. */
-function Mark({ value }: { value: CompareMark }) {
-  if (value === "yes") {
-    return (
-      <span className="db-mark db-mark--yes">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M5.5 12.5l4.4 4.4L18.6 7.8"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <span className="sr-only">Included</span>
-      </span>
-    );
-  }
-  if (value === "no") {
-    return (
-      <span className="db-mark db-mark--no">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M7.5 7.5l9 9M16.5 7.5l-9 9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-        </svg>
-        <span className="sr-only">Not available</span>
-      </span>
-    );
-  }
-  return <span className="db-mark__text">{value === "addon" ? "Add-On" : "Additional"}</span>;
 }
