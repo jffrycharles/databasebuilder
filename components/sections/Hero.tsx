@@ -5,7 +5,6 @@ import Globe from "@/components/ui/Globe";
 import CtaButton from "@/components/ui/CtaButton";
 import NeonCard from "@/components/ui/NeonCard";
 import { FloorRibbons, OrbitRings, WaveDivider } from "./HeroArt";
-import HeroAtmosphere from "@/components/ui/HeroAtmosphere";
 import { useAppReady } from "@/components/animations/AppShell";
 import { gsap, prefersReducedMotion, useIsoLayoutEffect } from "@/lib/gsap";
 import { HERO_CARDS, SITE } from "@/lib/data";
@@ -81,9 +80,6 @@ export default function Hero() {
 
   return (
     <section id="top" tabIndex={-1} ref={root} className="db-hero-bg relative overflow-hidden">
-      {/* The homepage had its own fixed gradients while every other opener got
-          the drifting field. Same backdrop everywhere now. */}
-      <HeroAtmosphere />
       <div className="relative z-[5] mx-auto grid w-full max-w-[1640px] grow items-center gap-[clamp(34px,4vw,52px)] px-5 pt-[34px] pb-[56px] sm:px-7 lg:grid-cols-[42%_58%] lg:gap-5 lg:px-10 lg:pb-[104px]">
         {/* ---- pitch ---- */}
         <div>

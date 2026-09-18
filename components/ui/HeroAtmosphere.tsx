@@ -15,16 +15,20 @@ import { gsap, prefersReducedMotion } from "@/lib/gsap";
    how far a layer travels as the page scrolls, which separates them.
 
    The component owns its own animation so any hero can simply drop it in. */
+/* Halved travel, no scale, and one tween per bloom instead of two.
+
+   The old recipe ran six infinite tweens — a wander and a separate opacity
+   breath on each of three blooms — and the wander animated `scale`, which
+   re-rasterises a 1000px gradient every frame rather than just moving it.
+   What is left is a slow drift on transform only: still alive, a third of the
+   work, and nothing on the page visibly pulses. */
 const BLOOMS = [
-  { sel: ".db-atmos__blob--a", x: 52, y: -38, s: 1.14, d: 19, lo: 0.52, p: 7.4 },
-  { sel: ".db-atmos__blob--b", x: -44, y: 34, s: 1.18, d: 24, lo: 0.42, p: 9.3 },
-  { sel: ".db-atmos__blob--c", x: 34, y: 46, s: 0.88, d: 28, lo: 0.46, p: 11.6 },
+  { sel: ".db-atmos__blob--a", x: 24, y: -18, d: 30 },
+  { sel: ".db-atmos__blob--b", x: -20, y: 16, d: 37 },
+  { sel: ".db-atmos__blob--c", x: 16, y: 20, d: 44 },
 ];
 
-/** `scrim` darkens one side for readability. It belongs under an asymmetric
-    opener where the copy sits left; under a centred headline it just makes the
-    left corner darker than the right for no reason. */
-export default function HeroAtmosphere({ scrim = true }: { scrim?: boolean }) {
+export default function HeroAtmosphere() {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,21 +38,20 @@ export default function HeroAtmosphere({ scrim = true }: { scrim?: boolean }) {
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        ".db-atmos__blob, .db-atmos__crown",
+        ".db-atmos__blob",
         { opacity: 0, scale: 0.82 },
         { opacity: 1, scale: 1, duration: 1.5, stagger: 0.12, ease: "power2.out" },
       );
       gsap.fromTo(
-        ".db-atmos__stars",
-        { opacity: 0 },
-        { opacity: 1, duration: 2.2, stagger: 0.3, ease: "power1.out" },
+        ".db-atmos__cols",
+        { opacity: 0, xPercent: -4 },
+        { opacity: 1, xPercent: 0, duration: 1.3, delay: 0.15, ease: "power2.out" },
       );
 
       BLOOMS.forEach((b, i) => {
         gsap.to(b.sel, {
           x: b.x,
           y: b.y,
-          scale: b.s,
           duration: b.d,
           // the entrance is still tweening scale until 1.5s — wait it out
           delay: 1.7 + i * 1.4,
@@ -56,19 +59,6 @@ export default function HeroAtmosphere({ scrim = true }: { scrim?: boolean }) {
           repeat: -1,
           yoyo: true,
         });
-        // the breath: a separate property, so it composes with the wander
-        gsap.fromTo(
-          b.sel,
-          { opacity: 1 },
-          {
-            opacity: b.lo,
-            duration: b.p,
-            delay: 1.6 + i * 0.8,
-            ease: "sine.inOut",
-            repeat: -1,
-            yoyo: true,
-          },
-        );
       });
 
       if (band) {
@@ -87,24 +77,16 @@ export default function HeroAtmosphere({ scrim = true }: { scrim?: boolean }) {
 
   return (
     <div ref={root} className="db-atmos" aria-hidden="true">
-      {/* Two star layers at different depths. They are the cheapest possible
-          way to say "this is deep space rather than a dark rectangle", and
-          they parallax apart as the band scrolls. */}
-      <span className="db-atmos__stars" data-depth="0.18" />
-      <span className="db-atmos__stars db-atmos__stars--near" data-depth="0.4" />
-
       <div className="db-atmos__layer" data-depth="0.45">
-        <span className="db-atmos__crown" />
         <span className="db-atmos__blob db-atmos__blob--a" />
         <span className="db-atmos__blob db-atmos__blob--b" />
         <span className="db-atmos__blob db-atmos__blob--c" />
       </div>
 
-      <span className="db-atmos__spill" />
-      <span className="db-atmos__vignette" />
+      <div className="db-atmos__cols" data-depth="0.85" />
 
       {/* keeps the reading side of the band dark; the only layer that never moves */}
-      {scrim && <span className="db-atmos__scrim" />}
+      <span className="db-atmos__scrim" />
     </div>
   );
 }
