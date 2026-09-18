@@ -4,26 +4,13 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { Icon } from "@/components/ui/Icon";
 import { LEADERS } from "@/lib/about";
 
-/* Four across on wide screens, two on tablets, one on phones, on the black
-   band the timeline hands over to.
-
-   White cards, rectangular portraits. Adam asked for both, and the reason is
-   sound: every headshot was shot on pale grey, so the previous dark card put a
-   grey rectangle inside a near-black one on a black band. Nothing separated
-   the three. A white card gives the photograph an edge to stop at, and the
-   section keeps the black he wanted.
-
-   The crops are normalised to his own photo — same head height, same eyeline
-   — so the four faces read as one row rather than four different zooms.
-
-   The grid is `items-start` so opening one biography grows only that card.
-   Stretching every cell to the tallest is what left three of the four with a
-   hole in the middle of them. */
+/* Light profiles follow the reference proportions with matching 4:5 portraits.
+   Align cards at the top so each biography can expand independently. */
 export default function Leadership() {
   return (
     <section
       id="leadership"
-      className="db-page-band db-section db-section--airy relative"
+      className="db-leadership db-section db-section--airy relative"
     >
       <div className="db-shell relative z-[2]">
         <SectionHeading
@@ -37,24 +24,21 @@ export default function Leadership() {
             </>
           }
           lede="Between them, decades on the phone and in the data."
-          className="mb-[clamp(40px,4.6vw,76px)]"
+          className="mb-[clamp(32px,3vw,48px)]"
         />
 
-        {/* Capped well inside the shell. At the full 1560 the four cards run to
-            ~340px each and a 4:5 portrait becomes a 425px-tall photograph —
-            Adam's note was "they do not have to large images". */}
-        <div className="mx-auto grid max-w-[960px] items-start gap-[clamp(14px,1.3vw,22px)] sm:grid-cols-2 xl:grid-cols-4">
+        <div className="db-team-grid">
           {LEADERS.map((p, i) => (
             <Reveal key={p.name} delay={i * 70}>
-              <article className="db-team-card h-full">
+              <article className="db-team-card">
                 <div className="db-team-card__photo">
                   {p.photo ? (
                     <Image
                       src={p.photo}
                       alt={`${p.name}, ${p.role}`}
                       fill
-                      sizes="(max-width: 640px) 92vw, (max-width: 1280px) 46vw, 23vw"
-                      className="object-cover object-[50%_30%]"
+                      sizes="(min-width: 1850px) 349px, (min-width: 1200px) calc(20vw - 21px), (min-width: 1024px) 219px, (min-width: 640px) 47vw, calc(100vw - 40px)"
+                      className="object-cover object-center"
                     />
                   ) : (
                     <span className="text-ink-3 font-display absolute inset-0 grid place-items-center text-[clamp(30px,3vw,44px)]">
@@ -67,13 +51,13 @@ export default function Leadership() {
                   <h3 className="font-body text-ink m-0 text-[clamp(17px,1.25vw,20px)] leading-tight font-bold tracking-[-.012em]">
                     {p.name}
                   </h3>
-                  <p className="text-ink-3 m-0 mt-1 text-[clamp(12.5px,0.84vw,14px)] leading-snug">
+                  <p className="db-team-card__role m-0 mt-1 text-[13px] leading-snug">
                     {p.role}
                   </p>
 
                   <span className="db-team-card__since mt-3 self-start">{p.since}</span>
 
-                  <p className="text-ink-2 mt-3 min-h-[4.4em] text-[clamp(12.5px,0.82vw,14px)] leading-[1.6]">
+                  <p className="text-ink-2 mt-3 min-h-[6.4em] text-[clamp(12.5px,0.82vw,14px)] leading-[1.6]">
                     {p.summary}
                   </p>
 

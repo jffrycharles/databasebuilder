@@ -13,6 +13,22 @@ const nextConfig: NextConfig = {
      with no server.js at its root — which fails on the server, not here. */
   outputFileTracingRoot: path.join(__dirname),
   reactStrictMode: true,
+  images: {
+    contentDispositionType: "inline",
+  },
+  async headers() {
+    return [
+      {
+        source: "/dashboard.webp",
+        headers: [
+          {
+            key: "Content-Disposition",
+            value: 'inline; filename="databasebuilder-dashboard.webp"',
+          },
+        ],
+      },
+    ];
+  },
   /* The round badge Next.js floats in the corner during `next dev`. It is the
      framework's own dev tooling, never part of a build, but it sits on top of
      every page while you are reviewing designs. */

@@ -651,7 +651,10 @@ html::-webkit-scrollbar-corner {
      which is the one thing a comparison must not do. */
   max-width: 1020px;
   margin-inline: auto;
-  overflow: hidden;
+  /* `clip`, not `hidden`. Both round the corners, but `hidden` makes this a
+     scroll container and a sticky header inside one sticks to a box that
+     never scrolls — i.e. not at all. */
+  overflow: clip;
   border: 1px solid var(--color-line);
   border-radius: 16px;
   background: #fff;
@@ -667,10 +670,21 @@ html::-webkit-scrollbar-corner {
 .db-compare__col {
   width: 26%;
 }
+/* The header follows you down. At 38 rows the pills are long gone by the
+   time you reach "Affordable Pricing", and a tick with no column heading
+   above it is just a tick. */
 .db-compare thead th {
+  position: sticky;
+  /* Flush to the viewport. The site header hides itself on the way down, so
+     offsetting by its height leaves a 66px slot where table rows slide past
+     ABOVE the pinned heading — which looks like a bug, not a header. */
+  top: 0;
+  z-index: 2;
   padding: clamp(7px, 0.7vw, 11px) clamp(6px, 0.6vw, 10px);
   vertical-align: middle;
   text-align: center;
+  background: #fff;
+  box-shadow: 0 1px 0 var(--color-line);
 }
 .db-compare__head {
   font-family: var(--font-display);
@@ -698,19 +712,48 @@ html::-webkit-scrollbar-corner {
 .db-compare__pill--db {
   background: linear-gradient(180deg, #16203a, #070b16);
 }
+/* A true neutral, not the blue-grey it was. Their column should read as
+   muted, not as a second brand colour. */
 .db-compare__pill--other {
-  background: linear-gradient(180deg, #74808f, #5b6675);
+  background: linear-gradient(180deg, #7c7f84, #5e6166);
 }
 
 /* a heavy rule where Adam's artwork puts a black bar */
 .db-compare__group {
   border-top: 2px solid var(--color-ink);
 }
+.db-compare__group tr:first-child th,
+.db-compare__group tr:first-child td {
+  padding-top: clamp(8px, 0.7vw, 12px);
+}
+.db-compare tbody:not(.db-compare__group) tr:last-child th,
+.db-compare tbody:not(.db-compare__group) tr:last-child td,
+.db-compare__group tr:last-child th,
+.db-compare__group tr:last-child td {
+  padding-bottom: clamp(8px, 0.7vw, 12px);
+}
 .db-compare tbody tr + tr {
   border-top: 1px solid #eef2f7;
 }
 .db-compare tbody tr:nth-child(even) {
   background: #f7f9fc;
+}
+@media (hover: hover) {
+  .db-compare tbody tr:hover {
+    background: #eaf0f8;
+  }
+}
+
+/* The DatabaseBuilder column, banded top to bottom. Cell backgrounds paint
+   over the row stripe, so the band stays continuous through the zebra. */
+.db-compare thead th:nth-child(2),
+.db-compare tbody td:nth-of-type(1) {
+  background: #eef4ff;
+}
+@media (hover: hover) {
+  .db-compare tbody tr:hover td:nth-of-type(1) {
+    background: #e2ecff;
+  }
 }
 .db-compare tbody td {
   padding: clamp(4px, 0.34vw, 6px) clamp(6px, 0.6vw, 10px);
@@ -773,7 +816,6 @@ html::-webkit-scrollbar-corner {
   height: auto;
   border-radius: 9px;
 }
-
 /* Black, not blue. The old recipe put a 700px blue radial at 14% across —
    exactly where the globe sits — so the whole left half of the band read as a
    blue pool. What is left is a neutral lift in the same place, just enough to
@@ -1086,6 +1128,10 @@ html::-webkit-scrollbar-corner {
     grid-template-columns: 0.78fr 1.22fr;
     gap: 56px;
     transition: grid-template-columns 0.62s var(--ease-db);
+  }
+  #why .db-showcase[data-expanded="false"] {
+    grid-template-columns: minmax(280px, 0.64fr) minmax(0, 1.36fr);
+    gap: clamp(24px, 3vw, 48px);
   }
   .db-showcase[data-expanded="true"] {
     grid-template-columns: 0fr 1fr;
@@ -1517,9 +1563,8 @@ html::-webkit-scrollbar-corner {
   position: relative;
   grid-column: 2;
   border-radius: 16px;
-  border: 1px solid #ffffff14;
-  /* navy, not black — it should read as the brand's dark, not a hole */
-  background: linear-gradient(168deg, #1f2b4c 0%, #182341 55%, #131d36 100%);
+  border: 1px solid var(--color-line);
+  background: #fff;
   padding: clamp(20px, 2.2vw, 34px);
   box-shadow:
     0 2px 6px #0d152621,
@@ -1532,7 +1577,7 @@ html::-webkit-scrollbar-corner {
 @media (hover: hover) {
   .db-tl__card:hover {
     transform: translateY(-3px);
-    border-color: #ffffff2e;
+    border-color: #c2cddd;
     box-shadow:
       0 4px 10px #0d152629,
       0 26px 56px #0d152640;
@@ -1579,11 +1624,11 @@ html::-webkit-scrollbar-corner {
   }
   .db-tl__item:nth-child(odd) .db-tl__card::after {
     left: 100%;
-    background: linear-gradient(90deg, #ffffff0f, #ffffff47);
+    background: linear-gradient(90deg, #c2cddd40, #c2cddd);
   }
   .db-tl__item:nth-child(even) .db-tl__card::after {
     right: 100%;
-    background: linear-gradient(270deg, #ffffff0f, #ffffff47);
+    background: linear-gradient(270deg, #c2cddd40, #c2cddd);
   }
 }
 
@@ -1920,51 +1965,51 @@ html::-webkit-scrollbar-corner {
   background: #05070dd9;
 }
 
-/* ---------------------------------------------------------------------------
-   Leadership — a dark band, dark cards, circular portraits.
-
-   The circle is the point, not decoration. These four photographs were shot on
-   four different pale backdrops; cropped square onto a dark card each one
-   became a bright rectangle with a hard seam along its edge. A circle has no
-   edge to catch, so the pale backdrop reads as a soft disc and the four sit
-   together as a set.
-   --------------------------------------------------------------------------- */
-/* Adam's note: "don't like the black on black", and "I like this layout
-   better with the light photo background so you can use black as a
-   background."
-
-   He is right about the cause. All four portraits are shot on pale grey, so a
-   dark card put a grey rectangle inside a dark rectangle on a black band —
-   three near-blacks and a grey, with nothing to separate them. The card is
-   white now. The band stays black, the photograph has something to sit on,
-   and the greyscale treatment goes: the reference he sent is in colour, and
-   the pale backdrops were the only reason to desaturate in the first place. */
+/* Leadership — light rectangular profiles on black. */
+.db-leadership {
+  background: var(--color-db-black);
+}
+.db-team-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+  width: 100%;
+}
+@media (min-width: 640px) {
+  .db-team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .db-team-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    /* The reference row occupies about 80% of its 1448px image: four
+       269px portraits separated by 28px gaps. Scale that proportion with
+       the screen, keeping the row usable on smaller desktop widths. */
+    max-width: clamp(960px, 80vw, 1480px);
+    margin-inline: auto;
+    column-gap: 28px;
+  }
+}
 .db-team-card {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid #ffffff14;
-  border-radius: 14px;
   background: #fff;
-  transition:
-    transform 0.38s var(--ease-db),
-    box-shadow 0.38s ease;
-}
-@media (hover: hover) {
-  .db-team-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 24px 54px #00000080;
-  }
 }
 
-/* Rectangular, and the same 4:5 on every card. The source files are cropped
-   to Adam's framing — same head height, same eyeline — so the four faces line
-   up across the row instead of each sitting at its own scale. */
+/* All source portraits share Adam's 4:5 format and a light backdrop. Matching
+   that ratio preserves their headroom without an additional crop or zoom. */
 .db-team-card__photo {
   position: relative;
   aspect-ratio: 4 / 5;
   overflow: hidden;
   background: #d7dbe2;
+}
+.db-team-card__role {
+  min-height: 2.75em;
+  color: var(--color-ink-2);
 }
 
 /* how long they have been here */
@@ -1975,7 +2020,7 @@ html::-webkit-scrollbar-corner {
   border: 1px solid var(--color-line);
   border-radius: 999px;
   background: #f1f4f8;
-  color: var(--color-ink-3);
+  color: var(--color-ink-2);
   font-family: var(--font-ui);
   font-size: 10.5px;
   font-weight: 600;

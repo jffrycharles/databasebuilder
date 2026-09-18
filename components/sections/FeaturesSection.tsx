@@ -24,7 +24,10 @@ export default function FeaturesSection() {
         <Reveal className="mx-auto mb-[clamp(22px,2.4vw,38px)] max-w-[760px] text-center">
           <h2 className="font-display text-ink text-[clamp(25px,2.45vw,40px)] leading-[1.08] text-balance">
             Database<span className="text-db-red">Builder</span>{" "}
-            <span className="text-ink-3">vs Other CRMs</span>
+            {/* Black/Red only. --color-ink-3 is #6b7a90, a blue-grey, so the
+                line ran black, red, then blue — the exact cast the wordmark
+                rule just dropped. */}
+            <span className="text-ink">vs Other CRMs</span>
           </h2>
           <p className="text-ink-2 mt-3 text-[clamp(15px,0.9vw,17.5px)] leading-[1.55]">
             {COMPARISON_LEDE}

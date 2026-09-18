@@ -94,19 +94,19 @@ export default function Timeline() {
 
                 <article className="db-tl__card">
                   <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-                    <span className="font-display text-[clamp(24px,2.1vw,36px)] leading-none tracking-[.01em] text-white">
+                    <span className="font-display text-[clamp(24px,2.1vw,36px)] leading-none tracking-[.01em] text-ink">
                       {m.year}
                     </span>
-                    <span className="db-chip bg-white/10 text-db-red">
+                    <span className="db-chip bg-db-red/10 text-[#b42318]">
                       <i />
                       {m.tag}
                     </span>
                   </div>
 
-                  <h3 className="font-body m-0 text-[clamp(18px,1.45vw,25px)] leading-[1.22] font-bold tracking-[-.018em] text-white">
+                  <h3 className="font-body m-0 text-[clamp(18px,1.45vw,25px)] leading-[1.22] font-bold tracking-[-.018em] text-ink">
                     {m.title}
                   </h3>
-                  <p className="mt-3.5 max-w-[52ch] text-[clamp(14.5px,0.93vw,16.5px)] leading-[1.68] text-white/65">
+                  <p className="mt-3.5 max-w-[52ch] text-[clamp(14.5px,0.93vw,16.5px)] leading-[1.68] text-ink-2">
                     {m.body}
                   </p>
                 </article>
