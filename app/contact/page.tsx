@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import ContactHero from "@/components/sections/contact/ContactHero";
 import ContactForm from "@/components/sections/contact/ContactForm";
+import NextSteps from "@/components/sections/contact/NextSteps";
 import MapSection from "@/components/sections/contact/MapSection";
 import CtaBand from "@/components/sections/CtaBand";
 
@@ -23,6 +24,8 @@ export default function ContactPage() {
     <main>
       <ContactHero />
       <ContactForm />
+      {/* between the two light sections, so the page alternates again */}
+      <NextSteps />
       <MapSection />
       <CtaBand id="trial" showTrialLength />
     </main>

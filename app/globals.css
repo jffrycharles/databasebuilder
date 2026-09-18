@@ -646,6 +646,40 @@ html::-webkit-scrollbar-corner {
     0 22px 54px #1d6fe838;
 }
 
+/* Numbered steps on a dark band. The numeral is an outline rather than a
+   fill: four solid 44px numbers in brand red compete with the headline above
+   them, and the step title is the thing to read. */
+.db-step {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 2vw, 30px);
+  border: 1px solid #ffffff14;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff0a 0%, #ffffff03 100%);
+  transition:
+    border-color 0.38s ease,
+    transform 0.38s var(--ease-db);
+}
+@media (hover: hover) {
+  .db-step:hover {
+    transform: translateY(-4px);
+    border-color: #ffffff2b;
+  }
+}
+.db-step__n {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3vw, 46px);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: #0000;
+  -webkit-text-stroke: 1.5px var(--color-db-red);
+}
+@supports not (-webkit-text-stroke: 1px red) {
+  .db-step__n {
+    color: var(--color-db-red);
+  }
+}
+
 /* Jump chips in a dark page opener. The count is the point: it tells you how
    much is behind each one before you commit to scrolling. */
 .db-jump {

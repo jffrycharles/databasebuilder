@@ -50,3 +50,36 @@ export const SUBJECTS = [
   "A suggestion for the product",
   "Something else",
 ] as const;
+
+/* What happens after someone writes in.
+
+   Every line here is already promised somewhere else on the site — the form
+   says "usually answered within one business day", the email channel says
+   "a person reads it — not a chatbot", and the FAQ says the support team
+   imports your data at no additional cost. Nothing new is claimed; it is the
+   same commitments, put in order, because the thing a contact page has to
+   beat is the fear that a message disappears. */
+export type ContactStep = { n: string; title: string; body: string };
+
+export const CONTACT_STEPS: ContactStep[] = [
+  {
+    n: "01",
+    title: "You send it",
+    body: "The form or a plain email — both land in the same inbox in Chicago.",
+  },
+  {
+    n: "02",
+    title: "A person reads it",
+    body: "Not a chatbot and not a ticket queue. Someone who knows the product.",
+  },
+  {
+    n: "03",
+    title: "You hear back",
+    body: "Usually within one business day, with an actual answer rather than a holding note.",
+  },
+  {
+    n: "04",
+    title: "We set you up",
+    body: "If you want the trial, we import your existing data for you at no extra cost.",
+  },
+];

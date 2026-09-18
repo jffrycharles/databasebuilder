@@ -193,7 +193,7 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="bg-page db-section db-section--airy">
+    <section id="contact-form" className="bg-page db-section db-section--airy">
       <div className="db-shell">
         <div className="grid items-start gap-[clamp(28px,3.4vw,64px)] lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.5fr)]">
           {/* ---- how to reach us, on the left ---- */}
