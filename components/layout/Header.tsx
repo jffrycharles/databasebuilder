@@ -10,6 +10,8 @@ import { NAV_LINKS, SITE } from "@/lib/data";
 export default function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  /* which parent item has its submenu expanded in the mobile menu */
+  const [expanded, setExpanded] = useState<string | null>(null);
   const ref = useRef<HTMLElement>(null);
 
   /* The chrome is fixed and transparent over the top of the page, so the
@@ -183,41 +185,72 @@ export default function Header() {
 
       <nav id="db-mobile-nav" className="db-mobile-nav" aria-hidden={!open}>
         <div className="mx-auto flex w-full max-w-[1640px] flex-col gap-1 px-4 pt-3 pb-5 sm:px-10">
-          {NAV_LINKS.map((l) => (
-            <div key={l.label}>
-              <SmartLink
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="font-ui flex items-center gap-2 py-2 text-[19px] tracking-[.055em] text-white uppercase"
-              >
-                {l.label}
-                {/* the same chevron the desktop nav uses, so a parent item
-                    looks like a parent item on a phone too */}
-                {l.children && (
-                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-white/55" aria-hidden="true">
-                    <path
-                      d="M6 9.5l6 6 6-6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+          {NAV_LINKS.map((l) => {
+            const isOpen = expanded === l.label;
+            return (
+              <div key={l.label}>
+                {l.children ? (
+                  /* A parent is a toggle, not a link. Its first child already
+                     points at the same page, so nothing is lost by spending
+                     the tap on opening the submenu — and a row that shows a
+                     chevron has to do something when you press it. */
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    aria-controls={`db-sub-${l.label.replace(/\W+/g, "")}`}
+                    onClick={() => setExpanded(isOpen ? null : l.label)}
+                    className="db-subnav__toggle font-ui flex w-full cursor-pointer items-center gap-2 py-2 text-left text-[19px] tracking-[.055em] text-white uppercase"
+                  >
+                    {l.label}
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="db-subnav__chev h-3.5 w-3.5 text-white/55"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M6 9.5l6 6 6-6"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                ) : (
+                  <SmartLink
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    className="font-ui block py-2 text-[19px] tracking-[.055em] text-white uppercase"
+                  >
+                    {l.label}
+                  </SmartLink>
                 )}
-              </SmartLink>
-              {l.children?.map((c) => (
-                <SmartLink
-                  key={c.label}
-                  href={c.href}
-                  onClick={() => setOpen(false)}
-                  className="font-ui block py-1.5 pl-5 text-[16px] tracking-[.055em] text-white/65 uppercase"
-                >
-                  {c.label}
-                </SmartLink>
-              ))}
-            </div>
-          ))}
+
+                {l.children && (
+                  <div
+                    id={`db-sub-${l.label.replace(/\W+/g, "")}`}
+                    className="db-subnav"
+                    data-open={isOpen ? "true" : "false"}
+                  >
+                    <div>
+                      {l.children.map((c) => (
+                        <SmartLink
+                          key={c.label}
+                          href={c.href}
+                          onClick={() => setOpen(false)}
+                          tabIndex={isOpen ? 0 : -1}
+                          className="font-ui block py-1.5 pl-5 text-[16px] tracking-[.055em] text-white/65 uppercase"
+                        >
+                          {c.label}
+                        </SmartLink>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
           <a
             href={SITE.login}
             className="font-ui py-2 text-[19px] tracking-[.055em] text-white uppercase sm:hidden"

@@ -484,6 +484,42 @@ html::-webkit-scrollbar-corner {
     opacity 0.24s ease,
     transform 0.28s var(--ease-db);
 }
+/* The chevron turns over when its submenu opens. Keyed off aria-expanded
+   rather than a conditional utility class, so the state that drives the
+   rotation is the same one screen readers are told about. */
+.db-subnav__chev {
+  transition: transform 0.28s var(--ease-db);
+}
+.db-subnav__toggle[aria-expanded="true"] .db-subnav__chev {
+  transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .db-subnav__chev {
+    transition: none;
+  }
+}
+
+/* The mobile submenu. Collapsed by default; the parent row toggles it.
+   grid-template-rows 0fr -> 1fr animates to the content's own height without
+   anyone having to measure it. */
+.db-subnav {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s var(--ease-db);
+}
+.db-subnav > div {
+  min-height: 0;
+  overflow: hidden;
+}
+.db-subnav[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+@media (prefers-reduced-motion: reduce) {
+  .db-subnav {
+    transition: none;
+  }
+}
+
 /* the page must not scroll behind an open full-screen menu */
 [data-nav-open="true"] {
   touch-action: none;
