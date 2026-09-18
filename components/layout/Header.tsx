@@ -188,9 +188,23 @@ export default function Header() {
               <SmartLink
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="font-ui block py-2 text-[19px] tracking-[.055em] text-white uppercase"
+                className="font-ui flex items-center gap-2 py-2 text-[19px] tracking-[.055em] text-white uppercase"
               >
                 {l.label}
+                {/* the same chevron the desktop nav uses, so a parent item
+                    looks like a parent item on a phone too */}
+                {l.children && (
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-white/55" aria-hidden="true">
+                    <path
+                      d="M6 9.5l6 6 6-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
               </SmartLink>
               {l.children?.map((c) => (
                 <SmartLink

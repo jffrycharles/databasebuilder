@@ -781,55 +781,6 @@ html::-webkit-scrollbar-corner {
   }
 }
 
-/* Jump chips in a dark page opener. The count is the point: it tells you how
-   much is behind each one before you commit to scrolling. */
-.db-jump {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 9px 9px 9px 15px;
-  border: 1px solid #ffffff1f;
-  border-radius: 999px;
-  background: #ffffff0d;
-  color: #fff;
-  font-family: var(--font-ui);
-  font-size: clamp(13px, 0.95vw, 15.5px);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  transition:
-    background 0.24s ease,
-    border-color 0.24s ease,
-    transform 0.24s var(--ease-db);
-}
-.db-jump span {
-  display: grid;
-  place-items: center;
-  min-width: 22px;
-  height: 22px;
-  padding-inline: 6px;
-  border-radius: 999px;
-  background: #ffffff14;
-  color: #ffffffa6;
-  font-size: 12px;
-  font-weight: 600;
-}
-@media (hover: hover) {
-  .db-jump:hover {
-    transform: translateY(-2px);
-    border-color: #0000;
-    background: var(--color-db-red);
-  }
-  .db-jump:hover span {
-    background: #00000033;
-    color: #fff;
-  }
-}
-.db-jump:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: 3px;
-}
-
 /* The framed product screenshot. A plain border let the capture's own white
    chrome run straight into the page, so the frame is a white mat with the
    hairline on the outside of it — the screenshot reads as a printed screen
