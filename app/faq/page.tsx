@@ -4,6 +4,7 @@ import PageHero from "@/components/ui/PageHero";
 import Reveal from "@/components/animations/Reveal";
 import Accordion from "@/components/ui/Accordion";
 import FaqDeepLink from "@/components/ui/FaqDeepLink";
+import FaqFallback from "@/components/sections/FaqFallback";
 import CtaBand from "@/components/sections/CtaBand";
 import { FAQ_ITEMS, FAQ_CATEGORIES } from "@/lib/faq";
 import { SITE } from "@/lib/data";
@@ -132,6 +133,7 @@ export default function FaqPage() {
         </div>
       </section>
 
+      <FaqFallback />
       <CtaBand id="trial" showTrialLength />
     </main>
   );
