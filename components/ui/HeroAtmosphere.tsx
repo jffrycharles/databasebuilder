@@ -21,7 +21,10 @@ const BLOOMS = [
   { sel: ".db-atmos__blob--c", x: 34, y: 46, s: 0.88, d: 28, lo: 0.46, p: 11.6 },
 ];
 
-export default function HeroAtmosphere() {
+/** `scrim` darkens one side for readability. It belongs under an asymmetric
+    opener where the copy sits left; under a centred headline it just makes the
+    left corner darker than the right for no reason. */
+export default function HeroAtmosphere({ scrim = true }: { scrim?: boolean }) {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,14 +34,14 @@ export default function HeroAtmosphere() {
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        ".db-atmos__blob",
+        ".db-atmos__blob, .db-atmos__crown",
         { opacity: 0, scale: 0.82 },
         { opacity: 1, scale: 1, duration: 1.5, stagger: 0.12, ease: "power2.out" },
       );
       gsap.fromTo(
-        ".db-atmos__cols",
-        { opacity: 0, xPercent: -4 },
-        { opacity: 1, xPercent: 0, duration: 1.3, delay: 0.15, ease: "power2.out" },
+        ".db-atmos__stars",
+        { opacity: 0 },
+        { opacity: 1, duration: 2.2, stagger: 0.3, ease: "power1.out" },
       );
 
       BLOOMS.forEach((b, i) => {
@@ -84,16 +87,24 @@ export default function HeroAtmosphere() {
 
   return (
     <div ref={root} className="db-atmos" aria-hidden="true">
+      {/* Two star layers at different depths. They are the cheapest possible
+          way to say "this is deep space rather than a dark rectangle", and
+          they parallax apart as the band scrolls. */}
+      <span className="db-atmos__stars" data-depth="0.18" />
+      <span className="db-atmos__stars db-atmos__stars--near" data-depth="0.4" />
+
       <div className="db-atmos__layer" data-depth="0.45">
+        <span className="db-atmos__crown" />
         <span className="db-atmos__blob db-atmos__blob--a" />
         <span className="db-atmos__blob db-atmos__blob--b" />
         <span className="db-atmos__blob db-atmos__blob--c" />
       </div>
 
-      <div className="db-atmos__cols" data-depth="0.85" />
+      <span className="db-atmos__spill" />
+      <span className="db-atmos__vignette" />
 
       {/* keeps the reading side of the band dark; the only layer that never moves */}
-      <span className="db-atmos__scrim" />
+      {scrim && <span className="db-atmos__scrim" />}
     </div>
   );
 }

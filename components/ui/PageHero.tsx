@@ -30,7 +30,7 @@ type Props = {
 export default function PageHero({ label, title, lede, aside, wave = true }: Props) {
   return (
     <section id="top" tabIndex={-1} className="db-page-band db-page-band--full db-under-header flex flex-col">
-      <HeroAtmosphere />
+      <HeroAtmosphere scrim={!!aside} />
       <div
         className={`db-shell relative z-[2] grid flex-1 content-center items-center gap-[clamp(28px,3.4vw,56px)] pt-[clamp(40px,5vw,72px)] pb-[clamp(56px,6vw,96px)] ${
           aside ? "lg:grid-cols-[1.12fr_0.88fr]" : "justify-items-center text-center"

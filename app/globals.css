@@ -163,9 +163,8 @@ html::-webkit-scrollbar-corner {
   padding-top: var(--db-header-h);
   background-color: var(--color-db-black);
   background-image:
-    radial-gradient(52% 90% at 100% 58%, #e2332442, #0000 70%),
-    radial-gradient(46% 82% at 74% 46%, #1226f04d, #0000 72%),
-    radial-gradient(62% 44% at 60% 100%, #182cdc4d, #0000 70%),
+    radial-gradient(52% 90% at 100% 58%, #e2332430, #0000 70%),
+    radial-gradient(48% 80% at 72% 44%, #9db8ff1a, #0000 72%),
     linear-gradient(#02030c 0%, #010409 58%, #000 100%);
 }
 .db-hero-bg::before {
@@ -174,11 +173,11 @@ html::-webkit-scrollbar-corner {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(90deg, #0000 0 39%, #2e52ff33 39.4% 40.2%, #0000 40.6%),
-    linear-gradient(90deg, #0000 0 41%, #2e52ff1f 41.3% 41.9%, #0000 42.3%),
-    linear-gradient(90deg, #0000 0 88%, #e2332433 88.4% 89.4%, #0000 89.8%),
-    linear-gradient(90deg, #0000 0 93%, #e2332421 93.3% 94.1%, #0000 94.5%),
-    linear-gradient(90deg, #0000 0 97%, #e233241a 97.2% 98%, #0000 98.4%);
+    linear-gradient(90deg, #0000 0 39%, #ffffff12 39.4% 40.2%, #0000 40.6%),
+    linear-gradient(90deg, #0000 0 41%, #ffffff0b 41.3% 41.9%, #0000 42.3%),
+    linear-gradient(90deg, #0000 0 88%, #e233241c 88.4% 89.4%, #0000 89.8%),
+    linear-gradient(90deg, #0000 0 93%, #e2332412 93.3% 94.1%, #0000 94.5%),
+    linear-gradient(90deg, #0000 0 97%, #e233240d 97.2% 98%, #0000 98.4%);
   -webkit-mask-image: linear-gradient(#000 0 72%, #0000 96%);
   mask-image: linear-gradient(#000 0 72%, #0000 96%);
 }
@@ -1422,7 +1421,7 @@ html::-webkit-scrollbar-corner {
   background-color: var(--color-db-black);
   background-image:
     radial-gradient(48% 92% at 92% 2%, #e2332426, #0000 62%),
-    radial-gradient(40% 70% at 58% 52%, #1226f024, #0000 68%),
+    radial-gradient(40% 70% at 58% 52%, #9db8ff16, #0000 68%),
     linear-gradient(#04060e 0%, #010409 62%, #000 100%);
 }
 
@@ -1929,60 +1928,42 @@ html::-webkit-scrollbar-corner {
    edge to catch, so the pale backdrop reads as a soft disc and the four sit
    together as a set.
    --------------------------------------------------------------------------- */
+/* Adam's note: "don't like the black on black", and "I like this layout
+   better with the light photo background so you can use black as a
+   background."
+
+   He is right about the cause. All four portraits are shot on pale grey, so a
+   dark card put a grey rectangle inside a dark rectangle on a black band —
+   three near-blacks and a grey, with nothing to separate them. The card is
+   white now. The band stays black, the photograph has something to sit on,
+   and the greyscale treatment goes: the reference he sent is in colour, and
+   the pale backdrops were the only reason to desaturate in the first place. */
 .db-team-card {
-  position: relative;
-  border: 1px solid #ffffff12;
-  border-radius: 20px;
-  background: linear-gradient(180deg, #ffffff0a 0%, #ffffff03 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #ffffff14;
+  border-radius: 14px;
+  background: #fff;
   transition:
     transform 0.38s var(--ease-db),
-    border-color 0.38s ease,
     box-shadow 0.38s ease;
 }
 @media (hover: hover) {
   .db-team-card:hover {
     transform: translateY(-5px);
-    border-color: #ffffff2b;
-    box-shadow: 0 22px 52px #00000066;
+    box-shadow: 0 24px 54px #00000080;
   }
 }
 
-.db-team-card__avatar {
+/* Rectangular, and the same 4:5 on every card. The source files are cropped
+   to Adam's framing — same head height, same eyeline — so the four faces line
+   up across the row instead of each sitting at its own scale. */
+.db-team-card__photo {
   position: relative;
-  width: clamp(104px, 9.6vw, 136px);
-  aspect-ratio: 1 / 1;
-  margin-inline: auto;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
-  border: 3px solid #ffffff14;
-  border-radius: 999px;
-  background: linear-gradient(160deg, #16264f 0%, #0b1330 55%, #060b1b 100%);
-  transition: border-color 0.38s ease;
-}
-.db-team-card:hover .db-team-card__avatar {
-  border-color: #ffffff2e;
-}
-/* Black and white, colour on hover — the treatment the current
-   databasebuilder.com uses. It also evens out four portraits shot on four
-   different backdrops, which is why they read as a set at rest. */
-.db-team-card__avatar img {
-  /* All four were shot on a pale grey backdrop, so at full brightness each one
-     reads as a white disc glowing off a near-black card. Knocking the
-     brightness back sits the circle INTO the card; hover restores it fully. */
-  filter: grayscale(1) brightness(0.62) contrast(1.18);
-  transition: filter 0.45s ease;
-}
-@media (hover: hover) {
-  .db-team-card:hover .db-team-card__avatar img,
-  .db-team-card:focus-within .db-team-card__avatar img {
-    filter: grayscale(0) brightness(1) saturate(1.02) contrast(1.02);
-  }
-}
-/* a touch device has no hover — show them in colour rather than leave every
-   portrait permanently grey */
-@media (hover: none) {
-  .db-team-card__avatar img {
-    filter: none;
-  }
+  background: #d7dbe2;
 }
 
 /* how long they have been here */
@@ -1990,42 +1971,45 @@ html::-webkit-scrollbar-corner {
   display: inline-flex;
   align-items: center;
   padding: 4px 10px 3px;
-  border: 1px solid #ffffff1c;
+  border: 1px solid var(--color-line);
   border-radius: 999px;
-  background: #ffffff0a;
-  color: #ffffff8f;
+  background: #f1f4f8;
+  color: var(--color-ink-3);
   font-family: var(--font-ui);
   font-size: 10.5px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-/* the round contact buttons that close each card */
+/* the contact button that closes each card — email only, per the client */
 .db-team-btn {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #ffffff1a;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border: 1px solid var(--color-line);
   border-radius: 999px;
-  background: #ffffff0d;
-  color: #fff;
+  background: #fff;
+  color: var(--color-ink-2);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
   transition:
     background 0.26s ease,
     border-color 0.26s ease,
-    transform 0.26s var(--ease-db);
+    color 0.26s ease;
 }
 @media (hover: hover) {
   .db-team-btn:hover {
-    transform: translateY(-2px);
     border-color: #0000;
     background: var(--color-db-red);
+    color: #fff;
   }
 }
 .db-team-btn:focus-visible {
-  outline: 3px solid #fff;
+  outline: 3px solid var(--color-brand);
   outline-offset: 3px;
 }
 
@@ -2066,31 +2050,172 @@ html::-webkit-scrollbar-corner {
   border-radius: 50%;
   will-change: transform, opacity;
 }
+/* Light, not colour. The old recipe led with two saturated blues, which is
+   the exact thing the wordmark just dropped — so the field is white now, with
+   red as the single accent. */
 .db-atmos__blob--a {
   left: 52%;
-  top: -20%;
-  width: min(78vw, 1040px);
-  background: radial-gradient(circle, #1226f042 0%, #1226f019 32%, #1226f000 64%);
+  top: -22%;
+  width: min(80vw, 1120px);
+  background: radial-gradient(circle, #b9d2ff30 0%, #8fb0ff14 32%, #8fb0ff00 64%);
 }
 .db-atmos__blob--b {
-  left: -20%;
-  top: 32%;
-  width: min(70vw, 880px);
-  background: radial-gradient(circle, #e2332438 0%, #e2332414 34%, #e2332400 64%);
+  left: -22%;
+  top: 34%;
+  width: min(72vw, 900px);
+  background: radial-gradient(circle, #e2332433 0%, #e2332412 34%, #e2332400 64%);
 }
 .db-atmos__blob--c {
-  left: 22%;
-  top: 50%;
-  width: min(62vw, 780px);
-  background: radial-gradient(circle, #5b3ce02b 0%, #5b3ce010 36%, #5b3ce000 66%);
+  left: 20%;
+  top: 52%;
+  width: min(64vw, 800px);
+  background: radial-gradient(circle, #ffffff1c 0%, #dce8ff0c 36%, #dce8ff00 66%);
+}
+
+/* The crown: one wide, very soft bloom sitting behind and above the headline.
+   It is the whole reason the reference reads as lit from within rather than
+   as a dark page with text on it. Kept faint — white type sits on top of it,
+   and anything stronger costs more contrast than the glow is worth. */
+.db-atmos__crown {
+  position: absolute;
+  left: 50%;
+  top: -24%;
+  width: min(168vw, 2150px);
+  aspect-ratio: 1 / 0.6;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  /* Wide and shallow. A tighter ellipse reads as a blob sitting behind the
+     type; this reads as the band being lit from above, which is the thing
+     worth copying. */
+  background: radial-gradient(
+    ellipse at 50% 48%,
+    #eaf2ff3d 0%,
+    #cadcff24 15%,
+    #a5c0fa16 29%,
+    #7c9ae40d 45%,
+    #0000 68%
+  );
+}
+
+/* Light spilling in from both edges, the way it does in the reference. */
+.db-atmos__spill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background-image:
+    radial-gradient(58% 46% at -6% 54%, #9db8ff1f, #0000 70%),
+    radial-gradient(54% 44% at 106% 44%, #c3d5ff1a, #0000 70%);
+}
+
+/* Corners pulled down, so the bloom has somewhere to fall off to. */
+.db-atmos__vignette {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: radial-gradient(118% 92% at 50% 42%, #0000 42%, #00000059 78%, #000000a6 100%);
+}
+
+.db-atmos__stars {
+  position: absolute;
+  inset: -6%;
+  display: block;
+  background-image:
+    radial-gradient(1.01px 1.01px at 37.88% 59.25%, #ffffff52, #0000 100%),
+    radial-gradient(1.13px 1.13px at 50.83% 92.08%, #ffffff5f, #0000 100%),
+    radial-gradient(0.83px 0.83px at 59.42% 5.03%, #ffffff3b, #0000 100%),
+    radial-gradient(1.08px 1.08px at 69.73% 24.98%, #ffffff5a, #0000 100%),
+    radial-gradient(0.85px 0.85px at 1.12% 85.05%, #ffffff3f, #0000 100%),
+    radial-gradient(1.43px 1.43px at 95.19% 1.56%, #ffffff83, #0000 100%),
+    radial-gradient(0.95px 0.95px at 10.98% 99.31%, #ffffff49, #0000 100%),
+    radial-gradient(1.06px 1.06px at 92.65% 67.26%, #ffffff57, #0000 100%),
+    radial-gradient(0.85px 0.85px at 87.40% 10.21%, #ffffff3e, #0000 100%),
+    radial-gradient(0.85px 0.85px at 73.95% 76.96%, #ffffff3d, #0000 100%),
+    radial-gradient(1.28px 1.28px at 85.42% 38.23%, #ffffff71, #0000 100%),
+    radial-gradient(0.98px 0.98px at 66.45% 93.86%, #ffffff4e, #0000 100%),
+    radial-gradient(0.99px 0.99px at 45.20% 71.37%, #ffffff4f, #0000 100%),
+    radial-gradient(0.97px 0.97px at 47.43% 92.20%, #ffffff4c, #0000 100%),
+    radial-gradient(1.38px 1.38px at 62.10% 65.15%, #ffffff7d, #0000 100%),
+    radial-gradient(1.1px 1.1px at 42.49% 83.98%, #ffffff5c, #0000 100%),
+    radial-gradient(0.89px 0.89px at 11.48% 31.73%, #ffffff43, #0000 100%),
+    radial-gradient(1.0px 1.0px at 94.99% 26.64%, #ffffff50, #0000 100%),
+    radial-gradient(0.9px 0.9px at 68.38% 56.87%, #ffffff44, #0000 100%),
+    radial-gradient(0.85px 0.85px at 59.97% 92.98%, #ffffff3e, #0000 100%),
+    radial-gradient(1.05px 1.05px at 47.20% 4.73%, #ffffff56, #0000 100%),
+    radial-gradient(1.0px 1.0px at 17.43% 52.28%, #ffffff50, #0000 100%),
+    radial-gradient(0.83px 0.83px at 30.82% 16.11%, #ffffff3b, #0000 100%),
+    radial-gradient(1.05px 1.05px at 4.97% 37.98%, #ffffff56, #0000 100%),
+    radial-gradient(0.86px 0.86px at 1.96% 89.41%, #ffffff40, #0000 100%),
+    radial-gradient(1.15px 1.15px at 2.11% 44.32%, #ffffff62, #0000 100%),
+    radial-gradient(1.49px 1.49px at 50.54% 93.43%, #ffffff8b, #0000 100%),
+    radial-gradient(0.86px 0.86px at 57.97% 10.98%, #ffffff40, #0000 100%),
+    radial-gradient(1.13px 1.13px at 0.56% 80.81%, #ffffff60, #0000 100%),
+    radial-gradient(1.33px 1.33px at 32.71% 33.00%, #ffffff78, #0000 100%),
+    radial-gradient(1.15px 1.15px at 12.18% 82.11%, #ffffff62, #0000 100%),
+    radial-gradient(1.05px 1.05px at 29.69% 72.94%, #ffffff55, #0000 100%),
+    radial-gradient(0.95px 0.95px at 0.76% 87.25%, #ffffff4a, #0000 100%),
+    radial-gradient(1.02px 1.02px at 57.55% 47.92%, #ffffff52, #0000 100%),
+    radial-gradient(0.93px 0.93px at 77.34% 65.35%, #ffffff48, #0000 100%),
+    radial-gradient(0.95px 0.95px at 54.85% 34.42%, #ffffff4a, #0000 100%),
+    radial-gradient(0.93px 0.93px at 39.52% 0.25%, #ffffff48, #0000 100%),
+    radial-gradient(1.13px 1.13px at 87.67% 16.12%, #ffffff60, #0000 100%),
+    radial-gradient(0.85px 0.85px at 32.90% 59.31%, #ffffff3e, #0000 100%),
+    radial-gradient(1.46px 1.46px at 60.01% 20.86%, #ffffff87, #0000 100%),
+    radial-gradient(1.34px 1.34px at 1.96% 30.05%, #ffffff79, #0000 100%),
+    radial-gradient(1.34px 1.34px at 22.27% 58.24%, #ffffff79, #0000 100%),
+    radial-gradient(1.32px 1.32px at 38.22% 48.95%, #ffffff76, #0000 100%),
+    radial-gradient(0.84px 0.84px at 21.01% 48.26%, #ffffff3d, #0000 100%),
+    radial-gradient(0.82px 0.82px at 91.28% 44.33%, #ffffff3b, #0000 100%),
+    radial-gradient(0.96px 0.96px at 26.79% 6.28%, #ffffff4b, #0000 100%);
+}
+.db-atmos__stars--near {
+  background-image:
+    radial-gradient(1.79px 1.79px at 51.82% 57.91%, #ffffffa4, #0000 100%),
+    radial-gradient(1.54px 1.54px at 58.13% 32.26%, #ffffff89, #0000 100%),
+    radial-gradient(2.23px 2.23px at 10.80% 46.25%, #ffffffd0, #0000 100%),
+    radial-gradient(1.55px 1.55px at 34.95% 88.04%, #ffffff8a, #0000 100%),
+    radial-gradient(2.04px 2.04px at 91.86% 16.99%, #ffffffbd, #0000 100%),
+    radial-gradient(2.18px 2.18px at 13.69% 53.58%, #ffffffcb, #0000 100%),
+    radial-gradient(1.92px 1.92px at 96.92% 65.81%, #ffffffb0, #0000 100%),
+    radial-gradient(2.0px 2.0px at 56.59% 82.64%, #ffffffb9, #0000 100%),
+    radial-gradient(1.78px 1.78px at 73.02% 96.55%, #ffffffa2, #0000 100%),
+    radial-gradient(2.18px 2.18px at 29.57% 21.78%, #ffffffcc, #0000 100%),
+    radial-gradient(1.22px 1.22px at 12.32% 99.45%, #ffffff69, #0000 100%),
+    radial-gradient(2.0px 2.0px at 28.79% 80.76%, #ffffffb9, #0000 100%),
+    radial-gradient(1.6px 1.6px at 96.10% 8.91%, #ffffff8f, #0000 100%),
+    radial-gradient(1.32px 1.32px at 70.73% 22.30%, #ffffff73, #0000 100%),
+    radial-gradient(1.99px 1.99px at 82.28% 75.33%, #ffffffb7, #0000 100%),
+    radial-gradient(2.22px 2.22px at 91.87% 57.12%, #ffffffd0, #0000 100%),
+    radial-gradient(1.38px 1.38px at 85.10% 97.75%, #ffffff79, #0000 100%),
+    radial-gradient(1.52px 1.52px at 60.85% 3.14%, #ffffff87, #0000 100%),
+    radial-gradient(1.31px 1.31px at 85.68% 14.09%, #ffffff72, #0000 100%),
+    radial-gradient(1.87px 1.87px at 94.47% 45.32%, #ffffffac, #0000 100%),
+    radial-gradient(1.33px 1.33px at 4.34% 52.67%, #ffffff74, #0000 100%),
+    radial-gradient(1.96px 1.96px at 79.29% 77.58%, #ffffffb5, #0000 100%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .db-atmos__stars {
+    animation: db-twinkle 7.5s ease-in-out infinite;
+  }
+  .db-atmos__stars--near {
+    animation: db-twinkle 11s ease-in-out infinite reverse;
+  }
+}
+@keyframes db-twinkle {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* the homepage hero's column lines, carried onto the story opener */
 .db-atmos__cols {
-  opacity: 0.75;
+  opacity: 0.3;
   background-image:
-    linear-gradient(90deg, #0000 0 20%, #2e52ff1f 20.4% 21.1%, #0000 21.5%),
-    linear-gradient(90deg, #0000 0 33%, #2e52ff12 33.3% 33.9%, #0000 34.3%),
+    linear-gradient(90deg, #0000 0 20%, #ffffff1a 20.4% 21.1%, #0000 21.5%),
+    linear-gradient(90deg, #0000 0 33%, #ffffff0f 33.3% 33.9%, #0000 34.3%),
     linear-gradient(90deg, #0000 0 71%, #e233241f 71.4% 72.2%, #0000 72.6%),
     linear-gradient(90deg, #0000 0 85%, #e2332414 85.3% 85.9%, #0000 86.3%),
     linear-gradient(90deg, #0000 0 92%, #e233240f 92.2% 92.8%, #0000 93.2%);
@@ -2099,7 +2224,7 @@ html::-webkit-scrollbar-corner {
 }
 @media (max-width: 767px) {
   .db-atmos__cols {
-    opacity: 0.5;
+    opacity: 0.2;
   }
 }
 
@@ -2177,9 +2302,9 @@ html::-webkit-scrollbar-corner {
   pointer-events: none;
   background: linear-gradient(
     101deg,
-    #010409e8 0%,
-    #010409ad 21%,
-    #01040933 39%,
+    #010409a3 0%,
+    #01040957 21%,
+    #01040914 39%,
     #01040900 55%
   );
 }
