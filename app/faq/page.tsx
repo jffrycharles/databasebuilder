@@ -75,7 +75,24 @@ export default function FaqPage() {
           </>
         }
         lede="Everything customers ask before they start, in plain language. If yours is not here, a person will answer it."
-      />
+      >
+        {/* The hero was a full viewport of dark carrying one headline, and the
+            page offered no way to scan eleven questions short of scrolling all
+            four groups. These solve each other: the anchors already exist for
+            the deep links, so the chips cost nothing but the markup. */}
+        <nav aria-label="Jump to a question group" className="mt-[clamp(26px,3vw,44px)]">
+          <ul className="m-0 flex list-none flex-wrap justify-center gap-2.5 p-0">
+            {groups.map((cat) => (
+              <li key={cat.anchor}>
+                <a href={`#${cat.anchor}`} className="db-jump">
+                  {cat.title}
+                  <span>{cat.items.length}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </PageHero>
 
       <section className="db-section db-section--airy bg-page">
         <div className="db-shell">

@@ -9,6 +9,8 @@ type Props = {
   lede?: React.ReactNode;
   /** optional right-hand column — keeps inner pages asymmetric, like the homepage */
   aside?: React.ReactNode;
+  /** sits under the lede, inside the centred column — jump links, chips, a cue */
+  children?: React.ReactNode;
   /** The wave hands the dark band off into a LIGHT page — its fill is the page
       colour. Set false when the next section is dark, or it draws a white band
       across the seam. */
@@ -27,7 +29,7 @@ type Props = {
  * uses. The sweeping light lines it replaced ran straight through the lede on
  * every one of these pages.
  */
-export default function PageHero({ label, title, lede, aside, wave = true }: Props) {
+export default function PageHero({ label, title, lede, aside, children, wave = true }: Props) {
   return (
     <section id="top" tabIndex={-1} className="db-page-band db-page-band--full db-under-header flex flex-col">
       <HeroAtmosphere />
@@ -63,6 +65,7 @@ export default function PageHero({ label, title, lede, aside, wave = true }: Pro
               </p>
             </Reveal>
           )}
+          {children && <Reveal delay={190}>{children}</Reveal>}
         </div>
         {aside && <Reveal delay={160}>{aside}</Reveal>}
       </div>
