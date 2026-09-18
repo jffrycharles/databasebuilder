@@ -95,7 +95,7 @@ export default function FaqPage() {
                   className="db-faq-group grid items-start gap-[clamp(20px,3vw,64px)] lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]"
                 >
                   <div className="lg:sticky lg:top-[calc(var(--db-header-h)+40px)]">
-                    <h2 className="font-display text-db-red m-0 text-[clamp(28px,3vw,48px)] leading-[1.04] tracking-[.015em]">
+                    <h2 className="font-display text-ink m-0 text-[clamp(28px,3vw,48px)] leading-[1.04] tracking-[.015em]">
                       {cat.title}
                     </h2>
                     <p className="text-ink-2 mt-3.5 max-w-[38ch] text-[clamp(14.5px,0.92vw,16.5px)] leading-[1.6]">
