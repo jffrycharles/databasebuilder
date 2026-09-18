@@ -2031,7 +2031,11 @@ html::-webkit-scrollbar-corner {
    that ratio preserves their headroom without an additional crop or zoom. */
 .db-team-card__photo {
   position: relative;
-  aspect-ratio: 4 / 5;
+  /* 3:4, not 4:5. Adam's note was "I like the rectangle photo layout" and 4:5
+     still read as near-square at this card width. The source crops are cut to
+     the same ratio, so the heads stay the same size and the eyelines stay on
+     one line across the row. */
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   background: #d7dbe2;
 }

@@ -17,7 +17,27 @@ const nextConfig: NextConfig = {
     contentDispositionType: "inline",
   },
   async headers() {
+    /* Staging must never be cached by a browser.
+       The client kept reporting layout bugs that were simply the previous
+       build still sitting in their browser — the pages are prerendered and
+       served with a long s-maxage, so a phone will happily hold yesterday's
+       HTML. On staging the point is to see the newest thing, not to be fast,
+       so HTML there is no-store. Production is untouched. */
+    const noStore =
+      process.env.NEXT_PUBLIC_NOINDEX === "1"
+        ? [
+            {
+              source: "/:path((?!_next|.*\\.).*)",
+              headers: [
+                { key: "Cache-Control", value: "no-store, must-revalidate" },
+                { key: "X-Robots-Tag", value: "noindex, nofollow" },
+              ],
+            },
+          ]
+        : [];
+
     return [
+      ...noStore,
       {
         source: "/dashboard.webp",
         headers: [
