@@ -2527,7 +2527,7 @@ body:has(.db-still) .db-anim {
 }
 @media (min-width: 1000px) {
   .db-sheet-quote {
-    grid-template-columns: auto minmax(0, 1fr) minmax(0, 17rem);
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 20rem);
     gap: clamp(20px, 2vw, 36px);
   }
   .db-sheet-quote__by {

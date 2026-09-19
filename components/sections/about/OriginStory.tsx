@@ -2,6 +2,7 @@ import Reveal from "@/components/animations/Reveal";
 import CountUp from "@/components/animations/CountUp";
 import { Icon } from "@/components/ui/Icon";
 import DotArt from "./DotArt";
+import Standfirst from "./Standfirst";
 import { ABOUT, ORIGIN, OWNERSHIP } from "@/lib/about";
 
 /* The standfirst is one sentence of diagnosis and one of answer. Split on the
@@ -41,9 +42,11 @@ export default function OriginStory() {
           {/* One paragraph, two tones — not two paragraphs. Set as separate
               blocks the halves broke into two centred slabs of the same width
               and stopped reading as a single sentence. */}
-          <p className="font-body text-ink mx-auto m-0 mt-[clamp(12px,1.1vw,18px)] max-w-[36ch] text-center text-[clamp(23px,2.3vw,37px)] leading-[1.17] tracking-[-.018em] text-balance">
-            <span className="text-ink-3">{DIAGNOSIS}</span> {ANSWER}
-          </p>
+          <Standfirst
+            diagnosis={DIAGNOSIS}
+            answer={ANSWER}
+            className="font-body mx-auto m-0 mt-[clamp(12px,1.1vw,18px)] max-w-[36ch] text-center text-[clamp(23px,2.3vw,37px)] leading-[1.17] tracking-[-.018em] text-balance"
+          />
         </Reveal>
 
         <Reveal className="mt-[clamp(22px,2.2vw,38px)]">
@@ -72,7 +75,7 @@ export default function OriginStory() {
 
             <div className="db-sheet-row db-sheet-row--prose">
               <div>
-                <h2 className="font-body text-ink m-0 max-w-[12ch] text-[clamp(24px,2.4vw,36px)] leading-[1.06] font-bold tracking-[-.028em] text-balance">
+                <h2 className="font-body text-ink m-0 max-w-[16ch] text-[clamp(24px,2.4vw,36px)] leading-[1.06] font-bold tracking-[-.028em] text-balance">
                   Where it <span className="text-db-red">started</span>
                 </h2>
                 <p className="text-ink-2 m-0 mt-[clamp(11px,1.1vw,16px)] text-[clamp(13.5px,0.9vw,15px)] leading-[1.58]">
@@ -99,7 +102,7 @@ export default function OriginStory() {
             </blockquote>
 
             <div className="db-sheet-row db-sheet-row--prose">
-              <h3 className="font-body text-ink m-0 max-w-[17ch] text-[clamp(21px,2.1vw,31px)] leading-[1.1] font-bold tracking-[-.026em] text-balance">
+              <h3 className="font-body text-ink m-0 max-w-[24ch] text-[clamp(21px,2.1vw,31px)] leading-[1.1] font-bold tracking-[-.026em] text-balance">
                 Your data is never <span className="text-db-red">held hostage</span>
               </h3>
               <p className="text-ink-2 m-0 text-[clamp(13.5px,0.9vw,15px)] leading-[1.58]">
