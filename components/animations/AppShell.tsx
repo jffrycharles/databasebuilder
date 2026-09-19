@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import Globe from "@/components/ui/Globe";
 import { heroGlobeTarget, measure } from "@/lib/globe-handoff";
-import { prefersReducedMotion } from "@/lib/gsap";
+import { markPageReady, prefersReducedMotion } from "@/lib/gsap";
 
 /* -------------------------------------------------------------------------
    Ready state
@@ -55,6 +55,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     window.setTimeout(() => {
       boot?.classList.add("is-done");
       setGone(true);
+      /* Not at `travel`, where the hero is handed the globe: the overlay is
+         still fading for another 520ms after that, and a section entrance
+         started under it is an entrance nobody sees. Here the page is
+         uncovered, so the sections below can start clean. */
+      markPageReady();
     }, travel + (soft ? 0 : 520));
   }, []);
 

@@ -16,21 +16,20 @@ const ANSWER = BREAK < 0 ? ABOUT.standfirst : ABOUT.standfirst.slice(BREAK + 2);
 /**
  * Our story.
  *
- * Four blocks, four layout families, on purpose. The previous build ran all
- * of this through one ruled sheet: every row hairlined, every cell the same
- * white, so the numbers, the story and the data promise all carried the same
- * weight and roughly a third of it was empty. A spec sheet is the right
- * shape for specs and the wrong shape for a founder's story.
+ * Four blocks, four layout families, four motions, on purpose. A band of
+ * figures under one rule; an editorial spread with the title held still while
+ * the story runs past it; a full-bleed dark centrepiece for his line; a white
+ * band for the data promise. Nothing here repeats the block above it, in
+ * layout or in the way it arrives.
  *
- * So: a typographic band for the figures, an asymmetric spread for the
- * story, a full-bleed dark moment for his line, and a white panel of rows
- * for the promise. The quote sits outside the shell because it bleeds; the
- * other three sit inside it.
+ * The last two are full-bleed, so they sit outside the shell rather than
+ * inside it, and the section's own rhythm padding belongs to the top half
+ * alone.
  */
 export default function OriginStory() {
   return (
-    <section id="origin" className="bg-page db-section">
-      <div className="db-shell">
+    <section id="origin" className="bg-page">
+      <div className="db-shell db-section">
         <Reveal>
           <p className="db-eyebrow-rule db-eyebrow-rule--ink">
             <span aria-hidden="true" />
@@ -52,20 +51,13 @@ export default function OriginStory() {
           <OriginStats />
         </div>
 
-        <div className="mt-[clamp(50px,5.6vw,104px)]">
+        <div className="mt-[clamp(54px,6vw,110px)]">
           <WhereItStarted />
         </div>
       </div>
 
-      <div className="mt-[clamp(50px,5.6vw,104px)]">
-        <FounderQuote />
-      </div>
-
-      <div className="db-shell relative z-[1] mt-[clamp(-30px,-2.4vw,-18px)]">
-        {/* the panel rides up over the seam of the dark band, so the contrast
-            step reads as one move rather than two stacked sections */}
-        <DataOwnership />
-      </div>
+      <FounderQuote />
+      <DataOwnership />
     </section>
   );
 }

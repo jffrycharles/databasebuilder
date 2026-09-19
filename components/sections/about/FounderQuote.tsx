@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGsap } from "@/lib/gsap";
+import { EASE, gsap, useGsap } from "@/lib/gsap";
 import DotArt from "./DotArt";
 import { ORIGIN, LEADERS } from "@/lib/about";
 
@@ -10,55 +10,98 @@ import { ORIGIN, LEADERS } from "@/lib/about";
    the same person. */
 const ADAM = LEADERS.find((l) => l.name === "Adam Berman");
 
+/* Authored line breaks. Left to wrap on its own the quote broke after "It's"
+   and stranded "either." on a line of its own, which is where a reader's eye
+   stops and the sentence stops being one breath. The quote is sliced at these
+   points rather than retyped, so lib/about.ts stays the one home for the
+   words and the two can never drift apart. */
+const BREAK_AFTER = ["give a price,", "It's not complicated,"];
+
+function toLines(text: string, after: string[]) {
+  const out: string[] = [];
+  let rest = text;
+  for (const mark of after) {
+    const i = rest.indexOf(mark);
+    if (i < 0) continue;
+    out.push(rest.slice(0, i + mark.length).trim());
+    rest = rest.slice(i + mark.length);
+  }
+  out.push(rest.trim());
+  return out.filter(Boolean);
+}
+
+const LINES = toLines(ORIGIN.pullQuote, BREAK_AFTER);
+
 /**
  * The founder's line, given the page's one authored moment.
  *
- * Full bleed and the only dark band in the section, with the quote mark
- * oversized in brand red and the line set large enough to be read from
- * across a desk. It is the single sentence on this page in his own voice and
- * it used to be the smallest thing on it.
+ * Full bleed, centred, and the only dark band in the section: everything else
+ * on the page is a column you read down, and this is the one thing you stop
+ * for. The lines are set by hand so all three break on a comma or a full stop,
+ * and the accent under them is what carries the eye down to his name.
  *
- * The reveal is a mask, not a fade: the line slides up from behind its own
- * edge. That makes it the one motion on the page that is not a rise, which
- * is what marks it as the moment rather than another section arriving.
+ * Each line comes up out of its own mask, one after the other, then the rule
+ * draws out from the middle and the attribution arrives behind it. Nothing
+ * here fades: the text sits at full opacity throughout and the mask does the
+ * work, so a line is either not yet arrived or completely readable.
  */
 export default function FounderQuote() {
   const root = useRef<HTMLElement>(null);
 
-  useGsap(() => {
-    const el = root.current;
-    if (!el) return;
-    const mark = el.querySelector(".db-quote__mark");
-    const line = el.querySelector(".db-quote__line");
-    const by = el.querySelector(".db-quote__by");
+  useGsap(
+    () => {
+      const el = root.current;
+      if (!el) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger: { trigger: el, start: "top 74%", toggleActions: "play none none none" },
-    });
+      const mark = el.querySelector<HTMLElement>(".db-say__mark");
+      const lines = el.querySelectorAll<HTMLElement>(".db-say__line");
+      const rule = el.querySelector<HTMLElement>(".db-say__rule");
+      const by = el.querySelectorAll<HTMLElement>(".db-say__by > *");
 
-    if (mark) tl.from(mark, { opacity: 0, y: 14, duration: 0.55, ease: "expo.out" }, 0);
-    /* yPercent on the inner line inside an overflow-clipped wrapper: the text
-       is masked by its own box, so nothing is ever hidden by opacity and the
-       resting state needs no inline style at all. */
-    if (line) tl.from(line, { yPercent: 105, duration: 1, ease: "expo.out" }, 0.1);
-    if (by) tl.from(by, { opacity: 0, y: 12, duration: 0.6, ease: "expo.out" }, 0.45);
-  }, root);
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: el, start: "top 72%", once: true },
+      });
+
+      if (mark) {
+        tl.from(mark, { yPercent: 55, opacity: 0, duration: 0.85, ease: EASE }, 0);
+      }
+
+      tl.from(lines, { yPercent: 112, duration: 1.05, ease: EASE, stagger: 0.11 }, 0.12);
+
+      /* Out from the centre, under the line it belongs to: an accent that
+         draws from one end would point at one side of a centred block. */
+      if (rule) tl.from(rule, { scaleX: 0, duration: 0.7, ease: EASE }, 0.62);
+
+      tl.from(by, { y: 14, opacity: 0, duration: 0.65, ease: EASE, stagger: 0.07 }, 0.72);
+    },
+    root,
+    [],
+    { afterReady: true },
+  );
 
   return (
-    <section ref={root} className="db-quote-band" aria-label="From the founder">
-      <DotArt shape="sphere" className="db-quote-band__art" />
+    <section ref={root} className="db-say" aria-label="From the founder">
+      <DotArt shape="sphere" className="db-say__art" />
       <div className="db-shell relative">
-        <blockquote className="m-0">
-          <span className="db-quote__mark" aria-hidden="true">
+        <blockquote className="db-say__quote">
+          <span className="db-say__mark" aria-hidden="true">
             &ldquo;
           </span>
-          <span className="db-quote__clip">
-            <span className="db-quote__line block">{ORIGIN.pullQuote}</span>
-          </span>
-          <cite className="db-quote__by">
-            <span className="db-quote__name">Adam Berman</span>
-            {ADAM && <span className="db-quote__role">{ADAM.role}</span>}
-            <span className="db-quote__src">From the letter to our customers</span>
+
+          <p className="db-say__text">
+            {LINES.map((line) => (
+              <span key={line} className="db-say__clip">
+                <span className="db-say__line">{line}</span>
+              </span>
+            ))}
+          </p>
+
+          <i className="db-say__rule" aria-hidden="true" />
+
+          <cite className="db-say__by">
+            <span className="db-say__name">Adam Berman</span>
+            {ADAM && <span className="db-say__role">{ADAM.role}</span>}
+            <span className="db-say__src">From the letter to our customers</span>
           </cite>
         </blockquote>
       </div>

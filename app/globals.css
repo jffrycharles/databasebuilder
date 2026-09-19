@@ -1446,11 +1446,21 @@ body:has(.db-still) .db-anim {
     opacity: 1 !important;
     transform: none !important;
   }
-  /* nothing scrubs the spine or lights the nodes, so they start finished */
-  .db-tl__node {
+  /* Nothing scrubs the rail or lights the nodes under reduced motion, so the
+     timeline starts finished: every node lit, every year at full ink. Scoped
+     through the item because the resting rules further down the sheet carry
+     the same weight and would otherwise win on source order. */
+  .db-hist__item .db-hist__node {
     border-color: var(--color-db-red);
     background: var(--color-db-red);
     box-shadow: 0 0 0 4px #e2332421;
+  }
+  .db-hist__item .db-hist__year {
+    color: var(--color-ink);
+  }
+  /* the export mark's chips are driven entirely by a loop that never runs */
+  .db-xp__chip {
+    display: none;
   }
   .db-hero-hold [data-hero-reveal],
   .db-hero-hold .db-globe-el {
@@ -1527,25 +1537,61 @@ body:has(.db-still) .db-anim {
 /* =========================================================================
    Milestone timeline
 
-   One rail down the middle on desktop with the cards alternating either side
-   of it, and the same rail pulled to the left edge on phones with everything
-   stacked against it. The spine fills on scroll; each node lights as its own
-   card arrives.
+   A rail with the milestones alternating either side of it on desktop, and
+   the same rail pulled to the left edge on phones with everything stacked
+   against it.
+
+   The year takes the side of the rail its card does not. The previous build
+   left that half of every row empty, so a very tall section was half blank
+   page and the cards grew to fill the silence: 44px shadows, 112px between
+   rows, a 16px line of body text adrift in a 560px card. With the year
+   opposite, nothing is blank, the years become the thing you scan, and the
+   cards go back to being light.
+
+   The rail fills as you scroll and each milestone comes alive as the fill
+   reaches its node: the year goes from pale to ink, the node lights, the
+   card arrives from its own side.
    ========================================================================= */
-.db-tl {
-  position: relative;
+.db-hist__head {
+  max-width: 780px;
+  margin: 0 auto clamp(44px, 5.2vw, 92px);
+  text-align: center;
 }
-.db-tl__spine {
+.db-hist__title-main {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 50px);
+  line-height: 1.04;
+  letter-spacing: 0.02em;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+.db-hist__lede {
+  margin: clamp(12px, 1.4vw, 20px) auto 0;
+  max-width: 62ch;
+  font-size: clamp(15px, 0.95vw, 17.5px);
+  line-height: 1.62;
+  color: var(--color-ink-2);
+}
+
+.db-hist {
+  position: relative;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+.db-hist__spine {
   position: absolute;
-  top: 4px;
-  bottom: 4px;
+  top: 2px;
+  bottom: 2px;
   left: 7px;
   width: 2px;
   border-radius: 2px;
   background: var(--color-line);
   overflow: hidden;
 }
-.db-tl__spine i {
+/* At rest this is the finished line, so if the script never runs the rail is
+   simply drawn rather than missing. */
+.db-hist__spine i {
   position: absolute;
   inset: 0 0 auto;
   display: block;
@@ -1553,108 +1599,172 @@ body:has(.db-still) .db-anim {
   transform-origin: 50% 0;
   background: linear-gradient(180deg, var(--color-db-red), var(--color-db-red-hot));
 }
-.db-tl__list {
+.db-hist__list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.db-tl__item {
+.db-hist__item {
   position: relative;
   display: grid;
   grid-template-columns: 36px minmax(0, 1fr);
   align-items: start;
 }
-.db-tl__item + .db-tl__item {
-  margin-top: clamp(22px, 3.4vw, 40px);
+.db-hist__item + .db-hist__item {
+  margin-top: clamp(26px, 3.2vw, 48px);
 }
-.db-tl__node {
+.db-hist__node {
   grid-column: 1;
+  grid-row: 1;
   justify-self: start;
-  margin-top: clamp(24px, 3vw, 34px);
-  width: 16px;
-  height: 16px;
+  margin-top: 10px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
-  border: 2px solid var(--color-line);
-  background: #fff;
+  border: 2px solid #ccd6e4;
+  background: var(--color-page);
   transition:
-    border-color 0.4s ease,
-    background-color 0.4s ease,
-    box-shadow 0.4s ease;
+    border-color 0.45s ease,
+    background-color 0.45s ease,
+    box-shadow 0.45s ease;
 }
-/* No glow: the ring alone marks the node once its card has arrived. */
-.db-tl__node.is-lit {
+.db-hist__item.is-on .db-hist__node {
   border-color: var(--color-db-red);
   background: var(--color-db-red);
   box-shadow: 0 0 0 4px #e2332421;
 }
-.db-tl__card {
+
+/* The year is the milestone's headline, so it is set in the display face at
+   headline scale and starts pale: the colour arriving is the activation. */
+.db-hist__year {
+  grid-column: 2;
+  margin: 0 0 clamp(10px, 1.1vw, 16px);
+  overflow: clip;
+  overflow-clip-margin: 8px;
+  font-family: var(--font-display);
+  /* Big enough to hold the half of the row the card does not, which is the
+     whole reason it sits opposite rather than inside the card. */
+  font-size: clamp(38px, 5.2vw, 86px);
+  line-height: 1;
+  letter-spacing: 0.012em;
+  /* 3.13:1 on the page ground, so an un-activated year is still readable at
+     this size rather than being decoration until the rail reaches it. The
+     step up to ink is 16.5:1, which is plenty of signal. */
+  color: #7d8ba0;
+  transition: color 0.55s ease;
+}
+.db-hist__year span {
+  display: block;
+}
+.db-hist__item.is-on .db-hist__year {
+  color: var(--color-ink);
+}
+
+/* One border, one radius, no shadow. Elevation is declared once, and here it
+   does not need declaring at all: the rail already says where the card sits. */
+.db-hist__card {
   position: relative;
   grid-column: 2;
-  border-radius: 16px;
   border: 1px solid var(--color-line);
+  border-radius: 14px;
   background: #fff;
-  padding: clamp(20px, 2.2vw, 34px);
-  box-shadow:
-    0 2px 6px #0d152621,
-    0 18px 44px #0d152633;
-  transition:
-    transform 0.4s var(--ease-db),
-    border-color 0.4s ease,
-    box-shadow 0.4s ease;
+  padding: clamp(18px, 1.9vw, 28px);
+  transition: border-color 0.35s ease;
 }
-@media (hover: hover) {
-  .db-tl__card:hover {
-    transform: translateY(-3px);
-    border-color: #c2cddd;
-    box-shadow:
-      0 4px 10px #0d152629,
-      0 26px 56px #0d152640;
-  }
+.db-hist__item.is-on .db-hist__card {
+  border-color: #d3dce8;
+}
+.db-hist__chip {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 4px 11px;
+  font-family: var(--font-brand);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: #e233241a;
+  color: var(--color-db-red-ink);
+}
+.db-hist__title {
+  margin: clamp(12px, 1.2vw, 18px) 0 0;
+  overflow: clip;
+  font-family: var(--font-body);
+  font-size: clamp(17px, 1.3vw, 23px);
+  line-height: 1.26;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  color: var(--color-ink);
+}
+.db-hist__title span {
+  display: block;
+}
+.db-hist__body {
+  margin: clamp(10px, 1.1vw, 15px) 0 0;
+  max-width: 52ch;
+  font-size: clamp(14px, 0.92vw, 16px);
+  line-height: 1.66;
+  color: var(--color-ink-2);
 }
 
 @media (min-width: 1024px) {
-  .db-tl__spine {
+  .db-hist__spine {
     left: 50%;
     margin-left: -1px;
-  }
-  .db-tl__item {
-    grid-template-columns: minmax(0, 1fr) clamp(72px, 8vw, 140px) minmax(0, 1fr);
-    align-items: center;
-  }
-  .db-tl__item + .db-tl__item {
-    margin-top: clamp(52px, 6vw, 112px);
   }
   /* Both children are pinned to row 1 by hand: the node is written first in
      the source, so a card asking for column 1 would otherwise be flowed onto
      a second row and drop out of line with its own node. */
-  .db-tl__node {
+  .db-hist__item {
+    grid-template-columns: minmax(0, 1fr) clamp(76px, 8vw, 136px) minmax(0, 1fr);
+    align-items: center;
+  }
+  .db-hist__item + .db-hist__item {
+    margin-top: clamp(30px, 3.6vw, 64px);
+  }
+  .db-hist__node {
     grid-column: 2;
     grid-row: 1;
     justify-self: center;
     align-self: center;
     margin-top: 0;
   }
-  .db-tl__item:nth-child(odd) .db-tl__card {
-    grid-column: 1;
+  .db-hist__year {
+    grid-row: 1;
+    margin: 0;
+  }
+  .db-hist__card {
     grid-row: 1;
   }
-  .db-tl__item:nth-child(even) .db-tl__card {
+  .db-hist__item:nth-child(odd) .db-hist__card {
+    grid-column: 1;
+  }
+  .db-hist__item:nth-child(odd) .db-hist__year {
     grid-column: 3;
-    grid-row: 1;
+    justify-self: start;
+    text-align: left;
+  }
+  .db-hist__item:nth-child(even) .db-hist__year {
+    grid-column: 1;
+    justify-self: end;
+    text-align: right;
+  }
+  .db-hist__item:nth-child(even) .db-hist__card {
+    grid-column: 3;
   }
   /* the hairline that ties a card back to its node */
-  .db-tl__card::after {
+  .db-hist__card::after {
     content: "";
     position: absolute;
     top: 50%;
-    width: clamp(24px, 4vw, 70px);
+    width: clamp(20px, 3.2vw, 56px);
     height: 1px;
   }
-  .db-tl__item:nth-child(odd) .db-tl__card::after {
+  .db-hist__item:nth-child(odd) .db-hist__card::after {
     left: 100%;
     background: linear-gradient(90deg, #c2cddd40, #c2cddd);
   }
-  .db-tl__item:nth-child(even) .db-tl__card::after {
+  .db-hist__item:nth-child(even) .db-hist__card::after {
     right: 100%;
     background: linear-gradient(270deg, #c2cddd40, #c2cddd);
   }
@@ -2415,79 +2525,130 @@ body:has(.db-still) .db-anim {
 /* =========================================================================
    Our story — the four blocks of the origin section
 
-   The previous build was one ruled sheet: every row hairlined, every cell the
-   same white, the metrics and the story and the data promise all carrying the
-   same weight. A spec sheet is the right shape for specs and the wrong shape
-   for a founder's story, so each block gets its own layout family instead:
-   a typographic band, an asymmetric editorial spread, a full-bleed quote, and
-   a white panel of rows.
+   Four blocks, four layout families, four ways of arriving. A band of figures
+   under one drawn rule; an editorial spread with the title held still while
+   the story runs past it; a full-bleed dark centrepiece for the founder's
+   line; a white band for the data promise. Nothing here repeats the block
+   above it, in layout or in motion, which is the point: a page where every
+   section fades up by 14px has no sections, only a scroll.
    ========================================================================= */
 
 .db-eyebrow-rule--ink {
   color: var(--color-ink-3);
 }
 
-/* ---------- 1. the numbers -----------------------------------------------
-   No cards. Three figures sharing one baseline under a single rule, which is
-   the whole composition: the numerals carry it and everything else is set
-   quietly beneath them. The dividers are short on purpose — a full-height
-   1px line between cells is what made the old version read as a table. */
-/* A real element, not a border, so the rule can be drawn on scroll. At rest
-   it is a full-width hairline, which is what shows if the script never runs. */
-.db-stats__rule {
+/* ---------- shared: SplitText pieces --------------------------------------
+   The plugin wraps each line or word in a mask of its own and sets the clip
+   inline; these give the pieces block behaviour so transforms apply to them,
+   and keep a word's own box tight so masked words still sit on their line. */
+.db-rline,
+.db-rline-mask {
+  display: block;
+}
+.db-rword,
+.db-rword-mask {
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* ---------- 1. the figures ------------------------------------------------
+   Three numerals on one baseline under a single drawn rule, with short
+   hairlines between. Compact: the old band ran the numerals to 96px, which is
+   the ceiling for display type on the whole site and left three statistics
+   shouting over the sentence that introduces them.
+
+   Each numeral sits in a box the width of its finished value, so 0 counting
+   to 45 cannot move anything on the row. */
+.db-figs {
+  --fig-gap: clamp(26px, 3.4vw, 62px);
+  /* The shell runs to 1560px, which spread three short figures across the
+     width of a table and left a third of every cell empty. The figures, the
+     story and the history all sit on this one editorial measure instead, so
+     the section reads as a column rather than as three loose bands. */
+  max-width: 1180px;
+  margin-inline: auto;
+}
+.db-fig-rule {
   display: block;
   height: 1px;
   background: var(--color-line);
   transform-origin: left center;
 }
-.db-stats {
+.db-figs__row {
   display: grid;
-  gap: clamp(26px, 3vw, 44px);
-  padding-top: clamp(26px, 2.8vw, 48px);
+  gap: 0;
+  margin: 0;
+  padding-top: clamp(24px, 2.6vw, 44px);
 }
-/* stacked, the divider turns horizontal: air alone let the three figures
-   blur into one column */
+.db-fig {
+  position: relative;
+  min-width: 0;
+}
 @media (max-width: 759.98px) {
-  .db-stats > * + * {
-    border-top: 1px solid var(--color-line);
-    padding-top: clamp(26px, 3vw, 44px);
+  .db-fig + .db-fig {
+    margin-top: var(--fig-gap);
+    padding-top: var(--fig-gap);
+  }
+  .db-fig__div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--color-line);
+    transform-origin: left center;
   }
 }
 @media (min-width: 760px) {
-  .db-stats {
+  .db-figs__row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: clamp(30px, 3.6vw, 76px);
-    gap: 0;
   }
-  /* a 64%-height hairline drawn as a background, so it never reaches the
-     top or bottom edge the way a border would */
-  .db-stats > * + * {
-    padding-left: clamp(30px, 3.6vw, 76px);
-    background-image: linear-gradient(var(--color-line), var(--color-line));
-    background-size: 1px 64%;
-    background-position: left top;
-    background-repeat: no-repeat;
+  .db-fig + .db-fig {
+    padding-left: var(--fig-gap);
+  }
+  /* short on purpose: a full-height rule between cells is what made the old
+     version read as a table */
+  .db-fig__div {
+    position: absolute;
+    top: 6px;
+    bottom: 26%;
+    left: calc(var(--fig-gap) / 2);
+    width: 1px;
+    background: var(--color-line);
+    transform-origin: 50% 0;
   }
 }
 
-.db-stat__fig {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: clamp(10px, 1vw, 16px);
+.db-fig__num {
+  position: relative;
+  display: block;
   margin: 0;
-}
-.db-stat__num {
+  /* The clip is here for the mask, which only needs to cut top and bottom.
+     `overflow` has no per-axis form once one axis is clipped, so the margin
+     buys back the few pixels of side bearing Anton's digits carry, without
+     letting the numeral show above its own box. */
+  overflow: clip;
+  overflow-clip-margin: 8px;
   font-family: var(--font-display);
-  /* the craft floor caps display type at 6rem and this is the one place on
-     the page that earns the whole allowance */
-  font-size: clamp(54px, 6.4vw, 96px);
-  line-height: 0.84;
+  font-size: clamp(46px, 5.2vw, 78px);
+  line-height: 1;
   letter-spacing: 0.012em;
   color: var(--color-ink);
   font-variant-numeric: tabular-nums;
 }
-.db-stat__unit {
+/* Holds the finished width from the first frame. Hidden rather than absent,
+   because an absolutely positioned figure over nothing has no width at all. */
+.db-fig__ghost {
+  visibility: hidden;
+}
+.db-fig__live {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.db-fig__unit {
+  margin: clamp(11px, 1.1vw, 16px) 0 0;
+  overflow: clip;
   font-family: var(--font-brand);
   font-size: clamp(11.5px, 0.8vw, 13px);
   font-weight: 600;
@@ -2496,86 +2657,124 @@ body:has(.db-still) .db-anim {
   /* text-size red, not the display red: see the token */
   color: var(--color-db-red-ink);
 }
-.db-stat__desc {
-  margin: clamp(14px, 1.4vw, 22px) 0 0;
-  max-width: 28ch;
-  font-size: clamp(14px, 0.92vw, 16px);
-  line-height: 1.55;
+.db-fig__unit span {
+  display: block;
+}
+.db-fig__desc {
+  margin: clamp(11px, 1.2vw, 18px) 0 0;
+  max-width: 27ch;
+  overflow: clip;
+  font-size: clamp(13.5px, 0.9vw, 15.5px);
+  line-height: 1.58;
   color: var(--color-ink-2);
 }
+.db-fig__desc span {
+  display: block;
+}
 
-/* ---------- 2. where it started ------------------------------------------
-   Asymmetric on purpose: the heading holds the left, the lead sits low and
-   right against it, and the rest of the story starts inboard of both so the
-   eye steps down and across rather than reading three stacked slabs. */
-.db-origin-grid {
+/* ---------- 2. where it started -------------------------------------------
+   The title is held still on the left while the passages run past it on the
+   right, with a short rail under the title filling as you work through them.
+   Previously an 84px headline sat over three slabs of body text at one width:
+   the heading shouted, the passages ran together, and the left column was a
+   hole the height of the story. */
+.db-story {
   display: grid;
-  gap: clamp(22px, 2.6vw, 40px);
+  gap: clamp(26px, 3vw, 44px);
+  max-width: 1180px;
+  margin-inline: auto;
 }
 @media (min-width: 1000px) {
-  .db-origin-grid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: clamp(24px, 2.4vw, 52px);
-    row-gap: 0;
-  }
-  .db-origin-grid__head {
-    grid-column: 1 / span 5;
-  }
-  /* the opening paragraph stays with the heading rather than starting the
-     right-hand column: it is the sentence the heading is about, and parked
-     opposite it the left column was left as a hole the height of the story */
-  .db-origin-grid__lead {
-    grid-column: 1 / span 5;
-    margin-top: clamp(20px, 2.2vw, 34px);
-  }
-  .db-origin-grid__body {
-    grid-column: 7 / span 6;
-    grid-row: 1 / span 2;
+  .db-story {
+    /* The title column is sized to the title. Given a share of the grid it
+       took 470px to hold a 330px heading and the rest of it was a hole. */
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    column-gap: clamp(44px, 6vw, 112px);
   }
 }
-
-.db-origin-head {
+.db-story__stick {
+  display: grid;
+  justify-items: start;
+  gap: clamp(18px, 2vw, 30px);
+}
+@media (min-width: 1000px) {
+  .db-story__stick {
+    position: sticky;
+    top: calc(var(--db-header-h) + clamp(28px, 4vw, 76px));
+  }
+}
+.db-story__head {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(40px, 5.4vw, 84px);
-  line-height: 0.94;
+  font-size: clamp(30px, 3.4vw, 54px);
+  line-height: 1.04;
   letter-spacing: 0.012em;
   color: var(--color-ink);
 }
-.db-origin-lead {
-  margin: 0;
-  max-width: 44ch;
-  font-size: clamp(16.5px, 1.18vw, 21px);
-  line-height: 1.52;
-  color: var(--color-ink);
+/* A readout of where you are in the story, not a control: 2px, no track
+   shading, no numbers beside it. */
+.db-story__rail {
+  position: relative;
+  display: block;
+  width: clamp(110px, 13vw, 200px);
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-line);
+  overflow: hidden;
 }
-.db-origin-body {
-  max-width: 64ch;
-  font-size: clamp(14.5px, 0.95vw, 16.5px);
-  line-height: 1.68;
-  color: var(--color-ink-2);
-}
-.db-origin-body p {
-  margin: 0;
-}
-/* after the reset, not before it: `.db-origin-body p` is (0,1,1) and outranks
-   a `> * + *` child selector, which silently zeroed every gap */
-.db-origin-body > p + p {
-  margin-top: clamp(18px, 1.9vw, 30px);
+.db-story__rail i {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--color-db-red), var(--color-db-red-hot));
 }
 
-/* ---------- 3. the founder's line ----------------------------------------
-   Full bleed, and the one tonal break on the page. It escapes the shell by
-   sitting outside it rather than by negative margins, so there is nothing to
-   go wrong at the scrollbar. */
-.db-quote-band {
+.db-story__block {
+  position: relative;
+}
+.db-story__block + .db-story__block {
+  margin-top: clamp(26px, 3vw, 46px);
+  padding-top: clamp(26px, 3vw, 46px);
+}
+.db-story__rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: min(100%, 200px);
+  height: 1px;
+  background: var(--color-line);
+  transform-origin: left center;
+}
+.db-story__p {
+  margin: 0;
+  max-width: 72ch;
+  font-size: clamp(15px, 1vw, 17px);
+  line-height: 1.7;
+  color: var(--color-ink-2);
+}
+.db-story__p--lead {
+  max-width: 50ch;
+  font-size: clamp(18px, 1.35vw, 24px);
+  line-height: 1.48;
+  letter-spacing: -0.008em;
+  color: var(--color-ink);
+}
+
+/* ---------- 3. the founder's line -----------------------------------------
+   Full bleed, centred, and the one tonal break on the page. Everything else
+   here is a column you read down; this is the thing you stop for. It escapes
+   the shell by sitting outside it rather than by negative margins, so there
+   is nothing to go wrong at the scrollbar. */
+.db-say {
   position: relative;
   overflow: clip;
   background: linear-gradient(162deg, #16203a 0%, #0a1020 58%, #050810 100%);
-  padding-block: clamp(54px, 6.4vw, 118px);
+  padding-block: clamp(64px, 7.6vw, 132px);
 }
 /* the dot motif from the wordmark, very low, as the band's only texture */
-.db-quote-band__art {
+.db-say__art {
   position: absolute;
   top: clamp(-40px, -3vw, -20px);
   right: clamp(-30px, -2vw, -10px);
@@ -2584,50 +2783,62 @@ body:has(.db-still) .db-anim {
   opacity: 0.05;
   pointer-events: none;
 }
-.db-quote__mark {
+.db-say__quote {
+  margin: 0 auto;
+  max-width: 900px;
+  text-align: center;
+}
+.db-say__mark {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(76px, 9vw, 150px);
-  line-height: 0.62;
+  font-size: clamp(62px, 6.6vw, 112px);
+  line-height: 0.6;
   color: var(--color-db-red);
-  /* the glyph carries its own left side bearing; pull it back so the quote
-     and the mark share a left edge */
-  margin-left: -0.06em;
 }
-/* The quote slides up from behind its own edge. A mask built from overflow
-   beats animating clip-path here: there is no keyword-to-shape interpolation
-   to get wrong, and the resting state is simply the text in place. The
-   padding/margin pair gives descenders room so `clip` never cuts a y or a p. */
-.db-quote__clip {
+.db-say__text {
+  margin: clamp(22px, 2.6vw, 42px) 0 0;
+}
+/* A mask built from overflow beats animating clip-path here: there is no
+   keyword-to-shape interpolation to get wrong, and the resting state is
+   simply the text in place. The padding/margin pair gives descenders room so
+   `clip` never cuts a p or a y. */
+.db-say__clip {
   display: block;
   overflow: clip;
-  padding-bottom: 0.16em;
-  margin-bottom: -0.16em;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
 }
-.db-quote__line {
-  margin: clamp(16px, 1.8vw, 30px) 0 0;
-  /* 44ch keeps it to three lines at desktop, which is the cap for a pull
-     quote: past that it stops being a glance and becomes a paragraph */
-  max-width: 44ch;
-  font-size: clamp(23px, 2.9vw, 46px);
-  line-height: 1.16;
-  letter-spacing: -0.03em;
+.db-say__line {
+  display: block;
+  font-size: clamp(21px, 2.45vw, 39px);
+  line-height: 1.26;
+  letter-spacing: -0.025em;
   font-weight: 700;
   color: #fff;
+  text-wrap: pretty;
 }
-.db-quote__by {
+.db-say__rule {
+  display: block;
+  width: clamp(46px, 5vw, 74px);
+  height: 2px;
+  margin: clamp(26px, 3vw, 44px) auto 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-db-red), var(--color-db-red-hot));
+  transform-origin: 50% 50%;
+}
+.db-say__by {
   display: grid;
-  gap: 3px;
-  margin-top: clamp(24px, 2.6vw, 42px);
+  gap: 4px;
+  margin-top: clamp(16px, 1.9vw, 26px);
   font-style: normal;
 }
-.db-quote__name {
+.db-say__name {
   font-size: clamp(15px, 1vw, 17px);
   font-weight: 700;
   letter-spacing: 0.005em;
   color: #fff;
 }
-.db-quote__role {
+.db-say__role {
   font-family: var(--font-brand);
   font-size: 12.5px;
   font-weight: 500;
@@ -2636,115 +2847,158 @@ body:has(.db-still) .db-anim {
   /* 5.6:1 on the band's darkest stop */
   color: #ffffffb8;
 }
-.db-quote__src {
+.db-say__src {
   font-size: 13px;
   line-height: 1.5;
   color: #ffffff8f;
 }
 
-/* ---------- 4. your data is never held hostage ---------------------------
-   The contrast step after the dark band: a white panel on the page ground,
-   carrying four rows rather than four cards. Rows because the four are one
-   promise in four parts, and a card grid would cut them into four unrelated
-   claims. */
-.db-own {
-  /* narrower than the shell: rows of one short line each, stretched to
-     1500px, read as a table of stubs rather than as a list of promises */
-  max-width: 1120px;
-  margin-inline: auto;
-  border-radius: 16px;
+/* ---------- 4. your data is never held hostage ----------------------------
+   A band, not a panel. It used to be a white card floating on the page ground
+   with the heading squeezed to 18 characters, which is what made the heading
+   cramped: the container was narrower than the sentence. Now the section is
+   the surface, the introduction gets a real measure, and the four promises sit
+   in a quartet ruled off by hairlines rather than boxed into four cards. */
+.db-keys {
   background: #fff;
-  padding: clamp(26px, 3.2vw, 60px);
-  /* elevation declared once: a shadow, no border */
-  box-shadow:
-    0 1px 2px #0d152610,
-    0 18px 48px #0d152614;
+  padding-block: clamp(58px, 6.6vw, 124px);
 }
-.db-own__head {
+.db-keys__top,
+.db-keys__grid {
+  max-width: 1320px;
+  margin-inline: auto;
+}
+.db-keys__top {
+  display: grid;
+  gap: clamp(30px, 4vw, 56px);
+}
+@media (min-width: 1000px) {
+  .db-keys__top {
+    /* the right column carries the mark, not an explainer paragraph: the
+       introduction stays stacked under its own heading where it belongs */
+    /* The first column is the lede's own measure, so the paragraph fills it
+       instead of stopping 190px short and opening a hole between the words
+       and the mark. */
+    grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+    column-gap: clamp(40px, 5vw, 96px);
+    align-items: center;
+  }
+}
+.db-keys__head {
   margin: 0;
-  max-width: 18ch;
+  /* 19ch, so the break falls after "never" and "held hostage" stays whole.
+     At 22ch it broke after "held" and left the red half of the phrase
+     stranded on a line of its own. */
+  max-width: 19ch;
   font-family: var(--font-display);
-  font-size: clamp(30px, 3.4vw, 54px);
-  line-height: 0.98;
+  font-size: clamp(32px, 3.8vw, 62px);
+  line-height: 1.02;
   letter-spacing: 0.012em;
   color: var(--color-ink);
 }
-.db-own__lede {
-  margin: clamp(14px, 1.5vw, 22px) 0 0;
-  max-width: 68ch;
-  font-size: clamp(14.5px, 0.95vw, 16.5px);
-  line-height: 1.66;
+.db-keys__lede {
+  margin: clamp(16px, 1.8vw, 26px) 0 0;
+  max-width: 64ch;
+  font-size: clamp(15px, 1vw, 17px);
+  line-height: 1.68;
   color: var(--color-ink-2);
 }
-.db-own__rows {
-  margin-top: clamp(26px, 3vw, 52px);
+.db-keys__figure {
+  display: flex;
+  justify-content: center;
 }
-/* Header beside the rows, not above them. Stacked, the panel carried its
-   content in a 480px column down the left and left the whole right half
-   white. This is not the banned split header: the right column holds the
-   four promises, which are the section's content, not an explainer. */
-@media (min-width: 1000px) {
-  .db-own {
-    display: grid;
-    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
-    column-gap: clamp(40px, 4.4vw, 84px);
-    align-items: start;
-  }
-  /* head and lede share one cell. Left as two cells spanned by the rows
-     column, grid handed the slack to the first row and dropped a 90px hole
-     between the heading and the paragraph under it. */
-  .db-own__intro {
-    grid-column: 1;
-  }
-  .db-own__rows {
-    grid-column: 2;
-    margin-top: 0;
-  }
-  /* the first row's text sits on the heading's first baseline */
-  .db-own__rows > :first-child {
-    padding-top: 0;
-  }
+.db-keys__art {
+  width: min(100%, 440px);
+  height: auto;
 }
-.db-own-row {
+
+/* Rows, at every width. Four across the bottom of the panel turned one
+   promise in four parts into four unrelated claims in four columns, and it
+   put the shortest text on the page into the narrowest measure it could
+   have. A row gives each one the full width and the eye one thing to do. */
+.db-keys__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  /* no max-width of its own: it shares the header block's 1320px so the rows
+     start on the same left edge as the heading. Capped narrower and centred,
+     the list sat indented from the words it belongs to. */
+  margin-top: clamp(34px, 4vw, 66px);
+  padding: 0;
+  list-style: none;
+}
+.db-key {
+  position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: clamp(16px, 1.8vw, 30px);
-  padding-block: clamp(17px, 1.9vw, 28px);
+  gap: clamp(18px, 2.2vw, 38px);
+  padding-block: clamp(20px, 2.4vw, 34px);
 }
-.db-own-row + .db-own-row {
-  border-top: 1px solid var(--color-line);
+.db-key__rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-line);
+  transform-origin: left center;
 }
-.db-own-row__icon {
+.db-key__icon {
   display: grid;
   place-items: center;
-  width: clamp(42px, 3.6vw, 54px);
-  height: clamp(42px, 3.6vw, 54px);
-  border-radius: 14px;
-  background: #e233241a;
-  color: var(--color-db-red);
-  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  border: 1px solid var(--color-line);
+  background: #fff;
+  color: var(--color-db-red-ink);
   transition:
+    border-color 0.26s ease,
     background-color 0.26s ease,
     color 0.26s ease;
 }
-.db-own-row__text {
+.db-key__text {
   margin: 0;
-  font-size: clamp(15px, 1.05vw, 18px);
+  max-width: 52ch;
+  font-size: clamp(15.5px, 1.1vw, 19px);
   line-height: 1.45;
   font-weight: 500;
   color: var(--color-ink);
-  transition: transform 0.26s var(--ease-db);
 }
-/* The rows are not links, so the interaction stays a tint and a nudge and
-   never a cursor change or a lift, which would promise a click that is not
-   there. */
-@media (hover: hover) {
-  .db-own-row:hover .db-own-row__icon {
+/* These are statements, not links, so the interaction stays a tint and never
+   a cursor change or a lift, which would promise a click that is not there. */
+@media (hover: hover) and (pointer: fine) {
+  .db-key:hover .db-key__icon {
+    border-color: var(--color-db-red);
     background: var(--color-db-red);
     color: #fff;
   }
-  .db-own-row:hover .db-own-row__text {
-    transform: translateX(3px);
-  }
+}
+
+/* the export mark: geometry, never a screenshot */
+.db-xp__panel,
+.db-xp__tray {
+  fill: none;
+  stroke: #c9d4e2;
+  stroke-width: 1.6;
+}
+.db-xp__row {
+  fill: #e3e9f1;
+}
+/* driven entirely by the loop; invisible when nothing is driving it */
+.db-xp__chip {
+  fill: var(--color-db-red);
+  opacity: 0;
+}
+.db-xp__draw {
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.db-xp__arrow {
+  stroke: #a9b7c9;
+}
+.db-xp__down {
+  stroke: var(--color-db-red);
 }

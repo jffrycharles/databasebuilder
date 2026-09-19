@@ -1,59 +1,124 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGsap } from "@/lib/gsap";
+import { EASE, gsap, SplitText, useGsap } from "@/lib/gsap";
 import { Icon } from "@/components/ui/Icon";
+import ExportMark from "./ExportMark";
 import { OWNERSHIP } from "@/lib/about";
 
 /**
- * The data promise, as the contrast step after the dark band.
+ * The data promise, as a band of its own.
  *
- * Four rows, not four cards. The four are one promise in four parts, and a
- * card grid cuts them into four unrelated claims that happen to sit next to
- * each other. Rows keep them reading as a list of things that are all true
- * at once, and give each one the width to be read rather than skimmed.
+ * It used to be a white card floating on the page ground, riding up over the
+ * seam of the dark band above it, with the heading squeezed to 18 characters
+ * so it broke after "never". A promise this plain does not need a container
+ * to be taken seriously, and the container was what made the heading cramped.
+ * So: the section is the surface, the introduction gets a real measure, and
+ * the four promises sit in a quartet divided by hairlines rather than boxed
+ * into four cards.
  *
- * The hover is a tint on the icon and a three-pixel nudge on the line. No
- * lift and no cursor change: these rows do not go anywhere, and motion that
- * promises a click that is not there is worse than no motion.
+ * The mark on the right is the claim drawn as geometry: rows leaving a stack
+ * and landing in a tray. Not a product screenshot, because the promise is
+ * about what happens to the records, not about a screen.
  */
 export default function DataOwnership() {
-  const root = useRef<HTMLDivElement>(null);
+  const root = useRef<HTMLElement>(null);
 
-  useGsap(() => {
-    const el = root.current;
-    if (!el) return;
-    const head = el.querySelectorAll("[data-head]");
-    const rows = el.querySelectorAll(".db-own-row");
+  useGsap(
+    () => {
+      const el = root.current;
+      if (!el) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" },
-    });
-    tl.from(head, { opacity: 0, y: 16, duration: 0.66, ease: "expo.out", stagger: 0.08 }, 0);
-    tl.from(rows, { opacity: 0, y: 14, duration: 0.6, ease: "expo.out", stagger: 0.065 }, 0.2);
-  }, root);
+      const head = el.querySelector<HTMLElement>(".db-keys__head");
+      const lede = el.querySelector<HTMLElement>(".db-keys__lede");
+      const rules = el.querySelectorAll<HTMLElement>(".db-key__rule");
+      const icons = el.querySelectorAll<HTMLElement>(".db-key__icon");
+      const texts = el.querySelectorAll<HTMLElement>(".db-key__text");
+
+      if (head) {
+        SplitText.create(head, {
+          type: "lines",
+          mask: "lines",
+          tag: "span",
+          linesClass: "db-rline",
+          autoSplit: true,
+          onSplit: (self) =>
+            gsap.from(self.lines, {
+              yPercent: 112,
+              duration: 0.95,
+              ease: EASE,
+              stagger: 0.09,
+              scrollTrigger: { trigger: head, start: "top 86%", once: true },
+            }),
+        });
+      }
+
+      if (lede) {
+        gsap.from(lede, {
+          y: 18,
+          opacity: 0,
+          duration: 0.8,
+          ease: EASE,
+          scrollTrigger: { trigger: lede, start: "top 88%", once: true },
+        });
+      }
+
+      /* One timeline for the quartet, so it reads as a set being laid out
+         rather than four things that each noticed the viewport separately:
+         the rules rule off the cells, the icons land in them, the lines
+         follow. Three passes across the same four cells, each a beat behind
+         the last. */
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: ".db-keys__grid", start: "top 84%", once: true },
+      });
+      tl.from(rules, { scaleX: 0, duration: 0.85, ease: EASE, stagger: 0.075 }, 0)
+        .from(
+          icons,
+          {
+            scale: 0.84,
+            opacity: 0,
+            duration: 0.6,
+            ease: EASE,
+            stagger: 0.075,
+            transformOrigin: "50% 50%",
+          },
+          0.14,
+        )
+        .from(texts, { y: 16, opacity: 0, duration: 0.7, ease: EASE, stagger: 0.075 }, 0.22);
+    },
+    root,
+    [],
+    { afterReady: true },
+  );
 
   return (
-    <div ref={root} className="db-own">
-      <div className="db-own__intro">
-        <h2 className="db-own__head" data-head>
-          Your data is never <span className="text-db-red">held hostage</span>
-        </h2>
-        <p className="db-own__lede" data-head>
-          {OWNERSHIP.body}
-        </p>
-      </div>
+    <section ref={root} className="db-keys" aria-labelledby="own-head">
+      <div className="db-shell">
+        <div className="db-keys__top">
+          <div className="db-keys__intro">
+            <h2 id="own-head" className="db-keys__head">
+              Your data is never <span className="text-db-red">held hostage</span>
+            </h2>
+            <p className="db-keys__lede">{OWNERSHIP.body}</p>
+          </div>
 
-      <ul className="db-own__rows m-0 list-none p-0">
-        {OWNERSHIP.points.map((p) => (
-          <li key={p.text} className="db-own-row">
-            <span className="db-own-row__icon" aria-hidden="true">
-              <Icon name={p.icon} className="h-[19px] w-[19px]" />
-            </span>
-            <p className="db-own-row__text">{p.text}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
+          <div className="db-keys__figure">
+            <ExportMark className="db-keys__art" />
+          </div>
+        </div>
+
+        <ul className="db-keys__grid">
+          {OWNERSHIP.points.map((p) => (
+            <li key={p.text} className="db-key">
+              <i className="db-key__rule" aria-hidden="true" />
+              <span className="db-key__icon" aria-hidden="true">
+                <Icon name={p.icon} className="h-[20px] w-[20px]" />
+              </span>
+              <p className="db-key__text">{p.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
