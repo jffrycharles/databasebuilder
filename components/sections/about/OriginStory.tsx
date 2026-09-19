@@ -51,14 +51,14 @@ export default function OriginStory() {
 
         <Reveal className="mt-[clamp(22px,2.2vw,38px)]">
           <div className="db-sheet">
-            <div className="db-sheet-row db-sheet-row--tight db-sheet-row--3">
+            <div className="db-sheet-row db-sheet-row--tight db-sheet-row--tint db-sheet-row--3">
               {ORIGIN.stats.map((s) => (
                 <div key={s.unit}>
                   {/* numeral and unit on one baseline: the unit belongs to the
                       figure, and set underneath it the eye had to choose
                       between the unit and the description */}
                   <p className="db-metric__fig m-0">
-                    <span className="font-display text-ink text-[clamp(32px,3.1vw,50px)] leading-none tracking-[.01em] tabular-nums">
+                    <span className="font-display text-ink text-[clamp(36px,3.6vw,58px)] leading-none tracking-[.01em] tabular-nums">
                       <CountUp value={s.value} />
                       <span className="text-db-red">{s.suffix}</span>
                     </span>
@@ -74,16 +74,13 @@ export default function OriginStory() {
             </div>
 
             <div className="db-sheet-row db-sheet-row--prose">
-              <div>
-                <h2 className="font-body text-ink m-0 max-w-[16ch] text-[clamp(24px,2.4vw,36px)] leading-[1.06] font-bold tracking-[-.028em] text-balance">
-                  Where it <span className="text-db-red">started</span>
-                </h2>
-                <p className="text-ink-2 m-0 mt-[clamp(11px,1.1vw,16px)] text-[clamp(13.5px,0.9vw,15px)] leading-[1.58]">
-                  {ORIGIN.lead}
-                </p>
-              </div>
-              <div className="text-ink-2 text-[clamp(13.5px,0.9vw,15px)] leading-[1.58]">
-                {ORIGIN.body.map((p, i) => (
+              <h2 className="font-body text-ink m-0 text-[clamp(24px,2.4vw,36px)] leading-[1.06] font-bold tracking-[-.028em] text-balance">
+                Where it <span className="text-db-red">started</span>
+              </h2>
+              {/* the lead reads first, so it belongs at the head of the
+                  reading column rather than stranded under the heading */}
+              <div className="db-story-cols text-ink-2 text-[clamp(13.5px,0.9vw,15px)] leading-[1.58]">
+                {[ORIGIN.lead, ...ORIGIN.body].map((p, i) => (
                   <p key={p} className={i ? "m-0 mt-[clamp(9px,0.9vw,13px)]" : "m-0"}>
                     {p}
                   </p>
@@ -92,25 +89,25 @@ export default function OriginStory() {
             </div>
 
             <blockquote className="db-sheet-quote m-0">
-              <DotArt shape="grid" className="h-[30px] w-[30px] shrink-0 text-white/25" />
-              <p className="font-body m-0 text-[clamp(19px,1.7vw,29px)] leading-[1.24] font-bold tracking-[-.022em] text-white">
+              <DotArt shape="grid" className="h-[34px] w-[34px] shrink-0 text-white/25" />
+              <p className="font-body m-0 text-[clamp(21px,2vw,34px)] leading-[1.22] font-bold tracking-[-.022em] text-white">
                 {ORIGIN.pullQuote}
               </p>
-              <cite className="db-sheet-quote__by font-brand text-[12.5px] leading-[1.4] font-medium tracking-[.02em] text-white/70 not-italic">
+              <cite className="font-brand text-[12.5px] leading-[1.4] font-medium tracking-[.02em] text-white/70 not-italic">
                 Adam Berman, from the letter to our customers
               </cite>
             </blockquote>
 
             <div className="db-sheet-row db-sheet-row--prose">
-              <h3 className="font-body text-ink m-0 max-w-[24ch] text-[clamp(21px,2.1vw,31px)] leading-[1.1] font-bold tracking-[-.026em] text-balance">
+              <h3 className="font-body text-ink m-0 text-[clamp(20px,1.9vw,27px)] leading-[1.12] font-bold tracking-[-.026em] text-balance">
                 Your data is never <span className="text-db-red">held hostage</span>
               </h3>
-              <p className="text-ink-2 m-0 text-[clamp(13.5px,0.9vw,15px)] leading-[1.58]">
-                {OWNERSHIP.body}
-              </p>
+              <div className="db-flow-cols text-ink-2 text-[clamp(13.5px,0.9vw,15px)] leading-[1.58]">
+                <p className="m-0">{OWNERSHIP.body}</p>
+              </div>
             </div>
 
-            <div className="db-sheet-row db-sheet-row--tight db-sheet-row--4">
+            <div className="db-sheet-row db-sheet-row--tight db-sheet-row--tint db-sheet-row--4">
               {OWNERSHIP.points.map((p) => (
                 <div key={p.text} className="db-point">
                   <span className="db-saas-icon">

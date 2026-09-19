@@ -2442,6 +2442,13 @@ body:has(.db-still) .db-anim {
 .db-sheet-row > :not(:first-child) {
   border-top: 1px solid var(--color-line);
 }
+/* The facts and the promises sit on a tint; the story sits on white. Five
+   rows of identical white gave the metrics, the story and the data promise
+   the same weight, so the eye had nowhere to land. A band is a step in
+   hierarchy that costs no height. */
+.db-sheet-row--tint {
+  background: #f6f8fb;
+}
 .db-sheet-row--tight > * {
   padding: clamp(15px, 1.55vw, 24px) clamp(17px, 1.6vw, 26px);
 }
@@ -2471,9 +2478,13 @@ body:has(.db-still) .db-anim {
     border-left: 1px solid var(--color-line);
   }
 }
+/* A narrow label rail, not two halves. Split 0.78/1.22 the heading column was
+   a column of text that happened to hold three words, so every prose row had a
+   hole the height of the paragraph beside it. Sized to the heading instead,
+   the rail reads as a margin note and the text gets the page. */
 @media (min-width: 900px) {
   .db-sheet-row--prose {
-    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
   }
   .db-sheet-row--prose > :not(:first-child) {
     border-top: 0;
@@ -2503,6 +2514,30 @@ body:has(.db-still) .db-anim {
    as a two-column grid with the description alongside, the unit sat under
    the numeral while the description sat to its right, so the two halves of
    the same fact pulled the eye in different directions. */
+/* Against a 17rem rail the reading column is over 1100px at desktop, which is
+   twice a comfortable measure. Two columns bring it back to about 60
+   characters without capping the width and reopening the hole the rail just
+   closed. Paragraphs are kept whole across the break. */
+.db-story-cols > * {
+  break-inside: avoid;
+}
+@media (min-width: 1100px) {
+  .db-story-cols {
+    columns: 2;
+    column-gap: clamp(26px, 2.6vw, 46px);
+  }
+}
+
+/* Same two columns, but for one continuous paragraph, which is allowed to
+   split across the break the way a newspaper column does. Without this the
+   data promise ran at a 1180px measure — roughly twice readable. */
+@media (min-width: 1100px) {
+  .db-flow-cols {
+    columns: 2;
+    column-gap: clamp(26px, 2.6vw, 46px);
+  }
+}
+
 .db-metric__fig {
   display: flex;
   flex-wrap: wrap;
@@ -2515,23 +2550,31 @@ body:has(.db-still) .db-anim {
    against near-black only reads as a seam. */
 .db-sheet-quote {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(13px, 1.3vw, 20px);
-  padding: clamp(20px, 2vw, 32px) clamp(20px, 2.1vw, 34px);
+  justify-items: start;
+  gap: clamp(16px, 1.6vw, 26px);
+  padding: clamp(28px, 3vw, 54px) clamp(20px, 2.1vw, 34px);
   background: linear-gradient(162deg, #16203a 0%, #0a1020 58%, #050810 100%);
 }
 .db-sheet > .db-sheet-quote,
 .db-sheet > .db-sheet-quote + * {
   border-top: 0;
 }
-@media (min-width: 1000px) {
+/* The quote is the one thing on this page in the founder's own voice, and it
+   was a 150px strip with the attribution squeezed into a side column.
+   It now sits on the same rail as the prose rows — the dot mark takes the
+   rail where a heading would be, the line and the name take the reading
+   column. Indenting the whole thing past the rail instead left a dead slab
+   of dark with nothing in it. */
+@media (min-width: 900px) {
   .db-sheet-quote {
-    grid-template-columns: auto minmax(0, 1fr) minmax(0, 20rem);
-    gap: clamp(20px, 2vw, 36px);
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    align-items: start;
+    column-gap: 0;
   }
-  .db-sheet-quote__by {
-    border-left: 1px solid #ffffff26;
-    padding-left: clamp(16px, 1.6vw, 26px);
+  .db-sheet-quote > :first-child {
+    grid-row: span 2;
+  }
+  .db-sheet-quote > * {
+    max-width: 58ch;
   }
 }
