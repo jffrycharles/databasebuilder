@@ -23,10 +23,14 @@ export const ORIGIN = {
   ],
   pullQuote:
     "You present a product, give a price, and close the deal. It's not complicated, so there's no reason your CRM should be either.",
+  /* Three fields, not two: the ruled metric row sets the unit as its own
+     small label under the numeral, so " yrs" can no longer ride along inside
+     the number. `suffix` is now only what belongs against the digits — the M
+     of 20M — and `unit` is the label. Same three facts as before. */
   stats: [
-    { value: 45, suffix: " yrs", label: "Of sales experience behind the product" },
-    { value: 20, suffix: "M", label: "Business and consumer records in the database" },
-    { value: 1, suffix: " price", label: "All-in-one, with no tiers and no à la carte add-ons" },
+    { value: 45, suffix: "", unit: "Years", label: "Of sales experience behind the product" },
+    { value: 20, suffix: "M", unit: "Records", label: "Business and consumer records in the database" },
+    { value: 1, suffix: "", unit: "Price", label: "All-in-one, with no tiers and no à la carte add-ons" },
   ],
 };
 

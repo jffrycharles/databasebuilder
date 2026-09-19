@@ -111,7 +111,9 @@ export default function Showcase({ copy, action, children }: Props) {
 
       <div ref={app} className="db-app-wrap">
         <div
-          className={`overflow-hidden transition-all duration-500 ${
+          /* named properties, not `all`: `all` also animates the margin and
+             the colours, and at 500ms the row visibly lagged the click */
+          className={`overflow-hidden transition-[max-height,opacity] duration-[260ms] ease-out ${
             expanded ? "mb-4 max-h-16 opacity-100" : "mb-0 max-h-0 opacity-0"
           }`}
         >
