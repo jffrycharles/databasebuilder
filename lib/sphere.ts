@@ -83,6 +83,48 @@ let raf = 0;
 let last = 0;
 let io: IntersectionObserver | null = null;
 
+/* -------------------------------------------------------------------------
+   Holding still while the page moves
+
+   Rendering a sphere writes eight path `d` attributes, and a path whose
+   geometry changed has to be re-laid-out. Measured over a 20-second scripted
+   scroll of /about with Chrome's layout counters, in dev and again in a
+   production build: 880 layout passes with the globes running, 255 with them
+   hidden. Three are mounted on that page (header, hero, footer), and the
+   header's sits in a fixed bar, so it is on screen and animating for the whole
+   life of the tab no matter where you are on the page.
+
+   Nobody can perceive a 42px logo mark turning while the page is sliding under
+   them. So the spheres hold still for as long as the scroll is live and carry
+   on from exactly where they stopped once it settles: the identity is intact
+   whenever anyone is actually looking at it, and scrolling gets the frame to
+   itself. A passive listener that only flips a boolean reads no layout, so the
+   scroll path pays nothing for this.
+   ------------------------------------------------------------------------- */
+const RESUME_MS = 140;
+let scrolling = false;
+let scrollTimer = 0;
+let listening = false;
+
+function watchScroll() {
+  if (listening || typeof window === "undefined") return;
+  listening = true;
+  window.addEventListener(
+    "scroll",
+    () => {
+      scrolling = true;
+      window.clearTimeout(scrollTimer);
+      scrollTimer = window.setTimeout(() => {
+        scrolling = false;
+        /* the clock restarts with the motion, so the first frame back does not
+           advance by the whole length of the scroll */
+        last = 0;
+      }, RESUME_MS);
+    },
+    { passive: true },
+  );
+}
+
 const mq = (q: string) => (typeof window === "undefined" ? false : window.matchMedia(q).matches);
 const reduced = () => mq("(prefers-reduced-motion: reduce)");
 const fine = () => mq("(hover: hover) and (pointer: fine)");
@@ -98,7 +140,9 @@ function ensureObserver() {
         if (hit) hit.vis = rec.isIntersecting;
       }
     },
-    { rootMargin: "120px" },
+    /* Tight on purpose. At 120px a globe kept rendering for another two
+       thirds of a second of scrolling after it had left the screen. */
+    { rootMargin: "0px" },
   );
 }
 
@@ -137,19 +181,36 @@ function step(it: Internal, dt: number) {
   }
 }
 
+/** Nothing left to settle: rendering again would write byte-identical paths. */
+function atRest(it: Internal) {
+  return (
+    !it.drag &&
+    it.pulseAmt <= 0.001 &&
+    Math.abs(it.vel) < 1e-4 &&
+    Math.abs(it.pitchGoal - it.pitch) < 1e-4 &&
+    Math.abs(it.yawGoal - it.yaw) < 1e-4 &&
+    Math.abs(it.boostGoal - it.boost) < 1e-4
+  );
+}
+
 function frame(t: number) {
   const dt = last ? Math.min(0.05, (t - last) / 1000) : 0.016;
   last = t;
-  for (let i = 0; i < list.length; i++) {
-    const it = list[i];
-    if (!it.el.isConnected) {
-      list.splice(i, 1);
-      i--;
-      continue;
+  /* The loop stays alive so motion resumes on the next frame after the scroll
+     settles, but nothing is stepped or drawn while the page is moving. */
+  if (!scrolling) {
+    for (let i = 0; i < list.length; i++) {
+      const it = list[i];
+      if (!it.el.isConnected) {
+        list.splice(i, 1);
+        i--;
+        continue;
+      }
+      if (!it.vis || document.hidden) continue;
+      if (atRest(it)) continue;
+      step(it, dt);
+      it.render();
     }
-    if (!it.vis || document.hidden) continue;
-    step(it, dt);
-    it.render();
   }
   raf = list.length ? requestAnimationFrame(frame) : 0;
 }
@@ -446,6 +507,7 @@ export function createSphere(el: SVGSVGElement, opts: SphereOptions = {}): Spher
   };
 
   list.push(it);
+  watchScroll();
   ensureObserver();
   io?.observe(el);
   it.render();
