@@ -34,7 +34,7 @@
 
   --font-display: var(--font-anton), "Oswald", Impact, sans-serif;
   --font-ui: var(--font-oswald), "Arial Narrow", sans-serif;
-  --font-body: var(--font-roboto), system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-google-sans), system-ui, -apple-system, sans-serif;
   /* databasebuilder.com's own face — used for small text only: eyebrows,
      metric labels, captions. */
   --font-brand: var(--font-raleway), "Raleway", system-ui, sans-serif;

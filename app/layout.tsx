@@ -28,11 +28,14 @@ const oswald = localFont({
   display: "swap",
 });
 
-const roboto = localFont({
-  src: "./fonts/roboto-var.woff2",
-  weight: "300 700",
+/* Google Sans, the face Adam's comparison chart is set in, so the copy
+   around the chart reads in the same voice. Only 400–700 exists; the opsz
+   axis swaps in the Text cut below 18px on its own. */
+const googleSans = localFont({
+  src: "./fonts/google-sans-var.woff2",
+  weight: "400 700",
   style: "normal",
-  variable: "--font-roboto",
+  variable: "--font-google-sans",
   display: "swap",
 });
 
@@ -97,7 +100,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${anton.variable} ${oswald.variable} ${roboto.variable} ${raleway.variable}`}>
+    <html lang="en" className={`${anton.variable} ${oswald.variable} ${googleSans.variable} ${raleway.variable}`}>
       <body>
         {/* With scripting off the loader can never be dismissed, so hide it. */}
         <noscript>
