@@ -1,66 +1,71 @@
-import Image from "next/image";
-import Reveal from "@/components/animations/Reveal";
+import SectionHeading from "@/components/ui/SectionHeading";
 import SmartLink from "@/components/ui/SmartLink";
+import CompareMotion from "@/components/sections/CompareMotion";
+import CompareTable, { MarkIcon } from "@/components/sections/CompareTable";
+import CompareChart from "@/components/sections/CompareChart";
+import { COMPARE_LEDE } from "@/lib/comparison";
+import type { Mark } from "@/lib/comparison";
+import { VARIANT } from "@/lib/variants";
+
+/* The legend reads left to right the way the marks rank: ours, then the three
+   ways a competitor falls short or charges. */
+const LEGEND: { mark: Mark; label: string }[] = [
+  { mark: "yes", label: "Included" },
+  { mark: "no", label: "Not included" },
+  /* the pills already say "Add-on" / "Additional"; the label finishes the thought */
+  { mark: "addon", label: "costs extra" },
+  { mark: "additional", label: "billed separately" },
+];
 
 /**
- * Adam's comparison chart, as his own artwork.
+ * DatabaseBuilder vs other CRMs, redesigned as a comparison table.
  *
- * This was rebuilt as an HTML table for a while — the argument being that a
- * table can be read by a screen reader and quoted by a search engine, and an
- * image cannot. Adam saw the rebuild and wanted his PNG back, including the
- * headings I had added to caption each block. His chart, his call.
+ * History, so the next change knows what it is undoing: this was an HTML table
+ * once before, and Adam asked for his PNG chart back. The chart then carried
+ * the section until this redesign, which keeps every one of its 37 rows and
+ * its title and subtitle (lib/comparison.ts), as real text in the site's own
+ * type. public/comparison.png is left in place in case he wants it again.
  *
- * The one thing an image cannot do is carry its own text, so the alt text does
- * it instead: the whole comparison, in reading order, for anyone on a screen
- * reader and for anything crawling the page.
+ * Dark, per the client's note: the dashboard section above and the chart were
+ * two light sections running into each other with nothing between them.
+ *
+ * Staging builds show the chart picture instead (lib/variants.ts).
  */
-const ALT =
-  "DatabaseBuilder vs Other CRMs: more advanced features at no additional cost. " +
-  "Individual features included with DatabaseBuilder and not with other CRMs: click to " +
-  "dial calling, customizable data fields and dashboard, sales pipeline management, call " +
-  "history and activity tracking, workflow management, email, templates and account sync, " +
-  "data import module, scalable as needed, safe and secure platform, user permissions " +
-  "levels, calendar and lead management, automatic call recording, auto voicemail library, " +
-  "built-in SMS text campaigns, local presence, integrated video conferencing, data export " +
-  "module. " +
-  "Team and training features included with DatabaseBuilder but an add-on with other CRMs: " +
-  "user account and lead management, company data share, team tracking and monitoring, " +
-  "call monitoring, whisper coaching, live call transfer with popup notification, customer " +
-  "profile popup on transfer. " +
-  "Included with DatabaseBuilder and not with other CRMs: all-in-one pricing, talking " +
-  "points, integrated Google and social media, live customer support, no long-term " +
-  "contract, 30-day cancellation, not overly complicated, affordable pricing. " +
-  "Charged separately by both: custom API integration, dialer minutes and SMS messages, " +
-  "additional phone numbers, data cloud storage, additional user licenses.";
-
 export default function FeaturesSection() {
+  if (VARIANT.compare === "image") return <CompareChart />;
   return (
-    /* Dark, per the client's note: the dashboard section above and this chart
-       were two light sections running into each other with nothing between
-       them. The band is the page's own black, as Leadership on /about is. */
-    <section id="features" className="db-section db-features">
+    <section id="features" className="db-section db-features db-features--table">
       <div className="db-shell">
-        <Reveal>
-          <p className="db-eyebrow-rule">
-            <span aria-hidden="true" />
-            How we compare
-            <span aria-hidden="true" />
-          </p>
-          {/* capped at the PNG's native 791px so the Excel text is never upscaled */}
-          <figure className="db-compare-frame mx-auto mt-[clamp(20px,2vw,32px)] mb-0">
-            <Image
-              src="/comparison.png"
-              alt={ALT}
-              width={791}
-              height={1146}
-              sizes="(max-width: 880px) 90vw, 791px"
-              quality={95}
-              className="db-compare-frame__sheet"
-            />
-          </figure>
-        </Reveal>
+        <SectionHeading
+          tone="dark"
+          label="How we compare"
+          align="center"
+          display
+          size="lg"
+          title={
+            <>
+              Database<span className="text-db-red">Builder</span> vs Other CRMs
+            </>
+          }
+          lede={COMPARE_LEDE}
+          className="mb-[clamp(26px,2.6vw,40px)]"
+        />
 
-        <p className="mx-auto mt-6 max-w-[851px] text-center text-[13.5px] leading-relaxed text-white/65">
+        {/* the key comes first, so the marks are learned before they are met */}
+        <ul className="db-cmp-legend" aria-label="Key">
+          {LEGEND.map(({ mark, label }) => (
+            <li key={mark}>
+              <MarkIcon mark={mark} />
+              {label}
+            </li>
+          ))}
+        </ul>
+
+        <CompareMotion className="mx-auto max-w-[1100px]">
+          <CompareTable />
+        </CompareMotion>
+
+        <p className="mx-auto mt-[clamp(20px,2vw,28px)] max-w-[760px] text-center text-[14px] leading-relaxed text-white/75">
           Everything marked included is in the subscription. Dialer minutes, SMS usage, additional
           phone numbers and custom programming are charged separately.{" "}
           <SmartLink

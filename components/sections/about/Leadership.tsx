@@ -36,7 +36,7 @@ export default function Leadership() {
                       src={p.photo}
                       alt={`${p.name}, ${p.role}`}
                       fill
-                      sizes="(min-width: 1200px) 340px, (min-width: 704px) 320px, (min-width: 640px) calc((100vw - 64px) / 2), (min-width: 360px) 320px, calc(100vw - 40px)"
+                      sizes="(min-width: 1200px) 340px, (min-width: 704px) 320px, (min-width: 640px) calc((100vw - 64px) / 2), min(480px, calc(100vw - 40px))"
                       className="object-cover object-center"
                     />
                   ) : (
@@ -59,7 +59,7 @@ export default function Leadership() {
 
                   <span className="db-team-card__since mt-3 self-start">{p.since}</span>
 
-                  <p className="text-ink-2 mt-3 min-h-[6.4em] flex-1 text-[14px] leading-[1.6]">
+                  <p className="text-ink-2 mt-3 flex-1 text-[14px] leading-[1.6] sm:min-h-[6.4em]">
                     {p.summary}
                   </p>
 

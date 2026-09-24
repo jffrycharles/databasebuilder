@@ -16,13 +16,19 @@ cd "$(dirname "$0")/.."
 
 SITE_URL="${SITE_URL:-https://staging.databasebuilder.com}"
 NOINDEX="${NOINDEX:-1}"
+# Which presentations this build shows (lib/variants.ts). Staging keeps the
+# pictures the client asked for — the comparison chart image and the Best
+# Choice monitors on /features; the Vercel preview builds the redesigns.
+COMPARE="${COMPARE:-image}"
+FEATURES_HERO="${FEATURES_HERO:-render}"
 OUT="staging-bundle.tgz"
 
 # These MUST exist before the build. Every page, robots.txt and sitemap.xml are
 # prerendered, so a value supplied at runtime instead arrives too late and the
 # deploy silently serves "Allow: /" with production canonicals.
-printf 'NEXT_PUBLIC_SITE_URL="%s"\nNEXT_PUBLIC_NOINDEX="%s"\n' "$SITE_URL" "$NOINDEX" > .env.local
-echo "==> building for $SITE_URL (noindex=$NOINDEX)"
+printf 'NEXT_PUBLIC_SITE_URL="%s"\nNEXT_PUBLIC_NOINDEX="%s"\nNEXT_PUBLIC_COMPARE="%s"\nNEXT_PUBLIC_FEATURES_HERO="%s"\n' \
+  "$SITE_URL" "$NOINDEX" "$COMPARE" "$FEATURES_HERO" > .env.local
+echo "==> building for $SITE_URL (noindex=$NOINDEX, compare=$COMPARE, features hero=$FEATURES_HERO)"
 
 rm -rf .next "$OUT"
 npm run build

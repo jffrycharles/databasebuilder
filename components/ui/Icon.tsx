@@ -2,7 +2,7 @@
    defined once and referenced with <use>. */
 
 export const ICON_NAMES = [
-  "api", "bell", "bolt", "cal", "card", "chart", "chat", "check", "clip", "clock", "dots", "fb", "gear", "grid", "headset", "ig", "li", "mail", "monitor", "phone", "pin", "plus", "rec", "search", "send", "share", "shield", "swap", "tag", "tw", "upload", "user", "video", "voicemail", "yt",
+  "api", "bell", "bolt", "cal", "card", "chart", "chat", "check", "clip", "clock", "dots", "fb", "gear", "grid", "headset", "ig", "li", "mail", "monitor", "phone", "pin", "plus", "rec", "search", "send", "share", "shield", "swap", "tag", "tw", "upload", "user", "users", "video", "voicemail", "x", "yt",
 ] as const;
 
 export type IconName = (typeof ICON_NAMES)[number];
@@ -54,6 +54,11 @@ export function IconSprite() {
         <g id="i-user"><circle cx="12" cy="8" r="3.6" fill="none" stroke="currentColor" strokeWidth="1.7"/><path d="M4.5 20c1.2-4 4-5.6 7.5-5.6S18.3 16 19.5 20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></g>
         <g id="i-video"><rect x="3" y="6" width="12" height="12" rx="2.2" fill="none" stroke="currentColor" strokeWidth="1.7"/><path d="M15 10.5l6-3v9l-6-3z" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/></g>
         <g id="i-voicemail"><circle cx="6.5" cy="13" r="3.4" fill="none" stroke="currentColor" strokeWidth="1.7"/><circle cx="17.5" cy="13" r="3.4" fill="none" stroke="currentColor" strokeWidth="1.7"/><path d="M6.5 16.4h11" stroke="currentColor" strokeWidth="1.7"/></g>
+        {/* users and x were added for the comparison table, drawn to the set's
+            rules: 24px grid, 1.7 strokes, round caps; x carries check's 2.6
+            weight so the two marks read as a pair */}
+        <g id="i-users"><circle cx="9" cy="8.5" r="3.2" fill="none" stroke="currentColor" strokeWidth="1.7"/><path d="M3 19.5c1-3.4 3.3-4.9 6-4.9s5 1.5 6 4.9" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/><path d="M15.2 5.5a3.2 3.2 0 0 1 0 6.1M17.4 14.9c1.8.6 3 2 3.6 4.6" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></g>
+        <g id="i-x"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round"/></g>
         <g id="i-yt"><path d="M21 8.4c-.2-1.3-.8-2.1-2.1-2.3-2.2-.3-4.5-.3-6.9-.3s-4.7 0-6.9.3C3.8 6.3 3.2 7.1 3 8.4c-.2 1.2-.2 2.4-.2 3.6s0 2.4.2 3.6c.2 1.3.8 2.1 2.1 2.3 2.2.3 4.5.3 6.9.3s4.7 0 6.9-.3c1.3-.2 1.9-1 2.1-2.3.2-1.2.2-2.4.2-3.6s0-2.4-.2-3.6zM10.2 15.1V8.9l5.3 3.1-5.3 3.1z" fill="currentColor"/></g>
       </defs>
     </svg>

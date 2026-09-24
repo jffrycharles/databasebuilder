@@ -9,6 +9,8 @@ type Props = {
   tone?: "light" | "dark";
   /** the story pages set their headings in the display face, like the heroes */
   display?: boolean;
+  /** "lg": a section's lead heading, at the "Why DatabaseBuilder?" scale */
+  size?: "default" | "lg";
   className?: string;
 };
 
@@ -20,6 +22,7 @@ export default function SectionHeading({
   align = "left",
   tone = "light",
   display = false,
+  size = "default",
   className = "",
 }: Props) {
   const centered = align === "center";
@@ -27,7 +30,7 @@ export default function SectionHeading({
     <Reveal
       className={`${
         centered
-          ? `mx-auto text-center ${display ? "max-w-[880px]" : "max-w-[640px]"}`
+          ? `mx-auto text-center ${size === "lg" ? "max-w-[1100px]" : display ? "max-w-[880px]" : "max-w-[640px]"}`
           : "max-w-[52ch]"
       } ${className}`}
     >
@@ -39,7 +42,7 @@ export default function SectionHeading({
       <h2
         className={`m-0 ${
           display
-            ? "font-display text-[clamp(25px,2.45vw,40px)] leading-[1.04] font-normal tracking-[.02em] text-balance"
+            ? `font-display ${size === "lg" ? "text-[clamp(34px,3.5vw,60px)]" : "text-[clamp(25px,2.45vw,40px)]"} leading-[1.04] font-normal tracking-[.02em] text-balance`
             : "font-body text-[clamp(26px,2.4vw,40px)] leading-[1.1] font-bold tracking-[-.02em]"
         } ${tone === "dark" ? "text-white" : "text-ink"}`}
       >

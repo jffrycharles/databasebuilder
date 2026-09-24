@@ -2737,12 +2737,19 @@ body:has(.db-still) .db-anim {
 .db-features {
   position: relative;
   isolation: isolate;
-  overflow: hidden;
+  /* clip, not hidden: hidden makes the band a scroll container, and the
+     comparison's sticky header would stick to the band instead of the page */
+  overflow: clip;
   background-color: var(--color-db-black);
   background-image:
     radial-gradient(50% 60% at 0% 0%, #1226f02e, #0000 70%),
     radial-gradient(46% 56% at 100% 100%, #e2332422, #0000 70%),
     linear-gradient(180deg, #040818 0%, #010409 55%, #000 100%);
+}
+/* the table version's big heading gets more room above it than the standard
+   rhythm, so it clears the fixed navbar with space to spare */
+.db-features--table {
+  padding-top: clamp(84px, 7.6vw, 140px);
 }
 .db-features::before {
   content: "";
@@ -2758,12 +2765,10 @@ body:has(.db-still) .db-anim {
   mask-image: radial-gradient(62% 58% at 50% 46%, #000 25%, #0000 78%);
 }
 
-/* The chart's frame: a slim dark bezel instead of the thick light-blue mat.
-   The hairline is a gradient border — brighter along the top edge, fading
-   down the sides — so the frame catches light from above like the rest of
-   the page's dark surfaces. The radii are concentric: the frame's radius is
-   the sheet's plus the padding between them, so the two curves run parallel
-   at every width. */
+/* The chart picture (CompareChart, the staging option). A slim dark bezel:
+   the hairline is a gradient border — brighter along the top edge, fading
+   down the sides — and the radii are concentric, the frame's radius being
+   the sheet's plus the padding between them. */
 .db-compare-frame {
   --pad: clamp(8px, 1.3vw, 16px);
   --sheet-r: 12px;
@@ -2786,6 +2791,1197 @@ body:has(.db-still) .db-anim {
   background: #e7eef8;
 }
 
+/* ---------- the comparison table (CompareTable) ---------------------------
+   Visibility pass (2026-09-25), from a three-lens audit (contrast, hierarchy,
+   scannability) with every final colour checked against WCAG:
+   - marks big enough to read at a glance: 28px tick, 26px ring, 12.5px pills
+     with borders at 3:1 or better
+   - alternating row bands instead of hairlines, stopping at our panel, so the
+     eye can follow a row across to its marks
+   - a clear order of weight: column names > group headings > feature names
+     (16-17px, 16.7:1) > marks
+   - our panel edge in solid brand blue (4.2:1), "Builder" in the hot red
+     (5.6:1; the brand red failed AA on the panel)
+   Second pass, on the user's "still too hard to see": every row is its own
+   bar with a gap above it (separation without spreadsheet rules), "Other
+   CRMs" gets a quiet grey column of its own so the comparison reads as two
+   columns, and each state has its own hue — blue included, amber add-on,
+   soft coral not included — so a glance is enough. The card surface lifts
+   off the band so the table is the section's focus.
+   Third pass: the same contrast and bars at a more compact scale — 15.5px
+   names, 46px rows, 13.5px group headings, 22/19px column names — so more
+   of the list fits on screen without anything going small again.
+   Fourth pass: the card itself is a charcoal slate (#1a2131) rather than
+   near-black, so it lifts off the dark band; the section around it is
+   unchanged. Every colour on it was re-checked against the new surface. */
+.db-cmp {
+  --cmp-bg: #1a2131;
+  --cmp-row: #ffffff0e;
+  --cmp-row-hover: #ffffff1a;
+  --cmp-gap: 3px;
+  --cmp-us: #1d6fe840;
+  --cmp-us-edge: var(--color-brand);
+  --cmp-them: #ffffff0a;
+  --cmp-them-edge: #ffffff33;
+  /* wide mark columns: the feature column only needs its longest name
+     (~330px), so the rest goes to the comparison, not to empty space
+     beside the names */
+  --cmp-col: clamp(92px, 26vw, 320px);
+  --cmp-inset: clamp(10px, 1.4vw, 22px);
+  --cmp-r: 16px;
+  border: 1px solid #ffffff21;
+  border-radius: 22px;
+  background: var(--cmp-bg);
+  /* a lit top edge and a deep drop: the card sits on the band, not in it */
+  box-shadow:
+    0 1px 0 #ffffff1f inset,
+    0 30px 80px -30px #000000f2;
+  padding: clamp(6px, 1vw, 12px) clamp(6px, 1.4vw, 22px) clamp(8px, 1vw, 14px);
+}
+.db-cmp__table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+.db-cmp__us,
+.db-cmp__them {
+  width: var(--cmp-col);
+}
+/* zero specificity, so every rule below can set its own padding plainly */
+:where(.db-cmp__table th, .db-cmp__table td) {
+  padding: 0;
+  font-weight: inherit;
+}
+
+/* header row — sticks under the site header, and moves up with it when the
+   site header slides away, so there is never a gap or an overlap. The rule
+   and the static shadow make a row sliding under it read as scrolling, not
+   as a clipping glitch. */
+.db-cmp__h {
+  position: sticky;
+  top: var(--db-header-h, 67px);
+  z-index: 2;
+  padding: clamp(10px, 0.8vw, 12px) 10px clamp(8px, 0.7vw, 10px);
+  background: var(--cmp-bg);
+  border-bottom: 1px solid #ffffff47;
+  box-shadow: 0 10px 12px -10px #000000cc;
+  transition: top 0.42s var(--ease-db);
+  vertical-align: bottom;
+}
+body:has(.db-header.is-hidden) .db-cmp__h {
+  top: 0;
+}
+.db-cmp__h--feature {
+  text-align: left;
+  padding-left: var(--cmp-inset);
+  font-family: var(--font-ui);
+  font-size: clamp(11px, 0.72vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ffffffb3;
+}
+.db-cmp__name {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 0.28em;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+}
+/* ours is the heaviest text in the table; theirs is easy to read, visibly
+   second */
+.db-cmp__us .db-cmp__name {
+  column-gap: 0;
+  color: #fff;
+  font-size: clamp(18px, 1.3vw, 22px);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+.db-cmp__them .db-cmp__name {
+  color: #ffffffe6;
+  font-size: clamp(16px, 1.12vw, 19px);
+}
+/* lighter than the brand red: on the blue header over the slate card,
+   #e23324 and even the hot red fall short of AA; this is 4.8:1 */
+.db-cmp__h .text-db-red {
+  color: #ff7a6b;
+}
+
+/* our column's panel */
+.db-cmp__us {
+  text-align: center;
+  background: var(--cmp-us);
+  border-inline: 1px solid var(--cmp-us-edge);
+}
+.db-cmp__h.db-cmp__us {
+  /* opaque, so rows scrolling under the stuck header never show through */
+  background:
+    linear-gradient(var(--cmp-us), var(--cmp-us)),
+    var(--cmp-bg);
+  border-top: 3px solid var(--color-brand);
+  border-radius: var(--cmp-r) var(--cmp-r) 0 0;
+}
+.db-cmp__table tbody:last-child tr:last-child .db-cmp__us {
+  border-bottom: 1px solid var(--cmp-us-edge);
+  border-radius: 0 0 var(--cmp-r) var(--cmp-r);
+}
+/* their column: the same shape as ours, in grey, a step quieter */
+.db-cmp__them {
+  text-align: center;
+  background: var(--cmp-them);
+  /* right edge only: on the left, our blue edge is the divider */
+  border-right: 1px solid var(--cmp-them-edge);
+}
+.db-cmp__h.db-cmp__them {
+  background:
+    linear-gradient(var(--cmp-them), var(--cmp-them)),
+    var(--cmp-bg);
+  border-top: 2px solid #ffffff4d;
+  border-radius: var(--cmp-r) var(--cmp-r) 0 0;
+}
+.db-cmp__table tbody:last-child tr:last-child .db-cmp__them {
+  border-bottom: 1px solid var(--cmp-them-edge);
+  border-radius: 0 0 var(--cmp-r) var(--cmp-r);
+}
+
+
+/* group headings — larger than the rows they head, with room above */
+.db-cmp__group > * {
+  padding-top: clamp(16px, 1.4vw, 20px);
+  padding-bottom: 6px;
+}
+.db-cmp__group th {
+  text-align: left;
+  padding-left: var(--cmp-inset);
+  font-family: var(--font-ui);
+  font-size: clamp(12.5px, 0.8vw, 13.5px);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 20px;
+  text-transform: uppercase;
+  color: #fff;
+}
+.db-cmp__group-label {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+}
+/* the category icon, from the same set, in a small tinted square */
+.db-cmp__group-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  margin-right: 11px;
+  border: 1px solid #1d6fe84d;
+  border-radius: 7px;
+  background: #1d6fe824;
+  color: #8ab8ff;
+}
+.db-cmp__group-icon svg {
+  width: 15px;
+  height: 15px;
+}
+.db-cmp__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 18px;
+  margin-left: 10px;
+  padding-inline: 6px;
+  border-radius: 999px;
+  background: #ffffff1f;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: #ffffffe0;
+  vertical-align: 2px;
+}
+/* the only line inside the body: a section break, stopping at our panel */
+tbody + tbody .db-cmp__group > th {
+  border-top: 1px solid #ffffff3d;
+}
+
+/* rows — every feature is its own bar, with a small gap above it: clear
+   separation without spreadsheet rules. The gap is a transparent border with
+   the fill clipped inside it, so it costs no extra markup. The bars stop at
+   the two column panels, which stay unbroken from header to last row. */
+.db-cmp__row > * {
+  height: clamp(32px, 1.95vw, 33px);
+  vertical-align: middle;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+.db-cmp__row th {
+  text-align: left;
+  padding: 4px 14px 4px var(--cmp-inset);
+  border-top: var(--cmp-gap) solid transparent;
+  border-radius: 8px 0 0 8px;
+  background-color: var(--cmp-row);
+  background-clip: padding-box;
+  font-family: var(--font-body);
+  font-size: clamp(14.5px, 0.9vw, 15.5px);
+  font-weight: 500;
+  line-height: 1.3;
+  color: #fff;
+}
+@media (hover: hover) and (pointer: fine) {
+  .db-cmp__row:hover th {
+    background-color: var(--cmp-row-hover);
+  }
+  .db-cmp__row:hover .db-cmp__us {
+    background-color: #1d6fe85c;
+  }
+  .db-cmp__row:hover .db-cmp__them {
+    background-color: #ffffff17;
+  }
+}
+
+/* marks — line icons from the site's icon set, no discs (a white tick on a
+   filled circle read as an emoji). Light brand blue and soft coral keep
+   both at 3:1 or better against their columns; the tick is a touch larger,
+   so our column still leads. */
+.db-cmp__yes,
+.db-cmp__no {
+  display: inline-block;
+  vertical-align: middle;
+}
+.db-cmp__yes {
+  width: 21px;
+  height: 21px;
+  color: #6aa8ff;
+}
+.db-cmp__no {
+  width: 18px;
+  height: 18px;
+  color: #ff8a7e;
+}
+.db-cmp__pill {
+  display: inline-block;
+  padding: 4px 10px 3px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.db-cmp__pill--addon {
+  color: #ffd591;
+  background: #f5a6232e;
+  border-color: #f5a623b3;
+}
+.db-cmp__pill--additional {
+  color: #ffffffe6;
+  background: #ffffff17;
+  border-color: #ffffff66;
+}
+
+/* the key, above the table, so the marks are learned before they are met */
+.db-cmp-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 28px;
+  margin: 0 auto clamp(22px, 2vw, 32px);
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+  color: #ffffffcc;
+}
+.db-cmp-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.db-cmp-legend .db-cmp__yes {
+  width: 19px;
+  height: 19px;
+}
+.db-cmp-legend .db-cmp__no {
+  width: 16px;
+  height: 16px;
+}
+
+/* phones: our name stacks, cells tighten, nothing scrolls sideways */
+@media (max-width: 639px) {
+  .db-cmp {
+    --cmp-col: 76px;
+    --cmp-r: 12px;
+    border-radius: 16px;
+  }
+  .db-cmp__us .db-cmp__name,
+  .db-cmp__them .db-cmp__name {
+    flex-direction: column;
+    font-size: 14.5px;
+    line-height: 1.1;
+  }
+  /* the mark columns only — a bare .db-cmp__h here overrode the FEATURES
+     label's left padding and set it 6px off the feature names */
+  .db-cmp__h.db-cmp__us,
+  .db-cmp__h.db-cmp__them {
+    padding-inline: 4px;
+  }
+  .db-cmp__row > * {
+    height: 34px;
+  }
+  .db-cmp {
+    --cmp-gap: 3px;
+  }
+  .db-cmp__row th {
+    padding-right: 8px;
+    font-size: 14.5px;
+    border-radius: 8px 0 0 8px;
+  }
+  .db-cmp__group > * {
+    padding-top: 14px;
+    padding-bottom: 5px;
+  }
+  .db-cmp__group th {
+    padding-right: 6px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    line-height: 18px;
+  }
+  /* too tight for the badge at phone width: it wrapped onto a line of its
+     own under two-word titles, and the rows it counts are right below */
+  .db-cmp__count {
+    display: none;
+  }
+  .db-cmp__yes {
+    width: 20px;
+    height: 20px;
+  }
+  .db-cmp__no {
+    width: 17px;
+    height: 17px;
+  }
+  .db-cmp__group-icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+    border-radius: 6px;
+  }
+  .db-cmp__group-icon svg {
+    width: 13px;
+    height: 13px;
+  }
+  .db-cmp__pill {
+    padding: 3px 6px 2px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+}
+
+/* =========================================================================
+   Features page (/features)
+   Built around the product's own screens. Screenshots sit in plain window
+   frames, never drawn over; where a detail matters, a native-size crop of the
+   same capture floats beside it so the type reads at full size.
+   ========================================================================= */
+
+/* hero — the product visual lives inside the dark band, above the wave */
+.db-fx-hero {
+  display: flex;
+  flex-direction: column;
+}
+.db-fx-stage {
+  margin: clamp(44px, 4.4vw, 72px) auto clamp(28px, 3vw, 52px);
+}
+
+/* ---- the Best Choice picture (the staging option, lib/variants.ts) -------
+   The band leaves room at its foot for the stage to overlap it. The stage
+   strip runs full width, transparent for exactly the overlap, so the band
+   shows through above and the page colour below. The render's own backdrop
+   is a flat #f1f1f1, so the stage is that exact grey and the photo has no
+   edge inside it; capped so the 1132px picture is never upscaled. */
+.db-fx-hero--render {
+  padding-bottom: clamp(150px, 17vw, 270px);
+}
+.db-fx-stage-band {
+  --ov: clamp(120px, 14vw, 225px);
+  position: relative;
+  z-index: 3;
+  margin-top: calc(-1 * var(--ov));
+  background: linear-gradient(#0000 var(--ov), var(--color-page) var(--ov));
+}
+.db-fx-render {
+  max-width: 1180px;
+  margin-inline: auto;
+  overflow: hidden;
+  padding: clamp(14px, 2.2vw, 34px) clamp(10px, 1.6vw, 24px) 0;
+  border: 1px solid #fff;
+  border-radius: clamp(16px, 1.8vw, 26px);
+  background: #f1f1f1;
+  box-shadow:
+    0 2px 6px #0d15261a,
+    0 50px 90px -40px #0d152680;
+}
+.db-fx-render img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---- hero product visual (HeroVisual) ------------------------------------
+   One front screen with two smaller screens behind it, and they switch
+   places. All three share one grid cell and one frame size (the captures
+   are cropped to 2:1), so any screen can sit in any slot; the slot is a
+   transform, in cqw of the stack, which HeroVisual's GEOMETRY mirrors in
+   px for the move between slots. The back screens are 46/80 of the front,
+   pinned to the visual's top corners, and a step darker. */
+.db-hv {
+  position: relative;
+  max-width: 1180px;
+  margin-inline: auto;
+  padding-top: 6%;
+  /* vertical scrolling stays the browser's; a horizontal swipe is ours */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* no native image drag: a drag here is a swipe */
+.db-hv img {
+  -webkit-user-drag: none;
+}
+.db-hv__stack {
+  display: grid;
+  width: 80%;
+  margin-inline: auto;
+  container-type: inline-size;
+}
+.db-hv__screen {
+  grid-area: 1 / 1;
+  transform-origin: 0 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.db-hv__screen[data-slot="front"] {
+  z-index: 2;
+}
+.db-hv__screen[data-slot="left"] {
+  z-index: 1;
+  transform: translate(-12.5cqw, -7.5cqw) scale(0.575);
+}
+.db-hv__screen[data-slot="right"] {
+  z-index: 1;
+  transform: translate(55cqw, -7.5cqw) scale(0.575);
+}
+.db-hv__screen .db-win {
+  box-shadow:
+    0 0 0 1px #ffffff14,
+    0 50px 100px -30px #000000f2;
+  transition:
+    filter 0.6s ease,
+    box-shadow 0.45s ease;
+}
+.db-hv__screen[data-slot="left"] .db-win,
+.db-hv__screen[data-slot="right"] .db-win {
+  filter: brightness(0.72) saturate(0.85);
+}
+.db-win__crop {
+  position: relative;
+  overflow: hidden;
+}
+.db-win__crop .db-win__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+/* each layer's own mover: pointer parallax, idle float, hover lift */
+.db-hv__depth,
+.db-award {
+  will-change: transform;
+}
+.db-award {
+  position: absolute;
+  top: -1%;
+  right: 1.5%;
+  z-index: 4;
+  width: clamp(70px, 9.5vw, 140px);
+  cursor: pointer;
+}
+.db-award img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 18px #00000073);
+}
+/* Hovering a screen behind brings it up to nearly full brightness — the
+   lift itself is GSAP's (scale); this is only the light. */
+@media (hover: hover) and (pointer: fine) {
+  .db-hv__screen[data-slot="left"]:hover .db-win,
+  .db-hv__screen[data-slot="right"]:hover .db-win {
+    filter: brightness(0.94) saturate(0.97);
+  }
+  .db-hv__screen[data-slot="front"]:hover .db-win {
+    box-shadow:
+      0 0 0 1px #ffffff26,
+      0 60px 110px -30px #000000;
+  }
+}
+.db-win--dark .db-win__url {
+  border-color: #ffffff17;
+  background: #0b1220;
+  color: #ffffff8c;
+}
+/* the screen buttons — plain: the current one is simply white */
+.db-hv-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 6px;
+  margin-top: clamp(22px, 2.4vw, 36px);
+}
+.db-hv-tabs button {
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #ffffff8c;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.db-hv-tabs button[aria-pressed="true"] {
+  background: #ffffff14;
+  color: #fff;
+}
+@media (hover: hover) and (pointer: fine) {
+  .db-hv-tabs button:hover {
+    color: #fff;
+  }
+}
+.db-hv-tabs button:focus-visible {
+  outline: 2px solid #8ab8ff;
+  outline-offset: 2px;
+}
+/* phones: a slimmer title bar, in proportion to a 280px window */
+@media (max-width: 719px) {
+  .db-hv .db-win__bar {
+    gap: 8px;
+    height: 22px;
+    padding: 0 9px;
+  }
+  .db-hv .db-win__dots {
+    gap: 4px;
+  }
+  .db-hv .db-win__dots i {
+    width: 6px;
+    height: 6px;
+  }
+  .db-hv .db-win__url {
+    height: 14px;
+    font-size: 8.5px;
+    line-height: 12px;
+    transform: translateX(-10px);
+  }
+}
+
+/* jump links — plain, static */
+.db-fx-jump {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 10px;
+  margin: clamp(24px, 2.4vw, 36px) auto 0;
+  max-width: 900px;
+}
+.db-fx-jump a {
+  padding: 7px 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--color-ink-2);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .db-fx-jump a:hover {
+    color: var(--color-brand);
+    border-color: #1d6fe866;
+  }
+}
+.db-fx-jump a:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* ---- window frame --------------------------------------------------- */
+.db-win {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #d9e1ec;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow:
+    0 2px 6px #0d152614,
+    0 34px 70px -34px #0d152673;
+}
+.db-win__bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 34px;
+  padding: 0 14px;
+  border-bottom: 1px solid #e3e9f1;
+  background: #f5f7fb;
+}
+.db-win__dots {
+  display: inline-flex;
+  flex: none;
+  gap: 6px;
+}
+.db-win__dots i {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #d3dae4;
+}
+.db-win__url {
+  flex: 0 1 320px;
+  margin-inline: auto;
+  overflow: hidden;
+  height: 20px;
+  padding-inline: 10px;
+  border: 1px solid #e3e9f1;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 11.5px;
+  line-height: 18px;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-ink-3);
+  transform: translateX(-24px);
+}
+.db-win__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.db-win--dark {
+  border-color: #ffffff1f;
+  background: #0b1220;
+  box-shadow: 0 40px 80px -36px #000000e6;
+}
+.db-win--dark .db-win__bar {
+  border-bottom-color: #ffffff14;
+  background: #111a2d;
+}
+.db-win--dark .db-win__dots i {
+  background: #ffffff2e;
+}
+
+/* ---- native-size detail crop ---------------------------------------- */
+.db-detail {
+  width: max-content;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid #d9e1ec;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow:
+    0 2px 6px #0d15261f,
+    0 26px 50px -22px #0d152680;
+}
+.db-detail__label {
+  margin: 0 0 8px 2px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+.db-detail__img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #e8edf3;
+  border-radius: 6px;
+}
+
+/* the five capability groups: three, then two centred under them */
+@media (min-width: 1024px) {
+  .db-fx-groups {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .db-fx-groups > * {
+    grid-column: span 2;
+  }
+  .db-fx-groups > :nth-child(4) {
+    grid-column: 2 / span 2;
+  }
+}
+
+/* ---- the one list pattern ------------------------------------------- */
+/* no margin here: an unlayered margin outranks the Tailwind mt-* the page
+   sets on each list, and the lists sat flush under their ledes */
+.db-fx-points {
+  display: grid;
+  gap: 22px 32px;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 768px) {
+  .db-fx-points--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .db-fx-points--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  .db-fx-points--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.db-fx-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.db-fx-point__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #1d6fe833;
+  border-radius: 10px;
+  background: #1d6fe814;
+  color: var(--color-brand);
+}
+.db-fx-point__icon svg {
+  width: 19px;
+  height: 19px;
+}
+.db-fx-point__title {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-ink);
+}
+.db-fx-point__body {
+  display: block;
+  margin-top: 4px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--color-ink-2);
+}
+.db-fx-points--dark .db-fx-point__icon {
+  border-color: #1d6fe84d;
+  background: #1d6fe824;
+  color: #8ab8ff;
+}
+.db-fx-points--dark .db-fx-point__title {
+  color: #fff;
+}
+.db-fx-points--dark .db-fx-point__body {
+  color: #ffffffb3;
+}
+
+/* ---- split sections ------------------------------------------------- */
+.db-fx-split {
+  display: grid;
+  gap: clamp(36px, 4vw, 64px);
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .db-fx-split {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+  .db-fx-split--flip > :first-child {
+    order: 2;
+  }
+  .db-fx-split--flip {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+}
+
+/* ---- database: the grid with its details floated around it ----------
+   Compact: this section sits straight under the hero, so it gets tighter
+   padding than the page rhythm, and the next section starts sooner. */
+.db-fx-compact {
+  padding-block: clamp(40px, 3.6vw, 64px);
+}
+.db-fx-follow {
+  padding-top: clamp(44px, 4vw, 72px);
+}
+.db-fx-db {
+  position: relative;
+  max-width: 1120px;
+  margin: clamp(24px, 2.6vw, 40px) auto 0;
+}
+.db-fx-db__details {
+  display: grid;
+  /* minmax(0, 1fr), not auto: an auto track grows to the crop's natural
+     width and pushed it off a phone screen */
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+/* 1260px, not 1180: below it the crops' side overhang ran past the
+   viewport edge and the page scrolled sideways */
+@media (min-width: 1260px) {
+  /* The floating crops overhang the window by fixed amounts, and the
+     container reserves exactly those amounts as padding. Percentages of
+     the visual's height let the lower crop run into the points below at
+     some widths. */
+  .db-fx-db {
+    padding-block: 40px 44px;
+  }
+  .db-fx-db__details {
+    display: contents;
+  }
+  .db-fx-db__tabs,
+  .db-fx-db__filters,
+  .db-fx-db__cols {
+    position: absolute;
+  }
+  .db-fx-db__tabs {
+    top: 26%;
+    left: -4%;
+  }
+  .db-fx-db__filters {
+    top: 0;
+    right: -3%;
+  }
+  .db-fx-db__cols {
+    right: -5%;
+    bottom: 0;
+  }
+}
+
+/* ---- productivity: the grid with one number off it ------------------- */
+.db-fx-prod {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+}
+.db-fx-prod__stat {
+  margin-top: 16px;
+}
+@media (min-width: 640px) {
+  .db-fx-prod__stat {
+    position: absolute;
+    right: -9%;
+    bottom: 12%;
+    margin: 0;
+  }
+}
+.db-fx-stat {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px 14px 14px;
+  border: 1px solid #d9e1ec;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 30px 60px -24px #000000cc;
+}
+.db-fx-stat__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: var(--color-brand);
+  color: #fff;
+}
+.db-fx-stat__icon svg {
+  width: 20px;
+  height: 20px;
+}
+.db-fx-stat__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--color-ink);
+}
+.db-fx-stat__label {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--color-ink-2);
+}
+
+/* ---- team: the admin screen with two details off it ----------------- */
+.db-fx-team {
+  position: relative;
+  max-width: 1120px;
+  margin: clamp(36px, 4vw, 60px) auto 0;
+}
+.db-fx-team .db-fx-float {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+@media (min-width: 1180px) {
+  .db-fx-team__main {
+    width: 80%;
+  }
+  .db-fx-team .db-fx-float {
+    position: absolute;
+    margin: 0;
+  }
+  .db-fx-team {
+    margin-bottom: clamp(72px, 6vw, 100px);
+  }
+  .db-fx-team__credits {
+    top: 7%;
+    right: 0;
+  }
+  .db-fx-team__tabs {
+    right: 2%;
+    bottom: -9%;
+  }
+}
+
+/* ---- video: the invite and the call it opens -------------------------- */
+/* width: 100% — a grid item with auto margins otherwise shrinks to its
+   content. The overlap is a negative top margin on the call, which (unlike
+   padding on the parent) is measured against this box's own width. */
+.db-fx-video {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  max-width: 660px;
+  margin-inline: auto;
+}
+@media (min-width: 640px) {
+  .db-fx-video {
+    display: block;
+  }
+  .db-fx-video__invite {
+    width: 82%;
+  }
+  /* two classes: the frame's own margin: 0 comes later in the file */
+  .db-fx-video .db-fx-video__call {
+    position: relative;
+    width: 60%;
+    margin: -16% 0 0 auto;
+  }
+}
+
+/* ---- your data ---------------------------------------------------------- */
+.db-fx-keys {
+  display: grid;
+  gap: 0;
+  margin: clamp(24px, 2.4vw, 34px) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line);
+}
+.db-fx-keys li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-line);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+.db-fx-keys__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e2332433;
+  border-radius: 9px;
+  background: #e232240f;
+  color: var(--color-db-red-ink);
+}
+.db-fx-keys__icon svg {
+  width: 17px;
+  height: 17px;
+}
+.db-fx-own-art {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-inline: auto;
+  aspect-ratio: 5 / 4;
+  border: 1px solid var(--color-line);
+  border-radius: 22px;
+  background: #f4f7fb;
+}
+.db-fx-own-art__mark {
+  width: 84%;
+  height: auto;
+}
+/* the call photo already carries its own window and desktop, so it gets a
+   plain rounded edge instead of a second frame */
+.db-fx-photo {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #ffffff1f;
+  border-radius: 14px;
+  box-shadow: 0 40px 80px -36px #000000e6;
+}
+.db-fx-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* the export mark (restored with the section): geometry, not a screenshot */
+.db-xp__panel,
+.db-xp__tray {
+  fill: none;
+  stroke: #c9d4e2;
+  stroke-width: 1.6;
+}
+.db-xp__row {
+  fill: #e3e9f1;
+}
+/* driven entirely by the loop; invisible when nothing is driving it */
+.db-xp__chip {
+  fill: var(--color-db-red);
+  opacity: 0;
+}
+.db-xp__draw {
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.db-xp__arrow {
+  stroke: #a9b7c9;
+}
+.db-xp__down {
+  stroke: var(--color-db-red);
+}
+@media (prefers-reduced-motion: reduce) {
+  .db-xp__chip {
+    display: none;
+  }
+}
+
+/* ---------- the comparison table, light (.db-cmp--light) ------------------
+   The same table on a soft off-white card (#eef2f7, the site's own light
+   page tone — pure white read as glaring on the dark band), the section
+   around it still dark: dark
+   ink, light-grey rules between the rows instead of bars, our column a
+   pale blue wash with a brand-blue edge. The tick and the cross keep their
+   hues but go a shade deeper, because the light versions made for the dark
+   card fade on light (tick 3.7:1 and cross 3.7:1 here, text 15-16:1). The
+   key above the table stays on the dark band, so it is not touched. */
+.db-cmp--light {
+  --cmp-bg: #eef2f7;
+  --cmp-row: transparent;
+  --cmp-row-hover: #e6ebf2;
+  --cmp-gap: 0px;
+  --cmp-us: #1d6fe81a;
+  --cmp-us-edge: var(--color-brand);
+  --cmp-them: #e5eaf1;
+  --cmp-them-edge: #cdd6e2;
+  border-color: #eef2f7;
+  box-shadow: 0 30px 80px -30px #000000d9;
+}
+.db-cmp--light .db-cmp__h {
+  border-bottom-color: #cdd6e2;
+  box-shadow: 0 10px 12px -10px #0d152621;
+}
+.db-cmp--light .db-cmp__h--feature {
+  color: var(--color-ink-3);
+}
+.db-cmp--light .db-cmp__us .db-cmp__name {
+  color: var(--color-ink);
+}
+/* a shade deeper than --color-db-red-ink: on the blue wash over the
+   off-white card that one is 4.4:1; this is 5.1:1 */
+.db-cmp--light .db-cmp__h .text-db-red {
+  color: #b3261a;
+}
+.db-cmp--light .db-cmp__them .db-cmp__name {
+  color: var(--color-ink-2);
+}
+.db-cmp--light .db-cmp__h.db-cmp__them {
+  border-top-color: #c5cfdc;
+}
+.db-cmp--light .db-cmp__group th {
+  color: var(--color-ink);
+}
+.db-cmp--light .db-cmp__group-icon {
+  border-color: #1d6fe833;
+  background: #1d6fe81a;
+  color: var(--color-brand);
+}
+.db-cmp--light .db-cmp__count {
+  background: #dfe5ed;
+  color: var(--color-ink-2);
+}
+.db-cmp--light tbody + tbody .db-cmp__group > th {
+  border-top-color: #cdd6e2;
+}
+/* rows: a hairline between them, full width, instead of a bar each */
+.db-cmp--light .db-cmp__row > * {
+  border-top: 1px solid #dde4ec;
+}
+.db-cmp--light .db-cmp__row th {
+  border-radius: 0;
+  color: var(--color-ink);
+}
+.db-cmp--light .db-cmp__yes {
+  color: var(--color-brand);
+}
+.db-cmp--light .db-cmp__no {
+  color: var(--color-db-red);
+}
+.db-cmp--light .db-cmp__pill--addon {
+  color: #8a4b00;
+  background: #fbe8c4;
+  border-color: #d9962e;
+}
+.db-cmp--light .db-cmp__pill--additional {
+  color: var(--color-ink-2);
+  background: #dfe5ed;
+  border-color: #aeb9c8;
+}
+@media (hover: hover) and (pointer: fine) {
+  .db-cmp--light .db-cmp__row:hover th {
+    background-color: var(--cmp-row-hover);
+    color: var(--color-ink);
+  }
+  .db-cmp--light .db-cmp__row:hover .db-cmp__us {
+    background-color: #1d6fe82e;
+  }
+  .db-cmp--light .db-cmp__row:hover .db-cmp__them {
+    background-color: #dfe5ed;
+  }
+}
+
 /* Leadership — light rectangular profiles on black. */
 .db-leadership {
   background: var(--color-db-black);
@@ -2799,7 +3995,9 @@ body:has(.db-still) .db-anim {
   align-items: stretch;
   gap: 24px;
   width: 100%;
-  max-width: 320px;
+  /* Phones: the card takes the column. At 320px it sat as a narrow strip
+     with dark gutters either side and a portrait taller than the screen. */
+  max-width: 480px;
   margin-inline: auto;
 }
 @media (min-width: 640px) {
@@ -2845,9 +4043,27 @@ body:has(.db-still) .db-anim {
   overflow: hidden;
   background: #d7dbe2;
 }
+@media (max-width: 639px) {
+  /* A full-width card at 3:4 would be a 560px portrait on a 460px screen, so
+     phones get a square, anchored near the top: the crop comes off the
+     shoulders, never the hair or Adam's cap. (6:5 was tried and cut into
+     Adam's beard.) */
+  .db-team-card__photo {
+    aspect-ratio: 1 / 1;
+  }
+  .db-team-card__photo img {
+    object-position: 50% 10%;
+  }
+}
 .db-team-card__role {
-  min-height: 2.75em;
   color: var(--color-ink-2);
+}
+/* Lines the pills up across cards sitting side by side. In a single column on
+   a phone it would only leave a hole under a one-line title. */
+@media (min-width: 640px) {
+  .db-team-card__role {
+    min-height: 2.75em;
+  }
 }
 
 /* how long they have been here */

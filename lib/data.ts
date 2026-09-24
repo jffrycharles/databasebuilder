@@ -39,6 +39,8 @@ export const NAV_LINKS: NavLink[] = [
       { label: "Our Team", href: "/about#leadership" },
     ],
   },
+  /* Adam: "Let's add another menu option up top — Features" */
+  { label: "Features", href: "/features" },
   { label: "Pricing", href: "/pricing" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact Us", href: "/contact" },
