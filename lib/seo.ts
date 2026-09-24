@@ -16,16 +16,24 @@ export const IS_INDEXABLE =
 /* The card every share of this site renders.
  *
  * `summary_large_image` promises a picture; without one, X, LinkedIn, Facebook
- * and Slack all fall back to a bare text row. /og.png is a 1200×630 render of
- * the brand lockup.
+ * and Slack all fall back to a bare text row. /og.jpg is a 1200×630 render of
+ * the brand lockup — the globe, the wordmark and the line.
+ *
+ * JPEG, not the PNG it was: WhatsApp quietly drops a preview image over a few
+ * hundred KB and shows a bare link instead, and the PNG was 369 KB. At quality
+ * 88 this is 128 KB with no visible difference on the dark gradient. The PNG
+ * stays for the JSON-LD organisation logo in app/layout.tsx.
  *
  * It lives here rather than in app/layout.tsx because a Next layout may only
  * export `metadata`, `viewport` and its default component — any other export
  * fails the build's type check. */
 export const OG_IMAGE = {
-  url: "/og.png",
+  url: "/og.jpg",
   width: 1200,
   height: 630,
+  /* Emitted as og:image:type. Facebook and LinkedIn use it to pick a decoder
+     before downloading, which is one less reason for a card to come back blank. */
+  type: "image/jpeg",
   alt: "DatabaseBuilder — a simple alternative to your overpriced CRM",
 } as const;
 

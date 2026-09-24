@@ -1,4 +1,3 @@
-import type { IconName } from "@/components/ui/Icon";
 
 /* Content sourced from the old databasebuilder.com — the Our Team and History
    pages and the CEO's "About Us" letter. Only the genuine copy is kept; the
@@ -8,7 +7,7 @@ export const ABOUT = {
   kicker: "Our story",
   headline: ["Sales software,", "designed by", "salespeople."],
   standfirst:
-    "Most CRM companies answered complexity by adding more of it, and raised the price to match. We went the other way: one simple system, one all-in-one price, built the way a salesperson actually works.",
+    "Many CRM companies add more advanced features and raise their prices. We went the other way and built a simple, easy to use software, at an all-in-price, the way you want to see it.",
   closing: "Salespeople close deals, not software.",
   ceoLetter: "https://databasebuilder.com/wp-content/uploads/2022/05/about-us.pdf",
 } as const;
@@ -22,7 +21,7 @@ export const ORIGIN = {
     "The goal was a system that worked the way a salesperson wants to use it, not the way a group of software developers decided it should be used. As we like to say, it's sales software, designed by salespeople.",
   ],
   pullQuote:
-    "You present a product, give a price, and close the deal. It's not complicated, so there's no reason your CRM should be either.",
+    "Selling is not complicated, you present a product or service, give a price, and close the deal. There's no reason your CRM should be either.",
   /* Three fields, not two: the ruled metric row sets the unit as its own
      small label under the numeral, so " yrs" can no longer ride along inside
      the number. `suffix` is now only what belongs against the digits — the M
@@ -31,18 +30,6 @@ export const ORIGIN = {
     { value: 45, suffix: "", unit: "Years", label: "Of sales experience behind the product" },
     { value: 20, suffix: "M", unit: "Records", label: "Business and consumer records in the database" },
     { value: 1, suffix: "", unit: "Price", label: "All-in-one, with no tiers and no à la carte add-ons" },
-  ],
-};
-
-export const OWNERSHIP = {
-  title: "Your data is never held hostage",
-  body:
-    "One of the biggest problems with the other CRMs on the market — beyond the price tag and the complexity — is how little control you have over data that took your team time and money to build. Cancel your service and it can be effectively held hostage, or simply unreachable without an active subscription. We do the opposite and hand you the keys.",
-  points: [
-    { icon: "upload" as IconName, text: "Download and back up your own data with a built-in tool" },
-    { icon: "swap" as IconName, text: "Take it whenever you want it, as often as you want it" },
-    { icon: "chat" as IconName, text: "Client notes and sales history come with it, not just contacts" },
-    { icon: "user" as IconName, text: "Administrators keep full control of users and access levels" },
   ],
 };
 
@@ -105,11 +92,11 @@ export const LEADERS: Leader[] = [
   {
     name: "Adam Berman",
     photo: "/team/adam-berman.webp",
-    summary: "Born into the business, in sales and marketing his whole career, and running the company since 1998.",
+    summary: "A lifelong salesman, using his passion and years of sales and marketing experience to build a better CRM for his team.",
     role: "President / CEO",
     initials: "AB",
     since: "Leading since 1998",
-    bio: "Adam was born into the business and has spent most of his life in sales and marketing, starting in commercial printing before joining RAI. Since taking over in 1998 he has overseen the company's growth and expansion into digital media. DatabaseBuilder is his latest project, and his passion for selling is what drives the product's direction.",
+    bio: "Born a true salesman, Adam spent most of his life in sales and marketing, and uses this passion and years of experience to build better CRM software for his marketing team. He quickly realized that most CRM systems did not operate the way his sales team needed them to. In 2013, DatabaseBuilder.com was launched. His newest project is building a whiteboard version of DatabaseBuilder that is designed for any business to use.",
     quote: "Selling hasn't changed much in 40 years. The technology around it has.",
     phone: "773-273-7310",
     email: "aberman@raichicago.com",
@@ -150,4 +137,3 @@ export const LEADERS: Leader[] = [
     email: "sdurlesteanu@raichicago.com",
   },
 ];
-

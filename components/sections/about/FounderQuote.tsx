@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { EASE, gsap, useGsap } from "@/lib/gsap";
+import { EASE, gsap, ScrollTrigger, useGsap } from "@/lib/gsap";
 import DotArt from "./DotArt";
 import { ORIGIN, LEADERS } from "@/lib/about";
 
@@ -10,12 +10,9 @@ import { ORIGIN, LEADERS } from "@/lib/about";
    the same person. */
 const ADAM = LEADERS.find((l) => l.name === "Adam Berman");
 
-/* Authored line breaks. Left to wrap on its own the quote broke after "It's"
-   and stranded "either." on a line of its own, which is where a reader's eye
-   stops and the sentence stops being one breath. The quote is sliced at these
-   points rather than retyped, so lib/about.ts stays the one home for the
-   words and the two can never drift apart. */
-const BREAK_AFTER = ["give a price,", "It's not complicated,"];
+/* Break at complete clauses so the quote stays readable across screen sizes.
+   The words still come from their single source in lib/about.ts. */
+const BREAK_AFTER = ["complicated,", "or service,", "the deal."];
 
 function toLines(text: string, after: string[]) {
   const out: string[] = [];
@@ -37,7 +34,7 @@ const LINES = toLines(ORIGIN.pullQuote, BREAK_AFTER);
  *
  * Full bleed, centred, and the only dark band in the section: everything else
  * on the page is a column you read down, and this is the one thing you stop
- * for. The lines are set by hand so all three break on a comma or a full stop,
+ * for. The lines are set by hand to break on a comma or a full stop,
  * and the accent under them is what carries the eye down to his name.
  *
  * Each line comes up out of its own mask, one after the other, then the rule
@@ -57,6 +54,30 @@ export default function FounderQuote() {
       const lines = el.querySelectorAll<HTMLElement>(".db-say__line");
       const rule = el.querySelector<HTMLElement>(".db-say__rule");
       const by = el.querySelectorAll<HTMLElement>(".db-say__by > *");
+      const art = el.querySelector<HTMLElement>(".db-say__art");
+
+      /* The dot motif is the globe's own vocabulary — it spins elsewhere on
+         this page. At 5% opacity a slow turn reads as ambient texture, not
+         a distraction, so the one dark band with no other motion isn't
+         perfectly still. */
+      if (art) {
+        /* Only while the band is on screen: a turn nobody can see is work
+           nobody asked for, and this page is already sensitive to that. */
+        const spin = gsap.to(art, {
+          rotation: 360,
+          duration: 110,
+          ease: "none",
+          repeat: -1,
+          transformOrigin: "50% 50%",
+          paused: true,
+        });
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top bottom",
+          end: "bottom top",
+          onToggle: (self) => (self.isActive ? spin.resume() : spin.pause()),
+        });
+      }
 
       const tl = gsap.timeline({
         scrollTrigger: { trigger: el, start: "top 72%", once: true },

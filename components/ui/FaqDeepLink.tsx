@@ -4,10 +4,9 @@ import { useEffect } from "react";
 
 /* Opening the question a link actually points at.
 
-   Every question is a native <details> with an id, and the category rail links
-   straight to one. Without this, clicking "Pricing & billing" — or landing on
-   /faq#cancellation from search — scrolled you to a row that was still shut,
-   so the answer you asked for was the one thing you could not see.
+   Every question is a native <details> with an id. Landing on
+   /faq#cancellation from search should reveal the answer instead of scrolling
+   to a row that is still shut.
 
    It runs on hash change and once on mount (SmoothScroll intercepts in-page
    hash clicks, so `hashchange` does not always fire) and marks the row so it

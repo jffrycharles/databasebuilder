@@ -1,6 +1,5 @@
 import Reveal from "@/components/animations/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
-import SmartLink from "@/components/ui/SmartLink";
 import { CONTACT_STEPS } from "@/lib/contact";
 
 /**
@@ -50,18 +49,6 @@ export default function NextSteps() {
           ))}
         </ol>
 
-        {/* The "schedule a call" slot the client asked for. No calendar link
-            has been supplied yet, so it points at the form rather than
-            shipping a dead button — swap the href when the link arrives. */}
-        <Reveal delay={360}>
-          <p className="mt-[clamp(28px,3vw,46px)] text-center text-[clamp(14px,0.92vw,16px)] leading-[1.6] text-white/55">
-            Would rather talk it through?{" "}
-            <SmartLink href="#contact-form" className="text-white underline underline-offset-4 hover:text-db-red-hot transition-colors">
-              Ask for a call
-            </SmartLink>{" "}
-            in the form above and we will arrange one.
-          </p>
-        </Reveal>
       </div>
     </section>
   );

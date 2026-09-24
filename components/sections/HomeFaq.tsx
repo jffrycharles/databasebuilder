@@ -2,6 +2,7 @@ import Reveal from "@/components/animations/Reveal";
 import SmartLink from "@/components/ui/SmartLink";
 import Accordion from "@/components/ui/Accordion";
 import { FAQ_ITEMS } from "@/lib/faq";
+import { LIVE_FAQ_ITEMS } from "@/lib/faq-live";
 import { SITE } from "@/lib/data";
 
 /* The four questions asked before a trial.
@@ -47,7 +48,7 @@ export default function HomeFaq() {
                 href="/faq"
                 className="text-brand text-[clamp(14.5px,0.95vw,16.5px)] font-semibold underline underline-offset-4"
               >
-                Read all {FAQ_ITEMS.length} questions
+                Read all {LIVE_FAQ_ITEMS.length} questions
               </SmartLink>
               <SmartLink
                 href="/contact"

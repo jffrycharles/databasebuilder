@@ -15,8 +15,8 @@ import { CONTACT } from "@/lib/contact";
 
      CONTACT_WEBHOOK_URL="https://…"
 
-   With it unset the route answers 501 and the browser falls back to the
-   mailto handoff, so the form still works on a fresh clone with no config.
+   With it unset the route answers 501. The browser retains the draft and
+   shows a delivery error; it never reports an unsent message as delivered.
    --------------------------------------------------------------------------- */
 
 export const runtime = "nodejs";
@@ -33,14 +33,30 @@ export async function POST(req: Request) {
 
   let body: Payload;
   try {
-    body = (await req.json()) as Payload;
+    const parsed: unknown = await req.json();
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return NextResponse.json({ ok: false, error: "Malformed request." }, { status: 400 });
+    }
+    body = parsed as Payload;
   } catch {
     return NextResponse.json({ ok: false, error: "Malformed request." }, { status: 400 });
   }
 
-  // A bot fills every field it can see. Humans never see this one.
+  /* A bot fills every field it can find — and so, now and then, does a
+     password manager or a browser's autofill. Dropping the message silently
+     behind a "Message sent" screen would lose a real enquiry with no second
+     path to us, so this answers the way any other undelivered message does:
+     a failure the visitor can act on. */
   if (str(body.website, 200)) {
-    return NextResponse.json({ ok: true, delivered: true });
+    return NextResponse.json(
+      {
+        ok: false,
+        delivered: false,
+        reason: "rejected",
+        error: `We could not send your message. Please email ${CONTACT.email} and we will pick it up from there.`,
+      },
+      { status: 422 },
+    );
   }
 
   const message = {
@@ -59,10 +75,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "That address looks incomplete." }, { status: 422 });
   }
 
-  // Nothing configured yet — say so plainly and let the client fall back.
+  // Nothing configured yet — retain the draft on the client, without handoff.
   if (!endpoint) {
     return NextResponse.json(
-      { ok: false, delivered: false, reason: "no-endpoint" },
+      { ok: false, delivered: false, reason: "no-endpoint", error: "Message delivery is temporarily unavailable. Your message has not been sent. Please try again later." },
       { status: 501 },
     );
   }
@@ -84,7 +100,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("[contact] delivery failed:", err);
     return NextResponse.json(
-      { ok: false, delivered: false, reason: "upstream" },
+      { ok: false, delivered: false, reason: "upstream", error: "We could not send your message. Please try again in a moment." },
       { status: 502 },
     );
   }

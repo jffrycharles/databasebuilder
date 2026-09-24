@@ -95,9 +95,9 @@ export default function Hero() {
             data-hero-reveal
             className="font-body mb-[clamp(22px,3vw,40px)] text-[clamp(16px,1.65vw,27px)] leading-[1.42] font-light text-[#f2f5fb]"
           >
-            Sales Software,
+            A Simple Alternative to
             <br />
-            Designed by Salespeople
+            your Overpriced CRM Software
           </p>
           <div data-hero-reveal>
             <CtaButton className="text-[clamp(18px,2.05vw,34px)]">Start 7-Day Free Trial</CtaButton>

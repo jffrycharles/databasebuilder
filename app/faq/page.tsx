@@ -1,38 +1,46 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { pageMeta } from "@/lib/seo";
-import PageHero from "@/components/ui/PageHero";
 import Accordion from "@/components/ui/Accordion";
 import FaqDeepLink from "@/components/ui/FaqDeepLink";
+import FaqHero from "@/components/sections/faq/FaqHero";
+import FaqMotion from "@/components/sections/faq/FaqMotion";
 import CtaBand from "@/components/sections/CtaBand";
-import { FAQ_ITEMS, FAQ_CATEGORIES } from "@/lib/faq";
+import { LIVE_FAQ_ITEMS, LIVE_FAQ_CATEGORIES } from "@/lib/faq-live";
 import { SITE } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "FAQ",
   description:
-    "Answers on importing your own data, customization, cancellation, security, pricing, sales training, the 7-day free trial and support.",
+    "Find answers to your questions about DatabaseBuilder's product and features, data, policies, and sales.",
   alternates: { canonical: "/faq" },
   ...pageMeta({
     title: "FAQ — DatabaseBuilder CRM",
     description:
-      "The questions we are asked most about the CRM, answered plainly.",
+      "Answers to your questions about DatabaseBuilder's product and features, data, policies, and sales.",
     path: "/faq",
   }),
 };
 
 const slug = (title: string) => `group-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
 
-export default function FaqPage() {
-  const byId = (id: string) => FAQ_ITEMS.find((f) => f.id === id);
+const categoryImages = {
+  product: { src: "/faq/product-features.webp", alt: "A sales professional reviewing a CRM dashboard", width: 1280, height: 1280 },
+  data: { src: "/faq/data.webp", alt: "Business reports and customer data on a tablet", width: 1280, height: 1280 },
+  policy: { src: "/faq/policy.webp", alt: "A privacy policy being reviewed on a laptop", width: 1280, height: 1280 },
+  sales: { src: "/faq/sales.webp", alt: "A sales team speaking with customers", width: 768, height: 768 },
+};
 
-  /* Resolve the groups once. The rail badge, the heading count, the rendered
-     rows and the structured data all read from this, so a mistyped id in
-     FAQ_CATEGORIES can no longer produce a rail that promises three answers
-     above a list showing two. */
-  const groups = FAQ_CATEGORIES.map((cat) => ({
+export default function FaqPage() {
+  const byId = (id: string) => LIVE_FAQ_ITEMS.find((f) => f.id === id);
+
+  /* Resolve the groups once. The heading, the rendered rows and the structured
+     data all read from this, so a mistyped id in LIVE_FAQ_CATEGORIES can no longer
+     produce a heading above a list that does not match it. */
+  const groups = LIVE_FAQ_CATEGORIES.map((cat) => ({
     ...cat,
     anchor: slug(cat.title),
-    items: cat.ids.map(byId).filter((f): f is (typeof FAQ_ITEMS)[number] => Boolean(f)),
+    items: cat.ids.map(byId).filter((f): f is (typeof LIVE_FAQ_ITEMS)[number] => Boolean(f)),
   }));
   const shown = groups.flatMap((g) => g.items);
 
@@ -57,55 +65,44 @@ export default function FaqPage() {
   };
 
   return (
-    <main className="db-still">
+    <main className="db-still db-faq-page">
       <script
         type="application/ld+json"
-        // the content is our own, from lib/faq.ts — no user input reaches this
+        // Restored FAQ content; escape characters that could close the script.
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c"),
         }}
       />
       <FaqDeepLink />
-      <PageHero
-        label="FAQ"
-        title={
-          <>
-            Your questions, <span className="text-db-red">answered.</span>
-          </>
-        }
-        lede="Everything customers ask before they start, in plain language. If yours is not here, a person will answer it."
-      />
+      <FaqMotion />
+      <FaqHero />
 
-      <section className="db-section db-section--airy bg-page">
-        <div className="db-shell">
-          {/* The group name sits to one side with the questions beside it —
-              name and one line of blurb, nothing else. The column used to be
-              sticky and used to carry a question count; the sticky column
-              travelled down the page as you scrolled, which read as an
-              animation on a page that should sit still. */}
-          <div className="grid gap-[clamp(52px,6vw,110px)]">
-            {groups.map((cat, i) => (
-              <div key={cat.title}>
-                <div
-                  id={cat.anchor}
-                  className="db-faq-group grid items-start gap-[clamp(20px,3vw,64px)] lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]"
-                >
-                  <div>
-                    <h2 className="font-display text-ink m-0 text-[clamp(28px,3vw,48px)] leading-[1.04] tracking-[.015em]">
-                      {cat.title}
-                    </h2>
-                    <p className="text-ink-2 mt-3.5 max-w-[38ch] text-[clamp(14.5px,0.92vw,16.5px)] leading-[1.6]">
-                      {cat.blurb}
-                    </p>
-                  </div>
+      <div className="db-faq-content">
+        {groups.map((cat) => (
+          <section
+            key={cat.title}
+            id={cat.anchor}
+            aria-labelledby={`${cat.anchor}-h`}
+            className={`db-faq-section db-faq-group db-faq-section--${cat.kind}`}
+          >
+            <div className="db-faq-shell db-faq-section__layout">
+              <Image
+                {...categoryImages[cat.kind]}
+                sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1280px) 44vw, 585px"
+                className="db-faq-section__photo"
+              />
 
-                  <Accordion items={cat.items} openFirst={i === 0} />
-                </div>
+              <div className="db-faq-section__questions">
+                <h2 id={`${cat.anchor}-h`} className="db-faq-section__title">
+                  <span>{cat.title}</span>
+                  <span>Related Questions</span>
+                </h2>
+                <Accordion items={cat.items} variant="plain" />
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
+          </section>
+        ))}
+      </div>
 
       <CtaBand id="trial" showTrialLength />
     </main>

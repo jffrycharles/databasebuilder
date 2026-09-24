@@ -5,8 +5,8 @@ import { EASE, gsap, settleTriggers, SplitText, useGsap } from "@/lib/gsap";
 import { ORIGIN } from "@/lib/about";
 
 /* Four passages, in the order they were written: where he started, what he
-   did without, why he built this, what it had to be. The first is the lead
-   and is set larger; the rest carry the story. */
+   did without, why he built this, what it had to be. All passages share the
+   same readable type size; the lead keeps its darker tone. */
 const PASSAGES = [ORIGIN.lead, ...ORIGIN.body];
 
 /**

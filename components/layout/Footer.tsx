@@ -67,11 +67,11 @@ export default function Footer() {
         <div className="border-line text-ink-3 mt-11 flex flex-wrap items-center gap-5 border-t py-5 text-[12.5px]">
           <span>© {new Date().getFullYear()} DatabaseBuilder. All rights reserved.</span>
           <span className="flex gap-5 sm:ml-auto">
-            <SmartLink href="/" className="hover:text-brand">
+            <SmartLink href="/privacy" className="hover:text-brand">
               Privacy Policy
             </SmartLink>
-            <SmartLink href="/" className="hover:text-brand">
-              Terms of Service
+            <SmartLink href="/terms" className="hover:text-brand">
+              Terms &amp; Conditions
             </SmartLink>
           </span>
         </div>

@@ -9,8 +9,14 @@ export const SITE = {
   /* Staging and the live site are the same code on two hostnames. Everything
      canonical hangs off this — metadataBase, the sitemap, robots — so it has
      to follow the host it is actually served from, or staging publishes
-     canonicals pointing at production and sitemaps nobody can verify. */
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.databasebuilder.com",
+     canonicals pointing at production and sitemaps nobody can verify.
+
+     The default is the apex, not www: www.databasebuilder.com has no DNS
+     record at all, so every canonical, og:url and og:image built from it
+     pointed at a host that does not answer — which is a share card that can
+     never load. scripts/build-staging.sh already passes the apex for its
+     production build. If www is ever the real home, add the record first. */
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://databasebuilder.com",
   register:
     "https://app.databasebuilder.com:446/Account/Register?id=9edcb5d7-b24a-44cc-80be-58cb47a7a2fc",
   login: "https://app.databasebuilder.com:446/Account/Login",
@@ -40,6 +46,7 @@ export const NAV_LINKS: NavLink[] = [
 
 /* ---- hero -------------------------------------------------------------- */
 export type HeroCard = {
+  /** Explicit line breaks keep the feature headings aligned. */
   title: string;
   description: string;
   art: "checklist" | "dialer" | "messaging" | "support";
@@ -48,18 +55,18 @@ export type HeroCard = {
 };
 
 export const HERO_CARDS: HeroCard[] = [
-  { title: "All-In-One Pricing", description: "INCLUDED", art: "checklist" },
-  { title: "Advanced Features", description: "INCLUDED", art: "messaging" },
-  { title: "Click to Dial w/Call Recording", description: "INCLUDED", art: "dialer" },
+  { title: "All-In-One\nPricing", description: "INCLUDED", art: "checklist" },
+  { title: "Advanced\nFeatures", description: "INCLUDED", art: "messaging" },
+  { title: "Click to Dial\nw/Recording", description: "INCLUDED", art: "dialer" },
   { title: "Live Support", description: "INCLUDED", art: "support", tone: "red" },
 ];
 
 /* ---- why --------------------------------------------------------------- */
 export const WHY_PARAGRAPHS = [
-  "A productive CRM does not need to cost a fortune to be effective. DatabaseBuilder.com is an easy-to-use CRM system, offered at a reasonable price, and designed for salespeople by salespeople.",
+  "A productive CRM does not need to cost a fortune to be effective. DatabaseBuilder.com is an easy-to-use CRM, offered at a reasonable price and can be used by anyone.",
   'Our "all-in-one" pricing makes our product easy to understand without all the complicated features that the average person is unlikely to use.',
-  "We provide all the features you want to see, not features a software developer wants you to use.",
-  "Give DatabaseBuilder.com a try and start a free trial today.",
+  "Features you want to see, not features a software developer wants you to use.",
+  "Give it a try and start a free trial today.",
 ];
 
 /* ---- built for salespeople --------------------------------------------- */

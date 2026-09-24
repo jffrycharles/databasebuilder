@@ -3,6 +3,7 @@ import { pageMeta } from "@/lib/seo";
 import AboutHero from "@/components/sections/about/AboutHero";
 import OriginStory from "@/components/sections/about/OriginStory";
 import Timeline from "@/components/sections/about/Timeline";
+import StoryOverview from "@/components/sections/about/StoryOverview";
 import QuoteBand from "@/components/sections/about/QuoteBand";
 import Leadership from "@/components/sections/about/Leadership";
 import CtaBand from "@/components/sections/CtaBand";
@@ -24,12 +25,12 @@ type: "article"
 export default function AboutPage() {
   return (
     <main>
-      {/* Order of the story: why it exists, who built it, the founder in his
-          own words, then the year-by-year and the archive. */}
+      {/* Open with the building and origin story; the quote and figures follow
+          the history before introducing the team. */}
       <AboutHero />
       <OriginStory />
-      {/* the history belongs with the story, not after the team */}
       <Timeline />
+      <StoryOverview />
       <Leadership />
       <QuoteBand />
       <CtaBand id="trial" />

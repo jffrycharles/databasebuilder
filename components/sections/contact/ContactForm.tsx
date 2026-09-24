@@ -1,30 +1,25 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Icon, type IconName } from "@/components/ui/Icon";
+import { Icon } from "@/components/ui/Icon";
+import SmartLink from "@/components/ui/SmartLink";
 import { gsap, prefersReducedMotion, useGsap } from "@/lib/gsap";
-import { CHANNELS, CONTACT, SUBJECTS } from "@/lib/contact";
+import { CHANNELS, SUBJECTS } from "@/lib/contact";
 
-/* ---------------------------------------------------------------------------
-   Submitting posts to /api/contact, which forwards to whatever
-   CONTACT_WEBHOOK_URL names. If that is not configured yet — or the upstream
-   is down — the route says so and we fall back to the old behaviour of
-   handing the message to the visitor's mail client.
-
-   The confirmation tells the truth about which of those happened, because
-   "thanks, we'll be in touch" over a mailto draft the visitor never sent is a
-   lie, and it loses enquiries. Either way the details are on screen with a
-   copy button, so nobody is left with nowhere to go.
-   --------------------------------------------------------------------------- */
+/* Delivery stays on /api/contact. Failed requests retain the draft for retry. */
 
 type Field = {
   name: keyof FormValues;
   label: string;
   type: "text" | "email" | "tel";
-  icon: IconName;
   placeholder: string;
   /** the token browsers and password managers match on to offer autofill */
   autoComplete: string;
+  /** which keyboard a phone should offer */
+  inputMode?: "email" | "tel";
+  /** the API trims to these lengths, so the field stops there too rather
+      than letting someone write past the cap and lose the tail in silence */
+  max: number;
   required?: boolean;
   half?: boolean;
 };
@@ -38,15 +33,16 @@ type FormValues = {
   message: string;
 };
 
-/** what actually happened to the message */
-type Outcome = "delivered" | "handoff";
-
 const FIELDS: Field[] = [
-  { name: "name", label: "Your name", type: "text", icon: "user", placeholder: "Alex Johnson", autoComplete: "name", required: true, half: true },
-  { name: "company", label: "Company", type: "text", icon: "api", placeholder: "Acme Co.", autoComplete: "organization", half: true },
-  { name: "email", label: "Email", type: "email", icon: "mail", placeholder: "you@company.com", autoComplete: "email", required: true, half: true },
-  { name: "phone", label: "Phone", type: "tel", icon: "phone", placeholder: "+1 773 000 0000", autoComplete: "tel", half: true },
+  { name: "name", label: "Your name", type: "text", placeholder: "Your full name", autoComplete: "name", max: 120, required: true, half: true },
+  { name: "company", label: "Company", type: "text", placeholder: "Your company", autoComplete: "organization", max: 160, half: true },
+  { name: "email", label: "Email", type: "email", placeholder: "you@company.com", autoComplete: "email", inputMode: "email", max: 160, required: true, half: true },
+  { name: "phone", label: "Phone", type: "tel", placeholder: "Your phone number", autoComplete: "tel", inputMode: "tel", max: 60, half: true },
 ];
+
+const MESSAGE_MAX = 5000;
+/** the last stretch, where a count starts being worth showing */
+const COUNT_FROM = MESSAGE_MAX - 500;
 
 const EMPTY: FormValues = {
   name: "",
@@ -57,11 +53,11 @@ const EMPTY: FormValues = {
   message: "",
 };
 
-export default function ContactForm() {
+export default function ContactForm({ scheduleCallUrl }: { scheduleCallUrl?: string }) {
   const [values, setValues] = useState<FormValues>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof FormValues, string>>>({});
   const [sent, setSent] = useState<FormValues | null>(null);
-  const [outcome, setOutcome] = useState<Outcome>("handoff");
+  const [submitError, setSubmitError] = useState("");
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
   /* Bots fill every field they can find; this one is hidden from people. */
@@ -70,14 +66,16 @@ export default function ContactForm() {
   const panel = useRef<HTMLDivElement>(null);
   const sentOnce = useRef(false);
   const focusInvalid = useRef(false);
+  const submitting = useRef(false);
+  const errorPanel = useRef<HTMLParagraphElement>(null);
 
   useGsap(() => {
     gsap.from("[data-row]", {
       opacity: 0,
-      y: 16,
-      duration: 0.6,
+      y: 8,
+      duration: 0.4,
       ease: "power3.out",
-      stagger: 0.06,
+      stagger: 0.035,
       scrollTrigger: { trigger: root.current, start: "top 82%", once: true },
     });
   }, root);
@@ -94,29 +92,62 @@ export default function ContactForm() {
      caret is left on a button that no longer exists — it falls back to the top
      of the document and a screen reader announces nothing at all. */
   useEffect(() => {
-    if (!sent || !sentOnce.current) return;
+    if (!sentOnce.current) return;
+    if (!sent) {
+      root.current?.querySelector<HTMLInputElement>("#f-name")?.focus();
+      return;
+    }
     const el = panel.current;
     if (!el) return;
     el.focus({ preventScroll: true });
     if (!prefersReducedMotion()) {
-      gsap.fromTo(el, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
+      const animation = gsap.fromTo(el, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" });
+      return () => { animation.revert(); };
     }
   }, [sent]);
 
+  useEffect(() => {
+    if (submitError) errorPanel.current?.focus({ preventScroll: true });
+  }, [submitError]);
+
+  /* maxLength stops typing and pasting, but not an autofill or a password
+     manager, and the API trims silently — so the cap is applied here too. */
+  const CAPS: Record<keyof FormValues, number> = {
+    name: 120, email: 160, phone: 60, company: 160, subject: 120, message: MESSAGE_MAX,
+  };
+
   const set = (key: keyof FormValues, value: string) => {
-    setValues((v) => ({ ...v, [key]: value }));
+    setValues((v) => ({ ...v, [key]: value.slice(0, CAPS[key]) }));
     if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
+  };
+
+  const problem = (key: keyof FormValues, v: FormValues): string | undefined => {
+    if (key === "name" && !v.name.trim()) return "Tell us who you are.";
+    if (key === "email") {
+      if (!v.email.trim()) return "We need an address to reply to.";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email.trim())) return "That address looks incomplete.";
+    }
+    if (key === "message" && v.message.trim().length < 10) return "A sentence or two is plenty.";
+    return undefined;
   };
 
   const validate = () => {
     const next: Partial<Record<keyof FormValues, string>> = {};
-    if (!values.name.trim()) next.name = "Tell us who you are.";
-    if (!values.email.trim()) next.email = "We need an address to reply to.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(values.email.trim()))
-      next.email = "That address looks incomplete.";
-    if (values.message.trim().length < 10) next.message = "A sentence or two is plenty.";
+    for (const key of ["name", "email", "message"] as const) {
+      const said = problem(key, values);
+      if (said) next[key] = said;
+    }
     setErrors(next);
     return Object.keys(next).length === 0;
+  };
+
+  /* Checked when you leave a field, so a mistyped address is caught while you
+     are still looking at it. An empty field says nothing yet — tabbing through
+     a form you have not filled in should not set it shouting. */
+  const leave = (key: keyof FormValues) => {
+    if (!values[key].trim()) return;
+    const said = problem(key, values);
+    if (said) setErrors((e) => ({ ...e, [key]: said }));
   };
 
   const plain = (v: FormValues) =>
@@ -143,26 +174,10 @@ export default function ContactForm() {
     }
   };
 
-  const handoff = () => {
-    const body = [
-      `Name: ${values.name}`,
-      values.company && `Company: ${values.company}`,
-      `Email: ${values.email}`,
-      values.phone && `Phone: ${values.phone}`,
-      `Subject: ${values.subject}`,
-      "",
-      values.message,
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(
-      `${values.subject} — ${values.name}`,
-    )}&body=${encodeURIComponent(body)}`;
-  };
-
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting.current) return;
+    setSubmitError("");
     if (!validate()) {
       /* Deferred to an effect on purpose: setErrors has not rendered yet, so
          nothing carries aria-invalid at this point and the query would come
@@ -171,106 +186,59 @@ export default function ContactForm() {
       return;
     }
 
+    submitting.current = true;
     setBusy(true);
-    let delivered = false;
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ ...values, website }),
+        signal: AbortSignal.timeout(15_000),
       });
-      delivered = res.ok;
-    } catch {
-      delivered = false; // offline, blocked, or the route is unreachable
+      const result = await res.json();
+      if (!res.ok || result?.delivered !== true) {
+        throw new Error(typeof result?.error === "string"
+          ? result.error
+          : "We could not send your message. Please try again in a moment.");
+      }
+      sentOnce.current = true;
+      setSent(values);
+    } catch (error) {
+      setSubmitError(error instanceof Error && error.name === "Error"
+        ? error.message
+        : "We could not send your message. Check your connection and try again. Your message is still here.");
+    } finally {
+      submitting.current = false;
+      setBusy(false);
     }
-
-    setBusy(false);
-    setOutcome(delivered ? "delivered" : "handoff");
-    setSent(values);
-    sentOnce.current = true;
-    // only bother the mail client when we could not deliver it ourselves
-    if (!delivered) handoff();
   };
 
   return (
-    <section id="contact-form" className="bg-page db-section db-section--airy">
-      <div className="db-shell">
-        <div className="grid items-start gap-[clamp(28px,3.4vw,64px)] lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.5fr)]">
-          {/* ---- how to reach us, on the left ---- */}
-          <aside>
-            <p className="font-ui text-ink-3 text-[11.5px] tracking-[.18em] uppercase">
-              Reach us directly
+    <section id="contact-form" className="db-contact-start" aria-labelledby="contact-heading">
+      <div className="db-contact-shell">
+        <div className="db-contact-layout">
+          <div className="db-contact-intro">
+            <h1 id="contact-heading" className="db-contact-title">
+              Contact <span>Us</span>
+            </h1>
+            <p className="db-contact-lede">
+              We are happy to help with any issue or question about the CRM.
             </p>
-            <ul className="m-0 mt-6 grid list-none gap-5 p-0">
-              {CHANNELS.map((c) => (
-                <li key={c.title}>
-                  <a
-                    href={c.href}
-                    target={c.icon === "pin" ? "_blank" : undefined}
-                    rel={c.icon === "pin" ? "noreferrer" : undefined}
-                    className="group flex items-start gap-4"
-                  >
-                    <span className="text-db-red border-line mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-[11px] border bg-white transition-colors group-hover:border-db-red/40">
-                      <Icon name={c.icon} className="h-[18px] w-[18px]" />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="font-ui text-ink-3 block text-[11px] tracking-[.16em] uppercase">
-                        {c.title}
-                      </span>
-                      <span className="font-body text-ink mt-1 block text-[clamp(15px,1.05vw,18px)] leading-snug font-bold">
-                        {c.lines[0]}
-                      </span>
-                      <span className="text-ink-3 mt-1 block text-[13px] leading-snug">
-                        {c.lines[1]}
-                      </span>
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-          </aside>
-
+          </div>
           {/* ---- the form ---- */}
-          <div ref={root} className="db-record p-[clamp(22px,2.8vw,44px)]">
-            <div className="mb-[clamp(22px,2.4vw,34px)] flex flex-wrap items-baseline gap-x-4 gap-y-2">
-              <h2 className="font-display m-0 text-[clamp(22px,2vw,34px)] text-ink leading-none tracking-[.01em]">
-                Get in touch
-              </h2>
-              <span className="text-ink-3 ml-auto text-[13px]">
-                Usually answered within one business day
-              </span>
-            </div>
-
+          <div ref={root} className="db-record db-contact-panel">
             {sent ? (
               <div ref={panel} role="status" aria-live="polite" tabIndex={-1}>
                 <div className="text-db-red border-line mb-5 inline-flex items-center gap-2.5 rounded-full border bg-white px-4 py-2 text-[14px] font-semibold">
                   <Icon name="check" className="h-4 w-4" />
-                  {outcome === "delivered" ? "Message sent" : "Draft ready in your email app"}
+                  Message sent
                 </div>
-                <h3 className="font-display m-0 text-[clamp(19px,1.55vw,25px)] text-ink leading-none tracking-[.01em]">
+                <h2 className="font-display m-0 text-[clamp(19px,1.55vw,25px)] text-ink leading-none tracking-[.01em]">
                   Thanks, {sent.name.split(" ")[0]}.
-                </h3>
+                </h2>
                 <p className="text-ink-2 mt-3 max-w-[52ch] text-[15px] leading-[1.6]">
-                  {outcome === "delivered" ? (
-                    <>
-                      We have it — nothing else to do. A person will reply to{" "}
-                      <span className="text-ink font-semibold">{sent.email}</span>, usually within
-                      one business day.
-                    </>
-                  ) : (
-                    <>
-                      Your message has been handed to your email client, addressed to{" "}
-                      <a className="text-db-red font-semibold" href={`mailto:${CONTACT.email}`}>
-                        {CONTACT.email}
-                      </a>
-                      .{" "}
-                      <span className="text-ink font-semibold">
-                        It is not sent until you send it from there.
-                      </span>{" "}
-                      If nothing opened, copy the details below and email them to us.
-                    </>
-                  )}
+                  We have it — nothing else to do. A person will reply to{" "}
+                  <span className="text-ink font-semibold">{sent.email}</span>.
                 </p>
 
                 <dl className="border-line mt-6 grid gap-0 rounded-[12px] border">
@@ -297,11 +265,6 @@ export default function ContactForm() {
                 </dl>
 
                 <div className="mt-6 flex flex-wrap items-center gap-3">
-                  {outcome === "handoff" && (
-                    <button type="button" onClick={handoff} className="db-cta-btn font-ui rounded-[9px] px-5 py-3 text-[15px] font-semibold tracking-[.03em] text-white uppercase">
-                      Open email again
-                    </button>
-                  )}
                   <button
                     type="button"
                     onClick={copy}
@@ -325,26 +288,34 @@ export default function ContactForm() {
                 </div>
               </div>
             ) : (
-              <form onSubmit={submit} noValidate>
+              <form onSubmit={submit} noValidate aria-busy={busy} aria-label="Send us a message">
+                <fieldset disabled={busy} className="m-0 min-w-0 border-0 p-0">
+                  <legend className="sr-only">Your contact details and message</legend>
                 {/* Not display:none — some bots skip those. Off-screen and out of
                     the tab order, so nobody real ever meets it. */}
                 <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
                   <label htmlFor="f-website">Leave this field empty</label>
+                  {/* The opt-outs 1Password, LastPass and Dashlane honour: a
+                      manager filling this would otherwise get a real person
+                      treated as a bot. */}
                   <input
                     id="f-website"
                     name="website"
                     type="text"
                     tabIndex={-1}
                     autoComplete="off"
+                    data-1p-ignore
+                    data-lpignore="true"
+                    data-form-type="other"
                     value={website}
                     onChange={(e) => setWebsite(e.target.value)}
                   />
                 </div>
 
-                <div className="grid gap-[clamp(16px,1.6vw,22px)] sm:grid-cols-2">
+                <div className="db-contact-fields">
                   {FIELDS.map((f) => (
                     <div key={f.name} data-row className={f.half ? "" : "sm:col-span-2"}>
-                      <label htmlFor={`f-${f.name}`} className="font-ui text-ink-2 mb-2 block text-[11.5px] tracking-[.14em] uppercase">
+                      <label htmlFor={`f-${f.name}`} className="db-contact-label">
                         {f.label}
                         {!f.required && <span className="text-ink-3"> (optional)</span>}
                       </label>
@@ -353,10 +324,15 @@ export default function ContactForm() {
                         name={f.name}
                         type={f.type}
                         autoComplete={f.autoComplete}
+                        inputMode={f.inputMode}
+                        maxLength={f.max}
+                        autoCapitalize={f.type === "email" ? "off" : undefined}
+                        spellCheck={f.type === "email" ? false : undefined}
                         className="db-field db-field--plain"
                         placeholder={f.placeholder}
                         value={values[f.name]}
                         onChange={(e) => set(f.name, e.target.value)}
+                        onBlur={() => leave(f.name)}
                         aria-required={f.required || undefined}
                         aria-invalid={errors[f.name] ? "true" : undefined}
                         aria-describedby={errors[f.name] ? `e-${f.name}` : undefined}
@@ -370,7 +346,7 @@ export default function ContactForm() {
                   ))}
 
                   <div data-row className="sm:col-span-2">
-                    <label htmlFor="f-subject" className="font-ui text-ink-2 mb-2 block text-[11.5px] tracking-[.14em] uppercase">
+                    <label htmlFor="f-subject" className="db-contact-label">
                       What is it about?
                     </label>
                     <select
@@ -387,46 +363,118 @@ export default function ContactForm() {
                   </div>
 
                   <div data-row className="sm:col-span-2">
-                    <label htmlFor="f-message" className="font-ui text-ink-2 mb-2 block text-[11.5px] tracking-[.14em] uppercase">
+                    <label htmlFor="f-message" className="db-contact-label">
                       Message
                     </label>
+                    {/* Guidance that stays put: as a placeholder it vanished the
+                        moment anyone started typing, which is when it matters. */}
+                    <p id="h-message" className="db-contact-hint">
+                      Tell us what you’re trying to do and we’ll point you the right way.
+                    </p>
                     <textarea
                       id="f-message"
                       name="message"
                       rows={6}
                       aria-required
+                      maxLength={MESSAGE_MAX}
                       className="db-field db-field--plain resize-y"
-                      placeholder="Tell us what you are trying to do and we will point you at the right part of the product."
                       value={values.message}
                       onChange={(e) => set("message", e.target.value)}
+                      onBlur={() => leave("message")}
+                      onKeyDown={(e) => {
+                        // the shortcut people who live in forms already try
+                        if ((e.metaKey || e.ctrlKey) && e.key === "Enter") e.currentTarget.form?.requestSubmit();
+                      }}
                       aria-invalid={errors.message ? "true" : undefined}
-                      aria-describedby={errors.message ? "e-message" : undefined}
+                      aria-describedby={errors.message ? "e-message h-message" : "h-message"}
                     />
-                    {errors.message && (
-                      <p id="e-message" role="alert" className="text-db-red mt-1.5 text-[12.5px] font-semibold">
-                        {errors.message}
-                      </p>
-                    )}
+                    <div className="db-contact-undermessage">
+                      {errors.message ? (
+                        <p id="e-message" role="alert" className="text-db-red m-0 text-[12.5px] font-semibold">
+                          {errors.message}
+                        </p>
+                      ) : (
+                        <span />
+                      )}
+                      {values.message.length >= COUNT_FROM && (
+                        <span className="db-contact-count" aria-hidden="true">
+                          {values.message.length.toLocaleString("en-US")} / {MESSAGE_MAX.toLocaleString("en-US")}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                <div data-row className="mt-[clamp(24px,2.4vw,36px)] flex flex-wrap items-center gap-x-6 gap-y-4">
+                <div data-row className="db-contact-actions">
                   <button
                     type="submit"
                     disabled={busy}
                     aria-busy={busy}
-                    className="db-cta-btn font-ui rounded-[9px] px-6 py-3.5 text-[clamp(13.5px,0.95vw,15.5px)] font-medium tracking-[.1em] text-white uppercase disabled:cursor-wait disabled:opacity-70"
+                    className="db-cta-btn db-contact-send font-ui rounded-[9px] px-6 py-3.5 text-[15px] font-medium tracking-[.06em] text-white uppercase disabled:cursor-wait disabled:opacity-70"
                   >
                     {busy ? "Sending…" : "Send message"}
+                    <Icon name="send" className="h-4 w-4" />
                   </button>
-                  <p className="text-ink-3 m-0 max-w-[44ch] text-[13px] leading-relaxed">
-                    Goes straight to {CONTACT.email}. If we cannot deliver it, your email app
-                    opens with the message ready instead.
+                  <p className="text-ink-3 m-0 max-w-[36ch] text-[13px] leading-relaxed" role="status">
+                    {busy
+                      ? "Sending your message. Please wait."
+                      : "We’ll reply to the email address you provide, usually within one business day."}
                   </p>
                 </div>
+                </fieldset>
+                {submitError && (
+                  <p ref={errorPanel} tabIndex={-1} role="alert" className="db-contact-error mt-5 rounded-[9px] border p-4 text-[14px] leading-relaxed">
+                    {submitError}
+                  </p>
+                )}
               </form>
             )}
+            {scheduleCallUrl && (
+              <div className="db-contact-booking">
+                <p>Prefer to talk?</p>
+                <a href={scheduleCallUrl} target="_blank" rel="noopener noreferrer" className="db-contact-schedule">
+                  <Icon name="cal" className="h-4 w-4" />
+                  Schedule a Call
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </div>
+            )}
           </div>
+          {/* Secondary contact details follow the form in reading order. */}
+          <aside className="db-contact-details" aria-label="Other ways to contact us">
+            <ul className="db-contact-channels">
+              {CHANNELS.map((c) => (
+                <li key={c.title}>
+                  <a
+                    href={c.href}
+                    target={c.icon === "pin" ? "_blank" : undefined}
+                    rel={c.icon === "pin" ? "noopener noreferrer" : undefined}
+                    className="db-contact-channel"
+                  >
+                    <span className="db-contact-channel__label">
+                      <Icon name={c.icon} className="h-4 w-4" />
+                        {c.title}
+                    </span>
+                    <span className="db-contact-channel__value">
+                        {c.lines[0]}
+                    </span>
+                    {c.icon === "pin" && <span className="db-contact-channel__value">{c.lines[1]}</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            {/* Keep a direct route to common questions below the contact details. */}
+            <div className="db-contact-quick">
+              <SmartLink href="/faq" className="db-contact-quick__link">
+                Read the FAQ
+                <svg viewBox="0 0 16 16" width="15" height="15" fill="none" aria-hidden="true">
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </SmartLink>
+            </div>
+          </aside>
+
         </div>
       </div>
     </section>

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
-import ContactHero from "@/components/sections/contact/ContactHero";
 import ContactForm from "@/components/sections/contact/ContactForm";
 import NextSteps from "@/components/sections/contact/NextSteps";
 import MapSection from "@/components/sections/contact/MapSection";
@@ -9,7 +8,7 @@ import CtaBand from "@/components/sections/CtaBand";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Your ideas, our solution. Email info@databasebuilder.com, or write to us at 3312 W Peterson Ave, Chicago, IL 60659.",
+    "Contact DatabaseBuilder. Email info@databasebuilder.com, or write to us at 3312 W Peterson Ave, Chicago, IL 60659.",
   alternates: { canonical: "/contact" },
   ...pageMeta({
     title: "Contact — DatabaseBuilder",
@@ -20,10 +19,16 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  let scheduleCallUrl: string | undefined;
+  try {
+    const url = new URL(process.env.NEXT_PUBLIC_SCHEDULE_CALL_URL?.trim() || "");
+    if (url.protocol === "https:" && !url.username && !url.password) scheduleCallUrl = url.href;
+  } catch {
+    // An absent or invalid booking URL must never produce a broken link.
+  }
   return (
-    <main>
-      <ContactHero />
-      <ContactForm />
+    <main id="top" tabIndex={-1} className="db-contact-page">
+      <ContactForm scheduleCallUrl={scheduleCallUrl} />
       {/* between the two light sections, so the page alternates again */}
       <NextSteps />
       <MapSection />

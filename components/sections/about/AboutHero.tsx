@@ -1,16 +1,13 @@
 "use client";
 
-import { Fragment, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import Globe from "@/components/ui/Globe";
+import Logo from "@/components/ui/Logo";
 import { FloorRibbons, OrbitRings, WaveDivider } from "@/components/sections/HeroArt";
 import HeroAtmosphere from "@/components/ui/HeroAtmosphere";
 import { useAppReady } from "@/components/animations/AppShell";
 import { gsap, prefersReducedMotion, useIsoLayoutEffect } from "@/lib/gsap";
 import { SITE } from "@/lib/data";
-
-/* Split so each word can rise out of a mask of its own. The last one carries
-   the accent, the way the homepage headline does. */
-const HEADLINE = ["Sales", "software,", "designed", "by", "salespeople"];
 
 /**
  * The story opener, built on the homepage hero's own lockup: the globe inside
@@ -59,13 +56,6 @@ export default function AboutHero() {
       tl.fromTo(".db-globe-el", { opacity: 0, scale: 0.86 }, { opacity: 1, scale: 1, duration: 0.5 })
         .fromTo(".db-orbit", { opacity: 0, scale: 0.82 }, { opacity: 1, scale: 1, duration: 0.9 }, "-=0.25")
         .fromTo("[data-story-label]", { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.6 }, 0.25)
-        /* the words climb out of their masks, one after another */
-        .fromTo(
-          ".db-word > span",
-          { yPercent: 115 },
-          { yPercent: 0, duration: 0.9, stagger: 0.075, ease: "power4.out" },
-          0.35,
-        )
         .fromTo("[data-story-mark]", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7 }, 0.85)
         .fromTo(".db-story-cue", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7 }, 1.3);
 
@@ -118,19 +108,12 @@ export default function AboutHero() {
           <span aria-hidden="true" />
         </p>
 
-        <h1 className="font-display m-0 mt-[clamp(12px,1.4vw,22px)] max-w-[26ch] text-[clamp(34px,4.6vw,66px)] leading-[1.02] tracking-[.03em] text-white">
-          {HEADLINE.map((word, i) => (
-            <Fragment key={word}>
-              <span className="db-word">
-                <span className={i === HEADLINE.length - 1 ? "text-db-red" : undefined}>
-                  {word}
-                </span>
-              </span>
-              {/* break at the comma: letting it wrap naturally split
-                  "designed / by", which reads worse than a clean clause break */}
-              {word.endsWith(",") && <br />}
-            </Fragment>
-          ))}
+        <h1
+          data-story-label
+          aria-label={`${SITE.name} — ${SITE.tagline}`}
+          className="m-0 mt-[clamp(12px,1.4vw,22px)] font-normal text-center"
+        >
+          <Logo size="clamp(26px,4.6vw,66px)" />
         </h1>
 
         {/* The homepage's own lockup — globe inside its orbit, wordmark beneath —
@@ -158,8 +141,7 @@ export default function AboutHero() {
               spin={22}
               label={`${SITE.name} globe. Drag to spin it, press Enter for a pulse.`}
             />
-            {/* The years, not the wordmark — the header already carries the
-                logo, and on this page the figure is the point. */}
+            {/* Keep the anniversary figure beneath the brand lockup. */}
             <div
               data-story-mark
               className="font-display mt-1 text-[clamp(40px,5.4vw,92px)] leading-[0.88] tracking-[.01em] whitespace-nowrap text-white"

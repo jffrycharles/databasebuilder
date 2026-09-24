@@ -11,30 +11,16 @@ export function getLenis() {
   return current;
 }
 
-/**
- * How hard the smoothing pulls toward where the wheel has actually asked to be,
- * per frame. Lenis takes either this or a `duration`, and the difference is the
- * whole feel of the page.
- *
- * It used to run `duration: 1.05` with a cubic ease-out, which restarts a
- * 1.05-second animation on every wheel event. Measured in Chrome, in both dev
- * and a production build: after the last wheel event the page kept moving for
- * ~890ms. On a trackpad, where you expect the content to stop when your fingers
- * stop, that reads as the page lagging behind you rather than as smoothness.
- *
- * `lerp` is frame-rate independent and settles geometrically: at 0.22 the
- * remaining distance is under a pixel in about 13 frames, so the glide is
- * ~200ms. Enough easing that a notched mouse wheel is not a staircase, not
- * enough to feel disconnected from the input.
- */
-const LERP = 0.22;
-
 export function scrollToId(id: string) {
   const target = document.querySelector(id);
   if (!target) return;
   const header = document.querySelector<HTMLElement>(".db-header");
   const offset = -((header?.offsetHeight ?? 0) + 12);
-  if (current) current.scrollTo(target as HTMLElement, { offset, duration: 0.9 });
+  /* No offset for Lenis: it already subtracts the root's scroll-padding-top
+     (the header's height, set on html) and the target's scroll-margin-top,
+     the way a native anchor jump does. Passing the header height as well
+     counted it twice, and every in-page jump stopped ~112px short. */
+  if (current) current.scrollTo(target as HTMLElement, { duration: 1.05 });
   else {
     const y = (target as HTMLElement).getBoundingClientRect().top + window.scrollY + offset;
     window.scrollTo({ top: y, behavior: prefersReducedMotion() ? "auto" : "smooth" });
@@ -73,24 +59,22 @@ export default function SmoothScroll() {
         // "Home" while already home: take them back to the top
         e.preventDefault();
         e.stopPropagation();
-        if (current) current.scrollTo(0, { duration: 0.9 });
+        if (current) current.scrollTo(0, { duration: 1 });
         else window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
       }
     };
     document.addEventListener("click", onClick, true);
 
-    /* A touch screen already has momentum scrolling, tuned by the OS and
-       running off the main thread. Smoothing it a second time in JavaScript can
-       only add latency and take the scroll off the compositor, so on a coarse
-       pointer the page simply scrolls. */
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    if (prefersReducedMotion() || coarse) {
+    if (prefersReducedMotion()) {
       return () => document.removeEventListener("click", onClick, true);
     }
 
+    // Restore the original Lenis glide used by this site.
     const lenis = new Lenis({
-      lerp: LERP,
+      duration: 1.05,
+      easing: (t: number) => 1 - Math.pow(1 - t, 3),
       smoothWheel: true,
+      touchMultiplier: 1.6,
       wheelMultiplier: 1,
     });
     current = lenis;

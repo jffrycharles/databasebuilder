@@ -87,26 +87,33 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-/** Scanning groups for the FAQ page. Every question appears exactly once. */
-export const FAQ_CATEGORIES: { title: string; blurb: string; ids: string[] }[] = [
+/**
+ * The four groups used by the live DatabaseBuilder FAQ, applied to the
+ * approved questions in this project. Every approved question appears once.
+ */
+export const FAQ_CATEGORIES: {
+  title: string;
+  art: "product" | "data" | "policy" | "sales";
+  ids: string[];
+}[] = [
   {
-    title: "Your data",
-    blurb: "Getting it in, getting it out, and keeping it safe.",
-    ids: ["own-data", "data-after-cancellation", "security"],
+    title: "Product & Features",
+    art: "product",
+    ids: ["own-data", "customization", "phone-and-email", "advanced-features"],
   },
   {
-    title: "The product",
-    blurb: "What it does and how far it bends to your business.",
-    ids: ["customization", "phone-and-email", "sales-training"],
+    title: "Data",
+    art: "data",
+    ids: ["data-after-cancellation", "security"],
   },
   {
-    title: "Pricing & billing",
-    blurb: "What you pay for, and what you never will.",
-    ids: ["advanced-features", "additional-costs", "cancellation"],
+    title: "Policy",
+    art: "policy",
+    ids: ["additional-costs", "cancellation", "free-trial"],
   },
   {
-    title: "Getting started",
-    blurb: "Trialling it, and who picks up the phone afterwards.",
-    ids: ["free-trial", "support"],
+    title: "Sales",
+    art: "sales",
+    ids: ["sales-training", "support"],
   },
 ];

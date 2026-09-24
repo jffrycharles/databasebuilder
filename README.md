@@ -1,38 +1,16 @@
 # DatabaseBuilder — marketing site
 
 The DatabaseBuilder website, built as a Next.js App Router project with
-GSAP + Lenis driving the motion. The homepage, Pricing and FAQ follow Adam
-Berman's September 2026 rebranding outline.
-
-## September 2026 content update
-
-- Updated the four hero cards, including the red Advanced Features card and
-  the two-way SMS wording and supporting descriptions.
-- Applied the supplied Why DatabaseBuilder copy, correcting obvious typos.
-- Included all 21 features in the brief's order, with green checks and the
-  source's ten key items emphasised.
-- Added `/faq` with all 11 questions and full answers, using native keyboard-
-  accessible accordions that work without JavaScript.
-- Added `/pricing` with a package for up to three users, additional users,
-  the 7-day trial, cancellation terms and separately billed usage/services.
-- Set Pricing and FAQ navigation to their actual pages.
-- Limited the import/export format badges to CSV, as specified in the brief.
-- About and Contact page files and their content are unchanged. The existing
-  design, loading screen, globe, animations and product mockups are retained.
-- This update is a local project package; no deployment was performed.
+GSAP + Lenis driving the motion. The homepage and Pricing follow Adam
+Berman's September 2026 rebranding outline. The FAQ follows the original live
+site instead: its photo layout, and all 18 of its questions and answers.
 
 **Pricing amounts are pending.** Adam marked pricing TBA. In `lib/pricing.ts`,
 `baseMonthly` and `additionalUserMonthly` are deliberately `null`. The page
 shows "Contact us for pricing" until approved amounts are supplied. The dollar
 symbol follows the outline; confirm the currency alongside the prices.
 
-**Validation:** `npm run build` passed, including TypeScript checks. Built HTML
-was checked for the 21 checklist items, ten emphasized key items, all 11 FAQ
-answers, the three-user pricing package, pending amounts, usage-charge copy,
-and Pricing/FAQ navigation. All 12 About/Contact files were compared with the
-original ZIP and are byte-for-byte unchanged. The review browser could not
-access the local server, so visual and interactive browser checks remain for
-local review with `npm run dev`.
+## Running it
 
 ```bash
 npm install
@@ -55,7 +33,7 @@ app/
   about/page.tsx        /about — our story
   contact/page.tsx      /contact — your ideas, our solution
   pricing/page.tsx      /pricing — package, additional users and usage charges
-  faq/page.tsx          /faq — all 11 questions from the rebranding outline
+  faq/page.tsx          /faq — 18 original live-site questions in four photo sections
   globals.css           design tokens + every custom rule the site needs
   fonts/                subset woff2: Anton, Oswald, Roboto
 
@@ -92,7 +70,8 @@ lib/
   about.ts              timeline, leadership bios, origin copy
   contact.ts            address, phone, email, enquiry subjects
   pricing.ts            package size, pending price amounts and usage charges
-  faq.ts                approved FAQ copy, with typos and punctuation corrected
+  faq.ts                approved FAQ copy used by the homepage
+  faq-live.ts           18 original live-site FAQs restored on /faq
   sphere.ts             the dot-sphere renderer and its interactions
   gsap.ts               plugin registration, reduced-motion helper, useGsap
   reveal.ts             one shared IntersectionObserver for scroll reveals

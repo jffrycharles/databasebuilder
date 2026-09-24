@@ -47,7 +47,29 @@ export default function OfficeMap() {
     );
     io.observe(node);
 
+    /* MapLibre prints its own "your browser does not support WebGL" notice
+       into the container and only reports it through the load timeout, so a
+       visitor without WebGL sat with that message for eight seconds. Asking
+       first also saves them the library download. */
+    function hasWebGL() {
+      try {
+        const probe = document.createElement("canvas");
+        const gl = probe.getContext("webgl") ?? probe.getContext("experimental-webgl");
+        /* Give it straight back: a page may only hold so many WebGL contexts
+           (Chrome caps around 16) and they are reclaimed at GC, so the probe
+           would otherwise sit on one of the slots the map itself needs. */
+        (gl as WebGLRenderingContext | null)?.getExtension("WEBGL_lose_context")?.loseContext();
+        return Boolean(gl);
+      } catch {
+        return false;
+      }
+    }
+
     async function start() {
+      if (!hasWebGL()) {
+        setFailed(true);
+        return;
+      }
       try {
         const [{ Map, Marker }] = await Promise.all([
           import("maplibre-gl"),

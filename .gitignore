@@ -14,3 +14,6 @@ brand/
 
 # build artefact from scripts/build-staging.sh — never committed
 staging-bundle.tgz
+
+# review screenshots and scratch notes — not site code
+artifacts/
