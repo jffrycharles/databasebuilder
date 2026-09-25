@@ -1,21 +1,10 @@
 import SectionHeading from "@/components/ui/SectionHeading";
 import SmartLink from "@/components/ui/SmartLink";
 import CompareMotion from "@/components/sections/CompareMotion";
-import CompareTable, { MarkIcon } from "@/components/sections/CompareTable";
+import CompareTable from "@/components/sections/CompareTable";
 import CompareChart from "@/components/sections/CompareChart";
 import { COMPARE_LEDE } from "@/lib/comparison";
-import type { Mark } from "@/lib/comparison";
 import { VARIANT } from "@/lib/variants";
-
-/* The legend reads left to right the way the marks rank: ours, then the three
-   ways a competitor falls short or charges. */
-const LEGEND: { mark: Mark; label: string }[] = [
-  { mark: "yes", label: "Included" },
-  { mark: "no", label: "Not included" },
-  /* the pills already say "Add-on" / "Additional"; the label finishes the thought */
-  { mark: "addon", label: "costs extra" },
-  { mark: "additional", label: "billed separately" },
-];
 
 /**
  * DatabaseBuilder vs other CRMs, redesigned as a comparison table.
@@ -47,18 +36,8 @@ export default function FeaturesSection() {
             </>
           }
           lede={COMPARE_LEDE}
-          className="mb-[clamp(20px,2vw,28px)]"
+          className="mb-[clamp(28px,2.6vw,40px)]"
         />
-
-        {/* the key comes first, so the marks are learned before they are met */}
-        <ul className="db-cmp-legend" aria-label="Key">
-          {LEGEND.map(({ mark, label }) => (
-            <li key={mark}>
-              <MarkIcon mark={mark} />
-              {label}
-            </li>
-          ))}
-        </ul>
 
         <CompareMotion className="mx-auto max-w-[900px]">
           <CompareTable />

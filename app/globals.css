@@ -3097,32 +3097,6 @@ tbody + tbody .db-cmp__group > th {
   border-color: #ffffff66;
 }
 
-/* the key, above the table, so the marks are learned before they are met */
-.db-cmp-legend {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px 28px;
-  margin: 0 auto clamp(16px, 1.4vw, 22px);
-  padding: 0;
-  list-style: none;
-  font-size: 13.5px;
-  color: #ffffffcc;
-}
-.db-cmp-legend li {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-}
-.db-cmp-legend .db-cmp__yes {
-  width: 19px;
-  height: 19px;
-}
-.db-cmp-legend .db-cmp__no {
-  width: 16px;
-  height: 16px;
-}
-
 /* phones: our name stacks, cells tighten, nothing scrolls sideways */
 @media (max-width: 639px) {
   .db-cmp {
