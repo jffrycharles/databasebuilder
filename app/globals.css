@@ -2826,7 +2826,7 @@ body:has(.db-still) .db-anim {
   /* wide mark columns: the feature column only needs its longest name
      (~330px), so the rest goes to the comparison, not to empty space
      beside the names */
-  --cmp-col: clamp(92px, 24vw, 260px);
+  --cmp-col: clamp(92px, 17vw, 220px);
   --cmp-inset: clamp(10px, 1.4vw, 22px);
   --cmp-r: 16px;
   border: 1px solid #ffffff21;
@@ -2836,7 +2836,7 @@ body:has(.db-still) .db-anim {
   box-shadow:
     0 1px 0 #ffffff1f inset,
     0 30px 80px -30px #000000f2;
-  padding: clamp(6px, 1vw, 12px) clamp(6px, 1.4vw, 22px) clamp(8px, 1vw, 14px);
+  padding: clamp(6px, 1vw, 14px) clamp(6px, 1.4vw, 22px) clamp(14px, 1.6vw, 24px);
 }
 .db-cmp__table {
   width: 100%;
@@ -2862,7 +2862,7 @@ body:has(.db-still) .db-anim {
   position: sticky;
   top: var(--db-header-h, 67px);
   z-index: 2;
-  padding: clamp(10px, 0.8vw, 12px) 10px clamp(8px, 0.7vw, 10px);
+  padding: clamp(12px, 1vw, 15px) 10px clamp(10px, 0.9vw, 13px);
   background: var(--cmp-bg);
   border-bottom: 1px solid #ffffff47;
   box-shadow: 0 10px 12px -10px #000000cc;
@@ -2872,17 +2872,19 @@ body:has(.db-still) .db-anim {
 body:has(.db-header.is-hidden) .db-cmp__h {
   top: 0;
 }
-/* set like the "DatabaseBuilder" column name beside it: same face, size and
-   weight, so the three headers read as one row */
+/* the small-caps label style, sized to sit level with the column names:
+   in capitals with wide tracking, 22px read far larger than the mixed-case
+   "DatabaseBuilder" beside it, so it is set a step down */
 .db-cmp__h--feature {
   text-align: left;
   padding-left: var(--cmp-inset);
   font-family: var(--font-ui);
-  font-size: clamp(18px, 1.3vw, 22px);
-  font-weight: 600;
+  font-size: clamp(14px, 0.95vw, 16px);
+  font-weight: 500;
   line-height: 1.15;
-  letter-spacing: 0.005em;
-  color: #fff;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffffffb3;
 }
 .db-cmp__name {
   display: inline-flex;
@@ -2953,8 +2955,8 @@ body:has(.db-header.is-hidden) .db-cmp__h {
 
 /* group headings — larger than the rows they head, with room above */
 .db-cmp__group > * {
-  padding-top: clamp(16px, 1.4vw, 20px);
-  padding-bottom: 6px;
+  padding-top: clamp(24px, 2vw, 32px);
+  padding-bottom: 10px;
 }
 .db-cmp__group th {
   text-align: left;
@@ -3015,7 +3017,7 @@ tbody + tbody .db-cmp__group > th {
    the fill clipped inside it, so it costs no extra markup. The bars stop at
    the two column panels, which stay unbroken from header to last row. */
 .db-cmp__row > * {
-  height: clamp(32px, 1.95vw, 33px);
+  height: clamp(42px, 2.7vw, 46px);
   vertical-align: middle;
   transition:
     background-color 0.15s ease,
@@ -3023,13 +3025,13 @@ tbody + tbody .db-cmp__group > th {
 }
 .db-cmp__row th {
   text-align: left;
-  padding: 4px 14px 4px var(--cmp-inset);
+  padding: 9px 14px 9px var(--cmp-inset);
   border-top: var(--cmp-gap) solid transparent;
   border-radius: 8px 0 0 8px;
   background-color: var(--cmp-row);
   background-clip: padding-box;
   font-family: var(--font-body);
-  font-size: clamp(13.5px, 0.82vw, 14.5px);
+  font-size: clamp(14.5px, 0.9vw, 15.5px);
   font-weight: 500;
   line-height: 1.3;
   color: #fff;
@@ -3056,13 +3058,13 @@ tbody + tbody .db-cmp__group > th {
   vertical-align: middle;
 }
 .db-cmp__yes {
-  width: 19px;
-  height: 19px;
+  width: 21px;
+  height: 21px;
   color: #6aa8ff;
 }
 .db-cmp__no {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   color: #ff8a7e;
 }
 .db-cmp__pill {
@@ -3096,7 +3098,7 @@ tbody + tbody .db-cmp__group > th {
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px 28px;
-  margin: 0 auto clamp(22px, 2vw, 32px);
+  margin: 0 auto clamp(16px, 1.4vw, 22px);
   padding: 0;
   list-style: none;
   font-size: 13.5px;
@@ -3136,19 +3138,19 @@ tbody + tbody .db-cmp__group > th {
     padding-inline: 4px;
   }
   .db-cmp__row > * {
-    height: 34px;
+    height: 44px;
   }
   .db-cmp {
     --cmp-gap: 3px;
   }
   .db-cmp__row th {
     padding-right: 8px;
-    font-size: 13.5px;
+    font-size: 14.5px;
     border-radius: 8px 0 0 8px;
   }
   .db-cmp__group > * {
-    padding-top: 14px;
-    padding-bottom: 5px;
+    padding-top: 22px;
+    padding-bottom: 8px;
   }
   .db-cmp__group th {
     padding-right: 6px;
@@ -3162,15 +3164,15 @@ tbody + tbody .db-cmp__group > th {
     display: none;
   }
   .db-cmp__yes {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
   .db-cmp__no {
-    width: 15px;
-    height: 15px;
+    width: 17px;
+    height: 17px;
   }
   .db-cmp__h--feature {
-    font-size: 14.5px;
+    font-size: 12px;
   }
   .db-cmp__group-icon {
     width: 22px;
@@ -3399,38 +3401,6 @@ tbody + tbody .db-cmp__group > th {
   }
 }
 
-/* jump links — plain, static */
-.db-fx-jump {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px 10px;
-  margin: clamp(24px, 2.4vw, 36px) auto 0;
-  max-width: 900px;
-}
-.db-fx-jump a {
-  padding: 7px 14px;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  background: #fff;
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--color-ink-2);
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
-}
-@media (hover: hover) and (pointer: fine) {
-  .db-fx-jump a:hover {
-    color: var(--color-brand);
-    border-color: #1d6fe866;
-  }
-}
-.db-fx-jump a:focus-visible {
-  outline: 3px solid var(--color-brand);
-  outline-offset: 2px;
-}
-
 /* ---- window frame --------------------------------------------------- */
 .db-win {
   margin: 0;
@@ -3613,6 +3583,9 @@ tbody + tbody .db-cmp__group > th {
 /* ---- split sections ------------------------------------------------- */
 .db-fx-split {
   display: grid;
+  /* minmax(0, 1fr): an auto track grows to the widest native-size crop in
+     it and pushed the whole column off a phone screen */
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(36px, 4vw, 64px);
   align-items: center;
 }
@@ -3631,11 +3604,14 @@ tbody + tbody .db-cmp__group > th {
 /* ---- database: the grid with its details floated around it ----------
    Compact: this section sits straight under the hero, so it gets tighter
    padding than the page rhythm, and the next section starts sooner. */
-.db-fx-compact {
-  padding-block: clamp(40px, 3.6vw, 64px);
+/* One rhythm for every section on the page, a step tighter than the site
+   default, and the trial card sits close under the feature grid rather
+   than a full section away. */
+.db-fx-page > section.db-section {
+  padding-block: clamp(52px, 4.8vw, 84px);
 }
-.db-fx-follow {
-  padding-top: clamp(44px, 4vw, 72px);
+.db-fx-page > #trial {
+  padding-top: 0;
 }
 .db-fx-db {
   position: relative;
@@ -3739,6 +3715,55 @@ tbody + tbody .db-cmp__group > th {
   color: var(--color-ink-2);
 }
 
+/* ---- lead screen: the window, and its research buttons at full size -- */
+.db-fx-lead {
+  position: relative;
+}
+.db-fx-lead__research {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+@media (min-width: 1024px) {
+  .db-fx-lead {
+    padding-bottom: clamp(110px, 9vw, 156px);
+  }
+  .db-fx-lead__research {
+    position: absolute;
+    right: -3%;
+    bottom: 0;
+    margin: 0;
+  }
+  .db-fx-lead__research .db-detail__img {
+    width: clamp(290px, 21vw, 360px);
+  }
+}
+
+/* A soft brand-tinted panel behind a composition on the light sections, so
+   the screenshots sit on something rather than floating in white. Static:
+   a tint, not a light. */
+.db-fx-backdrop {
+  position: relative;
+  isolation: isolate;
+}
+.db-fx-backdrop::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 10% -2% -3% 14%;
+  border-radius: 28px;
+  background: linear-gradient(140deg, #1d6fe824 0%, #1d6fe80b 58%, #e232240c 100%);
+}
+.db-fx-backdrop--wide::before {
+  inset: 12% 1% -3% 10%;
+}
+@media (max-width: 1023px) {
+  .db-fx-backdrop::before {
+    inset: 8% -8px -10px 8%;
+    border-radius: 20px;
+  }
+}
+
 /* ---- team: the admin screen with two details off it ----------------- */
 .db-fx-team {
   position: relative;
@@ -3751,23 +3776,25 @@ tbody + tbody .db-cmp__group > th {
   margin-top: 14px;
 }
 @media (min-width: 1180px) {
+  /* the crops hang off the right of the window; the container reserves the
+     room the lower one needs, so nothing runs into the points below */
+  .db-fx-team {
+    padding-bottom: 64px;
+  }
   .db-fx-team__main {
-    width: 80%;
+    width: 74%;
   }
   .db-fx-team .db-fx-float {
     position: absolute;
     margin: 0;
   }
-  .db-fx-team {
-    margin-bottom: clamp(72px, 6vw, 100px);
-  }
   .db-fx-team__credits {
-    top: 7%;
+    top: 8%;
     right: 0;
   }
   .db-fx-team__tabs {
-    right: 2%;
-    bottom: -9%;
+    right: 4%;
+    bottom: 0;
   }
 }
 
@@ -3779,7 +3806,7 @@ tbody + tbody .db-cmp__group > th {
   display: grid;
   gap: 16px;
   width: 100%;
-  max-width: 660px;
+  max-width: 720px;
   margin-inline: auto;
 }
 @media (min-width: 640px) {
@@ -3831,16 +3858,22 @@ tbody + tbody .db-cmp__group > th {
   width: 17px;
   height: 17px;
 }
+/* a quiet dot grid, the way data sits in rows — static, no light */
 .db-fx-own-art {
   display: grid;
   place-items: center;
   width: 100%;
-  max-width: 600px;
+  max-width: 560px;
   margin-inline: auto;
   aspect-ratio: 5 / 4;
   border: 1px solid var(--color-line);
   border-radius: 22px;
-  background: #f4f7fb;
+  background:
+    radial-gradient(circle, #cfd8e4 1px, #0000 1.4px) 0 0 / 20px 20px,
+    linear-gradient(160deg, #f8fafd 0%, #edf1f7 100%);
+  box-shadow:
+    0 2px 6px #0d152610,
+    0 30px 60px -34px #0d152659;
 }
 .db-fx-own-art__mark {
   width: 84%;
@@ -3919,7 +3952,7 @@ tbody + tbody .db-cmp__group > th {
   box-shadow: 0 10px 12px -10px #0d152621;
 }
 .db-cmp--light .db-cmp__h--feature {
-  color: var(--color-ink);
+  color: var(--color-ink-3);
 }
 .db-cmp--light .db-cmp__us .db-cmp__name {
   color: var(--color-ink);

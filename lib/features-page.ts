@@ -16,16 +16,6 @@ export const FX_HERO = {
     "The database, dialer, coaching tools, reporting and video meetings your team uses every day — in one easy-to-use CRM, at one all-in-one price.",
 };
 
-/* Jump links under the hero. Plain anchors, no motion. */
-export const FX_SECTIONS = [
-  { id: "database", label: "Database" },
-  { id: "lead-screen", label: "Lead screen" },
-  { id: "productivity", label: "Productivity" },
-  { id: "team", label: "Team management" },
-  { id: "video", label: "Video meetings" },
-  { id: "your-data", label: "Your data" },
-];
-
 export const FX_DATABASE = {
   label: "Customizable database",
   lede:

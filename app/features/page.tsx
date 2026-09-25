@@ -22,7 +22,6 @@ import {
   FX_LEAD,
   FX_OWNERSHIP,
   FX_PRODUCTIVITY,
-  FX_SECTIONS,
   FX_TEAM,
   FX_VIDEO,
   type FeaturePoint,
@@ -75,18 +74,9 @@ export default function FeaturesPage() {
   /* staging shows the Best Choice three-monitor picture; the default is the
      interactive product screens (lib/variants.ts) */
   const render = VARIANT.featuresHero === "render";
-  const jump = (
-    <nav className="db-fx-jump" aria-label="On this page">
-      {FX_SECTIONS.map((s) => (
-        <a key={s.id} href={`#${s.id}`}>
-          {s.label}
-        </a>
-      ))}
-    </nav>
-  );
 
   return (
-    <main>
+    <main className="db-fx-page">
       <FeaturesMotion />
 
       {/* ---- hero: the Best Choice award up top, per Adam's outline ------ */}
@@ -154,19 +144,12 @@ export default function FeaturesPage() {
                 sizes="(min-width: 1240px) 1132px, 92vw"
               />
             </div>
-            {jump}
           </div>
         </div>
-      ) : (
-        /* flow-root: the links' top margin would otherwise escape this block
-           and show the page's black body between the wave and the links */
-        <div className="bg-page flow-root">
-          <div className="db-shell">{jump}</div>
-        </div>
-      )}
+      ) : null}
 
       {/* ---- customizable database ------------------------------------- */}
-      <section id="database" className="db-section db-fx-compact bg-page">
+      <section id="database" className="db-section bg-page">
         <div className="db-shell">
           <SectionHeading
             label={FX_DATABASE.label}
@@ -220,7 +203,7 @@ export default function FeaturesPage() {
       </section>
 
       {/* ---- lead screen ------------------------------------------------ */}
-      <section id="lead-screen" className="db-section db-fx-follow bg-white">
+      <section id="lead-screen" className="db-section bg-white">
         <div className="db-shell db-fx-split">
           <div>
             <SectionHeading
@@ -235,7 +218,7 @@ export default function FeaturesPage() {
             />
             <Points points={FX_LEAD.points} className="mt-8" />
           </div>
-          <div data-fx="shot">
+          <div className="db-fx-lead db-fx-backdrop" data-fx="shot">
             <Window
               src="/dashboard.webp"
               alt="The lead screen: a dialer with click-to-dial and call recording on the left, the business lead record in the middle, and talking points with local time, weather and one-click research on the right."
@@ -244,6 +227,16 @@ export default function FeaturesPage() {
               url={APP}
               sizes="(min-width: 1024px) 58vw, 94vw"
             />
+            {/* the research buttons from the same capture, at full size */}
+            <div className="db-fx-float db-fx-lead__research" data-fx="float">
+              <Detail
+                src="/features/lead-research.png"
+                alt="One-click research buttons: search name, search phone number, demographics, Yahoo Finance news, local news, Chamber of Commerce, Google Maps and Facebook."
+                width={518}
+                height={264}
+                label="One-click research"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -303,7 +296,7 @@ export default function FeaturesPage() {
             }
             lede={FX_TEAM.lede}
           />
-          <div className="db-fx-team" data-fx="shot">
+          <div className="db-fx-team db-fx-backdrop db-fx-backdrop--wide" data-fx="shot">
             <Window
               src="/features/manage-users.png"
               alt="Manage Users: Invite People, Email Users and Refresh buttons, company credits and dialer minutes, tabs for Manage Users, Call Monitoring and Leads Pool, a user list with photos, tabs, leads and status, and a leads pool grid."
@@ -332,7 +325,7 @@ export default function FeaturesPage() {
               />
             </div>
           </div>
-          <Points points={FX_TEAM.points} className="db-fx-points--4 mt-[clamp(48px,5vw,84px)]" />
+          <Points points={FX_TEAM.points} className="db-fx-points--4 mt-[clamp(28px,2.8vw,44px)]" />
         </div>
       </section>
 

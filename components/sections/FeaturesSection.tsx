@@ -41,14 +41,13 @@ export default function FeaturesSection() {
           label="How we compare"
           align="center"
           display
-          size="lg"
           title={
             <>
               Database<span className="text-db-red">Builder</span> vs Other CRMs
             </>
           }
           lede={COMPARE_LEDE}
-          className="mb-[clamp(26px,2.6vw,40px)]"
+          className="mb-[clamp(20px,2vw,28px)]"
         />
 
         {/* the key comes first, so the marks are learned before they are met */}
@@ -61,7 +60,7 @@ export default function FeaturesSection() {
           ))}
         </ul>
 
-        <CompareMotion className="mx-auto max-w-[1040px]">
+        <CompareMotion className="mx-auto max-w-[900px]">
           <CompareTable />
         </CompareMotion>
 
