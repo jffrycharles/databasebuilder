@@ -61,7 +61,7 @@ export default function FeaturesSection() {
           ))}
         </ul>
 
-        <CompareMotion className="mx-auto max-w-[1100px]">
+        <CompareMotion className="mx-auto max-w-[1040px]">
           <CompareTable />
         </CompareMotion>
 
