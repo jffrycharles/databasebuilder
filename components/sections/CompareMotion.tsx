@@ -6,7 +6,7 @@ import { EASE, gsap, ScrollTrigger, useGsap } from "@/lib/gsap";
 /**
  * The comparison's one motion: rows fade up as they reach the viewport, a few
  * at a time, once. ScrollTrigger.batch collects whatever arrives together, so
- * a fast scroll brings in a screenful at once instead of queueing 37 rows of tweens.
+ * a fast scroll brings in a screenful at once instead of queueing every row of tweens.
  *
  * The cells move, not the <tr>: transforms on table rows are unreliable
  * across browsers, and the cells carry our column's panel, so the panel

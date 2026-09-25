@@ -26,7 +26,7 @@ export function MarkIcon({ mark }: { mark: Mark }) {
  *
  * Our column is one continuous panel from the header to the last row — the
  * "recommended plan" treatment — and the header row sticks under the site
- * header while the 37 rows scroll past it, so the two columns never lose
+ * header while the rows scroll past it, so the two columns never lose
  * their names. Group headings carry their row count.
  */
 export default function CompareTable() {
@@ -57,28 +57,40 @@ export default function CompareTable() {
           </tr>
         </thead>
 
-        {COMPARE_GROUPS.map((group) => (
-          <tbody key={group.title}>
-            <tr className="db-cmp__group">
-              <th scope="rowgroup">
-                <span className="db-cmp__group-label">
-                  <span className="db-cmp__group-icon">
-                    <Icon name={group.icon} />
-                  </span>
-                  {/* title and count wrap as one unit, so the badge stays
-                      beside the last word instead of at the cell's far edge */}
-                  <span>
-                    {group.title}
-                    <span className="db-cmp__count" aria-hidden="true">
-                      {group.rows.length}
+        {COMPARE_GROUPS.map((group, gi) => (
+          <tbody key={group.id}>
+            {group.title ? (
+              <tr className="db-cmp__group">
+                <th scope="rowgroup">
+                  <span className="db-cmp__group-label">
+                    {group.icon && (
+                      <span className="db-cmp__group-icon">
+                        <Icon name={group.icon} />
+                      </span>
+                    )}
+                    {/* title and count wrap as one unit, so the badge stays
+                        beside the last word instead of at the cell's far edge */}
+                    <span>
+                      {group.title}
+                      <span className="db-cmp__count" aria-hidden="true">
+                        {group.rows.length}
+                      </span>
                     </span>
                   </span>
-                </span>
-              </th>
-              {/* empty, but present, so our column's panel runs unbroken */}
-              <td className="db-cmp__us" aria-hidden="true" />
-              <td className="db-cmp__them" aria-hidden="true" />
-            </tr>
+                </th>
+                {/* empty, but present, so our column's panel runs unbroken */}
+                <td className="db-cmp__us" aria-hidden="true" />
+                <td className="db-cmp__them" aria-hidden="true" />
+              </tr>
+            ) : gi > 0 ? (
+              /* an untitled block in the chart: a rule and a little air,
+                 cells present so the column panels run unbroken */
+              <tr className="db-cmp__group db-cmp__group--bare" aria-hidden="true">
+                <th />
+                <td className="db-cmp__us" />
+                <td className="db-cmp__them" />
+              </tr>
+            ) : null}
             {group.rows.map((r) => (
               <tr key={r.feature} className="db-cmp__row">
                 <th scope="row">{r.feature}</th>

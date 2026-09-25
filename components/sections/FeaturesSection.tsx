@@ -22,7 +22,7 @@ const LEGEND: { mark: Mark; label: string }[] = [
  *
  * History, so the next change knows what it is undoing: this was an HTML table
  * once before, and Adam asked for his PNG chart back. The chart then carried
- * the section until this redesign, which keeps every one of its 37 rows and
+ * the section until this redesign, which keeps every one of its rows and
  * its title and subtitle (lib/comparison.ts), as real text in the site's own
  * type. public/comparison.png is left in place in case he wants it again.
  *

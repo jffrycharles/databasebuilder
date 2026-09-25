@@ -3007,6 +3007,11 @@ body:has(.db-header.is-hidden) .db-cmp__h {
   color: #ffffffe0;
   vertical-align: 2px;
 }
+/* the chart's untitled blocks: a rule and a little air, no heading */
+.db-cmp__group--bare > * {
+  padding-top: clamp(10px, 0.9vw, 14px);
+  padding-bottom: 0;
+}
 /* the only line inside the body: a section break, stopping at our panel */
 tbody + tbody .db-cmp__group > th {
   border-top: 1px solid #ffffff3d;
